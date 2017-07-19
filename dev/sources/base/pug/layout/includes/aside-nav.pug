@@ -1,0 +1,32 @@
+.aside
+    .aside-nav
+        .aside-nav-item 
+            h4.heading-title Navigation
+        hr
+        .aside-nav-item: a(href="./index.html", class=page=='dashboard'?'active':'').aside-nav-link
+            em.aside-nav-icon.mdi.mdi-speedometer
+            | Dashboard
+        .aside-nav-item: a(href="./csv-parser.html", class=page=='csv-parser'?'active':'').aside-nav-link
+            em.aside-nav-icon.mdi.mdi-database
+            | CSV parser
+        .aside-nav-item: a(href="./categories.html", class=page=='categories'?'active':'').aside-nav-link
+            em.aside-nav-icon.mdi.mdi-view-list
+            | Categories
+        .aside-nav-item: a(href="./citizens.html", class=page=='citizens'?'active':'').aside-nav-link
+            em.aside-nav-icon.mdi.mdi-account-multiple
+            | Citizens
+        .aside-nav-item: a(href="./shopers.html", class=page=='shopers'?'active':'').aside-nav-link
+            em.aside-nav-icon.mdi.mdi-shopping
+            | Shopers
+        .aside-nav-item: a(href="./bugets.html", class=page=='bugets'?'active':'').aside-nav-link
+            em.aside-nav-icon.mdi.mdi-coins
+            | Bugets
+        .aside-nav-item: a(href="./users.html", class=page=='users'?'active':'').aside-nav-link
+            em.aside-nav-icon.mdi.mdi-account-circle
+            | System Users
+        .aside-nav-item: a(href="./permissions.html", class=page=='permissions'?'active':'').aside-nav-link
+            em.aside-nav-icon.mdi.mdi-lock
+            | Permissions
+        .aside-nav-item: a(href="./login.html").aside-nav-link
+            em.aside-nav-icon.mdi.mdi-logout
+            | Quit

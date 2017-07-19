@@ -1,0 +1,50 @@
+extends layout/layout
+
+block vars
+    -var page = 'permissions';
+
+block content
+    include layout/includes/aside-nav
+    .content
+        .content-inner
+            h4.heading-title 
+                | Permissions
+                .btn-group.pull-right
+                    a(href="./categories-edit.html").btn.btn-default
+                        em.glyphicon.glyphicon-plus 
+                        |  Add new
+                    a(href="#").btn.btn-default
+                        em.glyphicon.glyphicon-upload 
+                        |  Import .csv
+                    a(href="#").btn.btn-default
+                        em.glyphicon.glyphicon-download 
+                        |  Export .csv
+            hr
+            .row
+                .col-md-12
+                    form.form: .row
+                        .col-md-4: .form-group
+                            label Select System User:
+                            select.form-control
+                                option(value="") User 001
+                                option(value="") User 002
+                                option(value="") User 003
+                                option(value="") User 004
+                        .col-md-12: .form-group
+                            input(type="button", value="Select").btn.btn-default
+                        .col-md-12: .form-group
+                            hr
+                            p: label(for="perms")
+                                input(type="checkbox")#perms 
+                                |  Manage Permissions
+                            p: label(for="citizens")
+                                input(type="checkbox")#citizens
+                                |  Manage Citizens
+                            p: label(for="categories")
+                                input(type="checkbox")#categories
+                                |  Manage Categories
+                            p: label(for="bugets")
+                                input(type="checkbox")#bugets
+                                |  Manage Bugets
+                        .col-md-12: .form-group
+                            input(type="button", value="Save").btn.btn-default

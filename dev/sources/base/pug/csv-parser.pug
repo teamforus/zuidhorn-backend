@@ -1,0 +1,77 @@
+extends layout/layout
+
+block vars
+    -var page = 'csv-parser';
+
+block content
+    include layout/includes/aside-nav
+    .content
+        .content-inner
+            h4.heading-title Import CSV file
+            hr
+            form.form
+                .row
+                    .col-md-12
+                        h5 
+                            strong 1) 
+                            | First you need to select your .csv file.
+                        p: a(href="#").btn.btn-default
+                            em.glyphicon.glyphicon-upload 
+                            |  Select file
+                        p.text-success 
+                            | File uploaded, size 5.6Mb, 45.735 rows found.
+                        br
+                .row
+                    .col-md-12
+                        h5 
+                            strong 2) 
+                            | Next, you need to calculate each record's childrens count.
+                        p: a(href="#").btn.btn-default
+                            em.glyphicon.glyphicon-play 
+                            |  Process
+                        p.text-success 
+                            | Success, all 45.735 rows parsed.
+                        br
+                .row
+                    .col-md-12
+                        h5 
+                            strong 3) 
+                            | Now, you can download new .csv file that contains children count.
+                        p
+                            a(href="#").btn.btn-default 
+                                em.glyphicon.glyphicon-download
+                                |  Download
+                        p.text-success 
+                            | Downloaded at 15:56.
+                        br
+                .row
+                    .col-md-12
+                        h5 
+                            strong 4) 
+                            | And upload required columns to platform, but first select buget category.
+                    .col-md-4
+                        label.form-label Please select category:
+                        .form-group
+                            select(name="", value="1").form-control
+                                option(value="1") Option 01
+                                option(value="2") Option 02
+                                option(value="3") Option 03
+                            p.text-danger Hello world!
+                        .form-group
+                            select(name="", value="1").form-control
+                                option(value="1") Option 01
+                                option(value="2") Option 02
+                                option(value="3") Option 03
+                        .form-group
+                            select(name="", value="1").form-control
+                                option(value="1") Option 01
+                                option(value="2") Option 02
+                                option(value="3") Option 03
+                    .col-md-12
+                        p: a(href="#").btn.btn-default
+                            em.glyphicon.glyphicon-cloud-upload 
+                            |  Upload to sever
+
+                        p.text-success 
+                            | Success! Uploading done.
+                        br

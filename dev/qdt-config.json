@@ -1,0 +1,110 @@
+{
+    "platforms": {
+        "*": {
+            "source": "base",
+            "libs": {
+                "jquery": true,
+                "bootstrap_3": true,
+                "angular": true,
+                "angular_2": false,
+                "underscore": false,
+                "underscore.string": false,
+                "mdi": true
+            },
+            "libs_data": {},
+            "paths": {
+                "root": false,
+                "assets_root": false,
+                "clean_paths": false
+            },
+            "assets": [{
+                "from": "resources/assets/**/*",
+                "to": "assets"
+            }, {
+                "from": "../../node_modules/sweetalert/dist/sweetalert.min.js",
+                "to": "assets/admin-panel/dist/sweetalert/"
+            }, {
+                "from": "../../node_modules/sweetalert/dist/sweetalert.css",
+                "to": "assets/admin-panel/dist/sweetalert/"
+            }],
+            "server": false,
+            "tasks": {
+                "disabled": {
+                    "pug": false,
+                    "ts": true,
+                    "js": false,
+                    "assets": false
+                },
+                "settings": {
+                    "js": [{
+                        "src": "app.js",
+                        "dest": "/",
+                        "name": "app.js"
+                    }, {
+                        "path": "/raw",
+                        "src": "raw/**/*.js",
+                        "dest": "/"
+                    }],
+                    "scss": [{
+                        "src": "style.scss",
+                        "watch": "includes/**/*.scss",
+                        "dest": "/",
+                        "name": "style.min.css"
+                    }],
+                    "pug": [{
+                        "path": "/",
+                        "src": ["*.pug"],
+                        "watch": ["layout/**/*.pug"],
+                        "dest": "/"
+                    }, {
+                        "path": "/raw/tpl",
+                        "src": ["raw/**/*.pug"],
+                        "dest": "/tpl"
+                    }]
+                }
+            }
+        },
+        "html": {
+            "source": "base",
+            "paths": {
+                "root": "../html",
+                "assets_root": "../html/assets",
+                "clean_paths": [
+                    "../html"
+                ]
+            },
+            "server": {
+                "path": "/",
+                "port": 3000
+            }
+        },
+        "phonegap": {
+            "paths": {
+                "root": "../phonegap/www",
+                "assets_root": "../phonegap/www/assets",
+                "clean_paths": [
+                    "../phonegap/www"
+                ]
+            }
+        },
+        "php": {
+            "paths": {
+                "root": "../php/public",
+                "assets_root": "../php/public/assets",
+                "clean_paths": [
+                    "../php/public/assets",
+                    "../php/public/raw"
+                ]
+            },
+            "tasks": {
+                "settings": {
+                    "pug": [{
+                        "path": "/raw/tpl",
+                        "src": ["raw/**/*.pug"],
+                        "dest": "/tpl"
+                    }]
+                }
+            }
+        }
+    }
+}

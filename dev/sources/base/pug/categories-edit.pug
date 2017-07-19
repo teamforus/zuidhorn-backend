@@ -1,0 +1,28 @@
+extends layout/layout
+
+block vars
+    -var page = 'categories';
+
+block content
+    include layout/includes/aside-nav
+    .content
+        .content-inner
+            h4.heading-title 
+                | Add category
+            hr
+            form.form
+                .row
+                    .col-md-4
+                        .form-group
+                            label.form-label Category name:
+                            input(type="text", placeholder="Name").form-control
+                            p.text-danger Hello world!
+                        .form-group
+                            label.form-label Parent category:
+                            select(name="", value="1").form-control
+                                option(value="-1") -
+                                option(value="1") Option 01
+                                option(value="2") Option 02
+                                option(value="3") Option 03
+                        .form-group
+                            input(type="button", value="Submit").btn.btn-default

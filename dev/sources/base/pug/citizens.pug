@@ -1,0 +1,89 @@
+extends layout/layout
+
+block vars
+    -var page = 'citizens';
+
+block content
+    include layout/includes/aside-nav
+    .content
+        .content-inner
+            h4.heading-title 
+                | Citizens
+                .btn-group.pull-right
+                    a(href="./categories-edit.html").btn.btn-default
+                        em.glyphicon.glyphicon-plus 
+                        |  Add new
+                    a(href="#").btn.btn-default
+                        em.glyphicon.glyphicon-upload 
+                        |  Import .csv
+                    a(href="#").btn.btn-default
+                        em.glyphicon.glyphicon-download 
+                        |  Export .csv
+            hr
+            div.alert.alert-md.alert-default Lorem ipsum dolor sit amet.
+            .row
+                .col-md-12
+                    form.form: .row
+                        .col-md-4: .form-group
+                            label Id
+                            input(type="number", name="", placeholder="Id").form-control
+                        .col-md-4: .form-group
+                            label Name
+                            input(name="", placeholder="Name").form-control
+                        .col-md-4: .form-group
+                            label Childs
+                            input.form-control(type="number", placeholder="Childs")
+                        .col-md-12: .form-group
+                            input(type="button", value="Filter").btn.btn-default
+            .row
+                .col-md-12
+                    table.table.table-striped
+                        tHead: tr
+                            th Id
+                            th Full name
+                            th Count childs
+                            th Founds left
+                            th Transactions
+                            th.text-right Actions
+                        tBody
+                            mixin category_row(id, full_name, childs, another_field, transactions_count)
+                                tr
+                                    td: strong ##{id}
+                                    td #{full_name}
+                                    td #{childs} 
+                                    td #{another_field} 
+                                    td #{transactions_count} 
+                                    td.text-right
+                                        .btn-group
+                                            a(href="#").text-primary 
+                                                em.mdi.mdi-pencil
+                                                | Edit
+                                            | &nbsp;
+                                            | &nbsp;
+                                            a(href="#", 
+                                                confirm-box, 
+                                                data-box-title="Are you sure?", 
+                                                data-box-text="This action cannot be undone, double check before continue.").text-primary
+                                                em.mdi.mdi-delete
+                                                | Delete 
+                            +category_row('0001', 'John Doe', 1, '€163.00 / €534.00', 1)
+                            +category_row('0002', 'John Doe', 2, '€163.00 / €534.00', 4)
+                            +category_row('0003', 'John Doe', 1, '€163.00 / €534.00', 2)
+                            +category_row('0004', 'John Doe', 0, '€163.00 / €534.00', 2)
+                            +category_row('0005', 'John Doe', 1, '€163.00 / €534.00', 3)
+                            +category_row('0006', 'John Doe', 0, '€163.00 / €534.00', 1)
+                            +category_row('0007', 'John Doe', 0, '€163.00 / €534.00', 1)
+                            +category_row('0008', 'John Doe', 2, '€163.00 / €534.00', 2)
+                            +category_row('0009', 'John Doe', 1, '€163.00 / €534.00', 1)
+                            +category_row('0010', 'John Doe', 3, '€163.00 / €534.00', 2)
+                    
+
+                    nav(aria-label='Page navigation')
+                        ul.pagination
+                            li: a(href='#', aria-label='Previous'): span(aria-hidden='true') &laquo;
+                            li: a(href='#') 1
+                            li: a(href='#') 2
+                            li: a(href='#') 3
+                            li: a(href='#') 4
+                            li: a(href='#') 5
+                            li: a(href='#', aria-label='Next'): span(aria-hidden='true') &raquo;
