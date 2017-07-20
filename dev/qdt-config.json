@@ -22,10 +22,13 @@
                 "to": "assets"
             }, {
                 "from": "../../node_modules/sweetalert/dist/sweetalert.min.js",
-                "to": "assets/admin-panel/dist/sweetalert/"
+                "to": "assets/dist/sweetalert/"
             }, {
                 "from": "../../node_modules/sweetalert/dist/sweetalert.css",
-                "to": "assets/admin-panel/dist/sweetalert/"
+                "to": "assets/dist/sweetalert/"
+            }, {
+                "from": "../../node_modules/papaparse/papaparse.min.js",
+                "to": "assets/dist/papaparse/"
             }],
             "server": false,
             "tasks": {
