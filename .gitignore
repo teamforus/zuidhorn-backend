@@ -2,6 +2,7 @@
 /dev/package-lock.json
 /dev/qdt-env.json
 /html
+/phonegap-html
 /phonegap/www
 /php/public/assets/*
 
