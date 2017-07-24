@@ -17,6 +17,7 @@ class UsersTableSeeder extends DatabaseSeeder
             'id'            => 1,
             'first_name'    => 'Admin',
             'last_name'     => '001',
+            'bsn_hash'      => '',
             'email'         => 'forus-admin@dev-weget.nl',
             'password'      => Hash::make('mvp-admin-pass'),
             ]);
@@ -25,6 +26,7 @@ class UsersTableSeeder extends DatabaseSeeder
             'id'            => 2,
             'first_name'    => 'Shoper',
             'last_name'     => '001',
+            'bsn_hash'      => '',
             'email'         => 'forus-shoper@weget.nl',
             'password'      => Hash::make('mvp-shoper-pass'),
             ]);
@@ -33,6 +35,7 @@ class UsersTableSeeder extends DatabaseSeeder
             'id'            => 3,
             'first_name'    => 'Citizen',
             'last_name'     => '001',
+            'bsn_hash'      => '',
             'email'         => 'forus-citizen@weget.nl',
             'password'      => Hash::make('mvp-citizen-pass'),
             ]);

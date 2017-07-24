@@ -1,29 +1,28 @@
 @extends("layouts.{$view_layout}.{$view_layout}_layout")
 
 @section('content')
-<h4 class="heading-title">Add category</h4>
+<h4 class="heading-title">
+    {{ $edit ? 'Edit category: ' . $edit->name : 'Add category' }}
+</h4>
 <hr>
-<form class="form">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="form-group">
-                <label class="form-label">Category name:</label>
-                <input class="form-control" type="text" placeholder="Name">
-                <p class="text-danger">Hello world!</p>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Parent category:</label>
-                <select class="form-control" name="" value="1">
-                    <option value="-1">-</option>
-                    <option value="1">Option 01</option>
-                    <option value="2">Option 02</option>
-                    <option value="3">Option 03</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <input class="btn btn-default" type="button" value="Submit">
-            </div>
+@include('layouts.panel.blocks.alerts')
+{{ Form::open(['method' => 'PUT', 'class' => 'form']) }}
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            {{ Form::label('name', 'Category name') }}
+            {{ Form::text('name', $edit ? $edit->name : '', ['class' => 'form-control', 'placeholder' => 'Name']) }}
+            {!! $errors->first('name', '<p class="text-danger">:message</p>') !!}
+        </div>
+        <div class="form-group">
+            <label class="form-label">Parent category:</label>
+            {{ Form::select('parent_id', App\Models\Category::hierarchicalSelectOptions(true, $edit ? $edit->id : false), $edit ? $edit->parent_id : '', ['class' => 'form-control']) }}
+            {!! $errors->first('parent_id', '<p class="text-danger">:message</p>') !!}
+        </div>
+        <div class="form-group">
+            {{ Form::submit('Submit', ['class' => 'btn btn-primary']) }}
         </div>
     </div>
-</form>
+</div>
+{{ Form::close() }}
 @endsection

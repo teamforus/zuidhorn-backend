@@ -18,7 +18,10 @@ class ShopersTableSeeder extends DatabaseSeeder
         $users = Role::where('key', 'shoper')->first()->users;
         
         $users->each(function($user) {
-            Shoper::create(['user_id' => $user->id]);
+            Shoper::create([
+                'name'      => 'Shoper #1',
+                'user_id'   => $user->id
+                ]);
         });
     }
 }

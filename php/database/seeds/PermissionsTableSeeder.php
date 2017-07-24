@@ -41,5 +41,23 @@ class PermissionsTableSeeder extends DatabaseSeeder
             'key'   => 'manage_permissions',
             'name'  => 'Manage permissions',
             ]);
+
+        Permission::create([
+            'id'    => 6,
+            'key'   => 'manage_bugets',
+            'name'  => 'Manage bugets',
+            ]);
+
+        Permission::create([
+            'id'    => 7,
+            'key'   => 'manage_vouchers',
+            'name'  => 'Manage vouchers',
+            ]);
+
+        Permission::create([
+            'id'    => 9,
+            'key'   => 'manage_vouchers_transactions',
+            'name'  => 'Manage vouchers transactions',
+            ]);
     }
 }

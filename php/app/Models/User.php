@@ -5,8 +5,11 @@ namespace App\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+use App\Notifications\MailResetPasswordToken;
+
 class User extends Authenticatable
 {
+    use Traits\Urls\UserUrlsTrait;
     use Notifiable;
 
     /**
@@ -15,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+    'first_name', 'last_name', 'bsn_hash', 'email', 'password',
     ];
 
     /**
@@ -24,8 +27,16 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+    'password', 'remember_token',
     ];
+
+    /**
+     * Send a password reset email to the user
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new MailResetPasswordToken($token));
+    }
     
     public function roles()
     {
@@ -59,5 +70,33 @@ class User extends Authenticatable
             'App\Models\Voucher', 
             'App\Models\UserBuget'
             );
+    }
+
+    public function getFullNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
+
+    public static function generateCitizensByHash($data)
+    {
+        return collect($data)->map(function($row) {
+            do {
+                $password = md5(rand(1, 100000000));
+            } while (self::wherePassword($password)->count() > 0);
+
+            do {
+                $email = md5(rand(1, 100000000));
+            } while (self::whereEmail($email)->count() > 0);
+
+            $row['email'] = $email;
+            $row['password'] = $password;
+
+            if (!$user = self::whereBsnHash($row['bsn_hash'])->first()) {
+                $user = Role::where('key', 'citizen')->first()->users()->save(
+                    new User($row));
+            }
+
+            return $user;
+        });
     }
 }

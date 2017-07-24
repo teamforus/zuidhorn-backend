@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Buget extends Model
 {
+    use Traits\Urls\BugetUrlsTrait;
+
     protected $fillable = ['name'];
 
     public function users()

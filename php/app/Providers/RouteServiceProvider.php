@@ -28,6 +28,8 @@ class RouteServiceProvider extends ServiceProvider
         parent::boot();
 
         Route::model('category', \App\Models\Category::class);
+        Route::model('voucher', \App\Models\Voucher::class);
+        Route::model('user', \App\Models\User::class);
     }
 
     /**

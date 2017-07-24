@@ -19,14 +19,16 @@ class VouchersTableSeeder extends DatabaseSeeder
 
         $users->each(function($user) {
             $user->user_bugets->each(function($user_buget) use ($user) {
-                $user_buget->buget->categories->each(function($category) use ($user, $user_buget) {
-                    Voucher::create([
-                        'code'          => 'UNIQUE-CODE',
-                        'user_buget_id' => $user_buget->id,
-                        'shoper_id'     => $user_buget->buget->categories->random(1)->first()->shopers->random(1)->first()->id,
-                        'max_amount'    => null,
-                        ]);
-                });
+                $category = $user_buget->buget->categories->random(1)->first();
+                $shoper = $category->shopers->random(1)->first();
+
+                Voucher::create([
+                    'code'          => Voucher::generateCode(),
+                    'user_buget_id' => $user_buget->id,
+                    'shoper_id'     => $shoper->id,
+                    'category_id'   => $category->id,
+                    'max_amount'    => null,
+                    ]);
             });
         });
     }

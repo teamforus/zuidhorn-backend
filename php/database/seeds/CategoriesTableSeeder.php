@@ -13,27 +13,27 @@ class CategoriesTableSeeder extends DatabaseSeeder
     public function run()
     {
         Category::create([
-            'id'                    => 1,
-            'name'                  => 'Transport',
-            'parent_category_id'    => null,
+            'id'        => 1,
+            'name'      => 'Transport',
+            'parent_id' => null,
             ]);
 
         Category::create([
-            'id'                    => 2,
-            'name'                  => 'Cars',
-            'parent_category_id'    => 1,
+            'id'        => 2,
+            'name'      => 'Cars',
+            'parent_id' => 1,
             ]);
 
         Category::create([
-            'id'                    => 3,
-            'name'                  => 'Bikes',
-            'parent_category_id'    => 1,
+            'id'        => 3,
+            'name'      => 'Bikes',
+            'parent_id' => 1,
             ]);
 
         Category::create([
-            'id'                    => 4,
-            'name'                  => 'Moto',
-            'parent_category_id'    => 1,
+            'id'        => 4,
+            'name'      => 'Moto',
+            'parent_id' => 1,
             ]);
     }
 }

@@ -1,0 +1,70 @@
+
+<form class="form">
+  <div class="row" ng-show="csvParser.realProgress == 1">
+    <div class="col-md-12">
+      <h5><strong>1) </strong>First you need to select your .csv file.</h5>
+      <p><a class="btn btn-primary" href="#" ng-click="csvParser.selectFile($event)"><em class="glyphicon glyphicon-open-file"> </em>&nbsp;Select file</a></p>
+      <div ng-if="csvParser.progress &gt; 1">
+        <p class="text-success">
+          File size: {{ (csvParser.steps[1].file.size / 1024 / 1024).toFixed(2) }}Mb,
+          row(s) found: {{ csvParser.steps[1].csvContent.length - 1 }}.
+        </p><a class="btn btn-default" href="#" ng-click="csvParser.goForward($event)">Next&nbsp;<em class="glyphicon glyphicon-chevron-right"> </em></a>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-show="csvParser.realProgress == 2">
+    <div class="col-md-12">
+      <h5><strong>2) </strong>Next, you need to estimate each record children count.</h5>
+      <p ng-if="csvParser.progress == 2"><a class="btn btn-primary" href="#" ng-click="csvParser.estimateCsv($event)"><em class="glyphicon glyphicon-play"> </em>&nbsp;Process</a></p>
+      <div ng-if="csvParser.progress &gt; 2">
+        <p class="text-success">Success, {{ csvParser.steps[2].csvContent.length - 1 }} row(s) parsed.</p><a class="btn btn-default" href="#" ng-click="csvParser.goForward($event)">Next&nbsp;<em class="glyphicon glyphicon-chevron-right"> </em></a>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-show="csvParser.realProgress == 3">
+    <div class="col-md-12">
+      <h5><strong>3) </strong>Now, you can either download parsed .csv file that contains children count or upload it to server.</h5>
+      <p><a class="btn btn-primary" href="#" ng-click="csvParser.uploadCsvInit($event)" ng-if="csvParser.progress == 3"><em class="glyphicon glyphicon-cloud-upload"></em>&nbsp;Upload to server</a><a class="btn btn-default" href="#" ng-click="csvParser.downloadCsv($event)"><em class="glyphicon glyphicon-download"></em>&nbsp;Download</a></p>
+      <p class="text-success" ng-if="csvParser.steps[3].downloaded">Downloaded.</p>
+    </div>
+  </div>
+  <div class="row" ng-show="csvParser.realProgress == 4">
+    <div class="col-md-12">
+      <h5><strong>4) </strong>Please select applicable budget categories.</h5>
+    </div>
+    <div class="col-md-4" ng-if="!csvParser.steps[4].uploaded">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-xs-8 col-md-10">
+            <label for="buget_name">Buget name</label>
+            <input class="form-control" type="text" id="buget_name" name="buget_name" ng-model="csvParser.steps[4].buget_name"/>
+          </div>
+        </div>
+      </div>
+      <label class="form-label">Please select category:</label>
+      <div class="form-group" ng-repeat="(category_key, category) in csvParser.steps[4].selectedCategories track by category_key">
+        <div class="row">
+          <div class="col-xs-8 col-md-10">
+            <select class="form-control" ng-model="csvParser.steps[4].selectedCategories[category_key]" ng-options="item.name | decode for item in csvParser.steps[4].categoryOptions track by item.id"></select>
+          </div>
+          <div class="col-xs-4 col-md-2"><a class="btn btn-primary" href="#" ng-click="csvParser.deleteCategory($event, category_key)" ng-if="csvParser.steps[4].selectedCategories.length &gt; 1"><em class="glyphicon glyphicon-remove"> </em></a></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <p ng-if="!csvParser.steps[4].uploaded"><a class="btn btn-primary" href="#" ng-click="csvParser.uploadToServer($event)"><em class="glyphicon glyphicon-cloud-upload"> </em>&nbsp;Upload to sever</a><a class="btn btn-default" href="#" ng-click="csvParser.addCategory($event)"><em class="glyphicon glyphicon-plus"> </em>&nbsp;Add category</a></p>
+      <div ng-if="csvParser.steps[4].uploaded">
+        <p class="text-success">Uploaded!</p><a class="btn btn-default" href="#" ng-click="csvParser.goForward($event)">Next&nbsp;<em class="glyphicon glyphicon-chevron-right"> </em></a>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-show="csvParser.realProgress == 5">
+    <div class="col-md-12">
+      <h5><strong>5) </strong>Download .csv with vouchers.</h5>
+    </div>
+    <div class="col-md-12">
+      <p><a class="btn btn-primary" href="#" ng-click="csvParser.saveFromServer($event)"><em class="glyphicon glyphicon-cloud-download"> </em>&nbsp;Download .csv file</a></p>
+      <p class="text-success" ng-if="csvParser.steps[5].downloaded">Downloaded!</p>
+    </div>
+  </div>
+</form>

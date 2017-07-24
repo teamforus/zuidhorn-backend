@@ -17,9 +17,15 @@ class CreateVouchersTable extends Migration
             $table->increments('id');
             $table->string('code');
             $table->integer('user_buget_id')->unsigned();
+            $table->integer('category_id')->unsigned();
             $table->integer('shoper_id')->unsigned();
             $table->float('max_amount')->unsigned()->nullable();
+            $table->string('status')->default('active');
             $table->timestamps();
+
+            $table->foreign('category_id')
+            ->references('id')->on('categories')
+            ->onDelete('cascade');
 
             $table->foreign('user_buget_id')
             ->references('id')->on('user_bugets')

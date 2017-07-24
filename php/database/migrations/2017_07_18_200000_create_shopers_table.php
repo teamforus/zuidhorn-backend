@@ -15,6 +15,7 @@ class CreateShopersTable extends Migration
     {
         Schema::create('shopers', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name');
             $table->integer('user_id')->unsigned();
             $table->timestamps();
 

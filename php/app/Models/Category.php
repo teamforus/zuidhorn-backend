@@ -6,20 +6,24 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    protected $fillable = ['name', 'parent_category_id'];
+    use Traits\Urls\CategoryUrlsTrait;
+    use Traits\SelectInputTrait;
+    use Traits\SelectInputHierarchicalTrait;
+
+    protected $fillable = ['name', 'parent_id'];
 
     public function parent()
     {
         return $this->belongsTo(
             'App\Models\Category', 
-            'parent_category_id');
+            'parent_id');
     }
 
     public function childs()
     {
         return $this->hasMany(
             'App\Models\Category', 
-            'parent_category_id');
+            'parent_id');
     }
 
     public function bugets()
@@ -34,5 +38,14 @@ class Category extends Model
         return $this->belongsToMany(
             'App\Models\Shoper', 
             'shoper_categories');
+    }
+
+    public function unlink()
+    {
+        $this->childs->each(function($child) {
+            $child->unlink();
+        });
+
+        return $this->delete();
     }
 }

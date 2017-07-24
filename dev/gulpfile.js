@@ -164,6 +164,31 @@ var scss_compiler = function(platform, src, dest, name) {
     streamCombiner.apply(streamCombiner, streams).on('error', _doNotify);
 };
 
+var less_compiler = function(platform, src, dest, name) {
+    if (!qdt_core.isPlatformTaskEnabled(platform, 'less'))
+        return;
+
+    // notifiers
+    var _doNotify = function(val) {
+        qdt_core.doNotify('LESS - Error', val);
+    };
+
+    var streams = [];
+
+    streams.push(gulp.src(src));
+    streams.push(plugins.less());
+    streams.push(plugins.autoprefixer(pluginSettings.autoPrefixer));
+    streams.push(plugins.cleanCss());
+    streams.push(plugins.rename(name));
+    streams.push(gulp.dest(platform.paths.assets_root + '/css/' + dest));
+
+    if (qdt_e.server.enabled && (qdt_e.server.watch_platforms == "all" ||
+            qdt_e.server.watch_platforms.indexOf(platform.name) !== -1))
+        streams.push(browserSyncReload(pluginSettings.browserSyncReload));
+
+    streamCombiner.apply(streamCombiner, streams).on('error', _doNotify);
+};
+
 var js_compiler = function(platform, src, dest, name) {
     if (!qdt_core.isPlatformTaskEnabled(platform, 'js'))
         return;
@@ -319,6 +344,27 @@ gulp.task('scss', [], function() {
     }
 });
 
+// less task
+gulp.task('less', [], function() {
+    var _iif_scss = function(_k_scss, platform, group) {
+        var _path = 'sources/' + _k_scss + '/less/';
+
+        less_compiler(platform, _path + group.src, group.dest, group.name);
+    };
+
+    // less
+    for (var k_less in grouped_platforms) {
+        for (var _a = grouped_platforms[k_less].length - 1; _a >= 0; _a--) {
+            var _less_s = grouped_platforms[k_less][_a].tasks.settings.less;
+
+            for (var _aa = _less_s.length - 1; _aa >= 0; _aa--) {
+                (_iif_scss)(k_less, grouped_platforms[k_less][_a],
+                    grouped_platforms[k_less][_a].tasks.settings.less[_aa]);
+            }
+        }
+    }
+});
+
 // javascript task
 gulp.task('js', [], function() {
     var _iif_js = function(_k_js, platform, group) {
@@ -413,6 +459,27 @@ gulp.task('watch', ['server'], function() {
         });
     };
 
+    var _iif_less = function(_k_scss, platform, group) {
+        var _watch_src = [];
+        var _path = 'sources/' + _k_scss + '/less/';
+
+        group.src = _path + group.src;
+
+        if (typeof group.watch == "string")
+            group.watch = [group.watch];
+
+        for (var j = group.watch.length - 1; j >= 0; j--)
+            _watch_src.push(_path + group.watch[j]);
+
+        gulp.watch(group.src, function() {
+            less_compiler(platform, group.src, group.dest, group.name);
+        });
+
+        gulp.watch(_watch_src, function() {
+            less_compiler(platform, group.src, group.dest, group.name);
+        });
+    };
+
     var _iif_ts = function(_k_ts) {
         gulp.watch('./sources/' + _k_ts + '/ts/*.ts', function(src) {
             ts_compiler(_k_ts);
@@ -487,6 +554,18 @@ gulp.task('watch', ['server'], function() {
         }
     }
 
+    // less
+    for (var k_less in grouped_platforms) {
+        for (var _a = grouped_platforms[k_less].length - 1; _a >= 0; _a--) {
+            var _less_s = grouped_platforms[k_less][_a].tasks.settings.less;
+
+            for (var _aa = _less_s.length - 1; _aa >= 0; _aa--) {
+                (_iif_less)(k_less, grouped_platforms[k_less][_a],
+                    grouped_platforms[k_less][_a].tasks.settings.less[_aa]);
+            }
+        }
+    }
+
     // js
     for (var k_js in grouped_platforms) {
         for (var _b = grouped_platforms[k_js].length - 1; _b >= 0; _b--) {
@@ -552,7 +631,7 @@ gulp.task('init', function(done) {
 });
 
 // warch processing
-gulp.task('compile', ['scss', 'pug', 'js', 'ts', 'assets']);
+gulp.task('compile', ['scss', 'less', 'pug', 'js', 'ts', 'assets']);
 
 // default task
 gulp.task('default', ['compile', 'watch', 'server']);

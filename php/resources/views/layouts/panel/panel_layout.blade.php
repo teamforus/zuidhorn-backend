@@ -2,7 +2,7 @@
 <html lang="en">
 @include('layouts.panel.includes.head')
 
-<body>
+<body ng-app="forusApp" ng-controller="baseCtrl" ng-csp>
     <!-- include includes/dev-pages-->
     @include('layouts.panel.includes.header')
     @include('layouts.panel.includes.sidebar-nav')

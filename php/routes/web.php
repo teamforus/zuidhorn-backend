@@ -11,20 +11,51 @@
 |
 */
 
-Route::get('/', function () {
-    return App\Models\User::find(3)->vouchers;
-    return view('welcome');
+Route::get('/home', function () {
+    return redirect(action('Panel\DashboardController@getIndex'));
 });
 
+Route::get('/', function () {
+    return redirect(action('Panel\DashboardController@getIndex'));
+});
 
-Route::group(['prefix' => 'panel'], function() {
+Route::group(['prefix' => 'panel', 'middleware' => 'auth'], function() {
     Route::get('/dashboard', 'Panel\DashboardController@getIndex');
     Route::get('/csv-parser', 'Panel\UsersController@getCsvParser');
-    Route::get('/categories', 'Panel\CategoriesController@getList');
-    Route::get('/categories/edit/{category?}', 'Panel\CategoriesController@getEdit');
-    Route::get('/citizens', 'Panel\CitizensController@getList');
+
+
+    Route::get('/categories', 'Panel\CategoryController@getIndex');
+    Route::get('/categories/edit/{category?}', 'Panel\CategoryController@getEdit');
+    Route::get('/categories/create', 'Panel\CategoryController@getCreate');
+    Route::get('/categories/view/{category}', 'Panel\CategoryController@getView');
+    Route::get('/categories/delete/{category}', 'Panel\CategoryController@getDelete');
+
+    Route::put('/categories/edit/{category}', 'Panel\CategoryController@putEdit');
+    Route::put('/categories/create', 'Panel\CategoryController@putCreate');
+
+
+    Route::get('/vouchers', 'Panel\VoucherController@getList');
+    Route::get('/vouchers/view/{voucher}', 'Panel\VoucherController@getView');
+
+
+    Route::get('/citizens', 'Panel\UserController@getIndexCitizens');
+    Route::get('/citizens/view/{user}', 'Panel\UserController@getViewCitizen');
+
+
+    Route::get('/voucher-transactions', 'Panel\VoucherTransactionController@getIndex');
+    Route::get('/voucher-transactions/view/{user}', 'Panel\VoucherTransactionController@getView');
+
+
     Route::get('/shopers', 'Panel\ShopersController@getList');
     Route::get('/bugets', 'Panel\BugetsController@getList');
     Route::get('/users', 'Panel\UsersController@getAdminsList');
     Route::get('/permissions', 'Panel\UsersController@getPermissions');
 });
+
+
+Route::group(['prefix' => 'ajax', 'middleware' => 'auth'], function() {
+    Route::get('/category/select-option', 'Ajax\CategoryController@getSelectOptions');
+    Route::put('/buget/submit-data', 'Ajax\BugetController@putSubmitData');
+});
+
+Auth::routes();

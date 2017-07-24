@@ -1,0 +1,90 @@
+form.form
+    .row(ng-show='csvParser.realProgress == 1')
+        .col-md-12
+            h5
+                strong 1) 
+                | First you need to select your .csv file.
+            p
+                a.btn.btn-primary(href='#', ng-click='csvParser.selectFile($event)')
+                    em.glyphicon.glyphicon-open-file 
+                    | &nbsp;Select file
+            div(ng-if='csvParser.progress > 1')
+                p.text-success
+                    | File size: {{ (csvParser.steps[1].file.size / 1024 / 1024).toFixed(2) }}Mb,
+                    | row(s) found: {{ csvParser.steps[1].csvContent.length - 1 }}.
+                a.btn.btn-default(href="#" ng-click="csvParser.goForward($event)")
+                    | Next&nbsp;
+                    em.glyphicon.glyphicon-chevron-right 
+    .row(ng-show='csvParser.realProgress == 2')
+        .col-md-12
+            h5
+                strong 2) 
+                | Next, you need to estimate each record children count.
+            p(ng-if='csvParser.progress == 2')
+                a.btn.btn-primary(href='#', ng-click='csvParser.estimateCsv($event)')
+                    em.glyphicon.glyphicon-play  
+                    | &nbsp;Process
+            div(ng-if='csvParser.progress > 2')
+                p.text-success
+                    | Success, {{ csvParser.steps[2].csvContent.length - 1 }} row(s) parsed.
+                a.btn.btn-default(href="#" ng-click="csvParser.goForward($event)")
+                    | Next&nbsp;
+                    em.glyphicon.glyphicon-chevron-right 
+    .row(ng-show='csvParser.realProgress == 3')
+        .col-md-12
+            h5
+                strong 3) 
+                | Now, you can either download parsed .csv file that contains children count or upload it to server.
+            p
+                a.btn.btn-primary(href='#', ng-click='csvParser.uploadCsvInit($event)', ng-if='csvParser.progress == 3')
+                    em.glyphicon.glyphicon-cloud-upload
+                    | &nbsp;Upload to server
+                a.btn.btn-default(href='#', ng-click='csvParser.downloadCsv($event)')
+                    em.glyphicon.glyphicon-download
+                    | &nbsp;Download
+            p.text-success(ng-if='csvParser.steps[3].downloaded') Downloaded.
+    .row(ng-show='csvParser.realProgress == 4')
+        .col-md-12
+            h5
+                strong 4) 
+                | Please select applicable budget categories.
+        .col-md-4(ng-if='!csvParser.steps[4].uploaded')
+            .form-group: .row: .col-xs-8.col-md-10
+                label(for="buget_name") Buget name
+                input(type="text" id="buget_name" name="buget_name" ng-model="csvParser.steps[4].buget_name").form-control
+            label.form-label Please select category:
+            .form-group(ng-repeat='(category_key, category) in csvParser.steps[4].selectedCategories track by category_key')
+                .row
+                    .col-xs-8.col-md-10
+                        select.form-control(
+                            ng-model='csvParser.steps[4].selectedCategories[category_key]', 
+                            ng-options='item.name | decode for item in csvParser.steps[4].categoryOptions track by item.id')
+
+                    .col-xs-4.col-md-2
+                        a.btn.btn-primary(href='#' ng-click="csvParser.deleteCategory($event, category_key)" ng-if="csvParser.steps[4].selectedCategories.length > 1")
+                            em.glyphicon.glyphicon-remove 
+        .col-md-12
+            p(ng-if='!csvParser.steps[4].uploaded')
+                a(href='#' ng-click="csvParser.uploadToServer($event)").btn.btn-primary
+                    em.glyphicon.glyphicon-cloud-upload  
+                    | &nbsp;Upload to sever
+                a(href='#' ng-click="csvParser.addCategory($event)").btn.btn-default
+                    em.glyphicon.glyphicon-plus  
+                    | &nbsp;Add category
+            div(ng-if='csvParser.steps[4].uploaded')
+                p.text-success Uploaded!
+                a.btn.btn-default(href="#" ng-click="csvParser.goForward($event)")
+                    | Next&nbsp;
+                    em.glyphicon.glyphicon-chevron-right 
+
+    .row(ng-show='csvParser.realProgress == 5')
+        .col-md-12
+            h5
+                strong 5) 
+                | Download .csv with vouchers.
+        .col-md-12
+            p
+                a(href='#' ng-click="csvParser.saveFromServer($event)").btn.btn-primary
+                    em.glyphicon.glyphicon-cloud-download  
+                    | &nbsp;Download .csv file
+            p.text-success(ng-if='csvParser.steps[5].downloaded') Downloaded!

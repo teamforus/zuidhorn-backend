@@ -70,6 +70,11 @@ body {
             margin: 0 -30px;
             border-bottom: 1px solid rgba(255, 255, 255, .3);
             transition: all .4s ease;
+            max-width: initial;
+            width: auto;
+            background: none;
+            border: none;
+            cursor: pointer;
 
             &.active, &:hover {
                 background-color: #fff;
@@ -145,7 +150,7 @@ body {
         background: #ffffff;
         border: medium none;
         margin-top: -1px;
-        padding: 25px;
+        padding: 25px 25px 15px;
     }
 
     .checkbox {
@@ -154,6 +159,12 @@ body {
         input[type="checkbox"] {
             margin-top: 7px;
         }
+    }
+
+    .forgot-password {
+        padding: 10px 0 0;
+        display: block;
+        line-height: 20px;
     }
 
     .nav-tabs.nav-justified > {
