@@ -55,9 +55,9 @@ class PermissionsTableSeeder extends DatabaseSeeder
             ]);
 
         Permission::create([
-            'id'    => 9,
-            'key'   => 'manage_vouchers_transactions',
-            'name'  => 'Manage vouchers transactions',
+            'id'    => 8,
+            'key'   => 'manage_voucher_transactions',
+            'name'  => 'Manage voucher transactions',
             ]);
     }
 }

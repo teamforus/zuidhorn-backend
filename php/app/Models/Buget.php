@@ -8,7 +8,7 @@ class Buget extends Model
 {
     use Traits\Urls\BugetUrlsTrait;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'amount'];
 
     public function users()
     {

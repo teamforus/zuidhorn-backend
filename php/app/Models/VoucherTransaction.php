@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class VoucherTransaction extends Model
 {
+    use Traits\Urls\VoucherTransactionUrlsTrait;
+    
     protected $fillable = ['voucher_id', 'amount'];
 
     public function voucher()

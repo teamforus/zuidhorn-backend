@@ -13,8 +13,9 @@ class BugetsTableSeeder extends DatabaseSeeder
     public function run()
     {
         Buget::create([
-            'id'    => 1,
-            'name'  => 'KeenPakket',
+            'id'        => 1,
+            'name'      => 'Kind Pakket',
+            'amount'    => 50000
             ]);
     }
 }

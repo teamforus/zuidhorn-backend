@@ -23,7 +23,8 @@ class VouchersTableSeeder extends DatabaseSeeder
                 $shoper = $category->shopers->random(1)->first();
 
                 Voucher::create([
-                    'code'          => Voucher::generateCode(),
+                    // 'code'          => Voucher::generateCode(),
+                    'code'          => 'VIES-2F9M-J8RR-TC5W',
                     'user_buget_id' => $user_buget->id,
                     'shoper_id'     => $shoper->id,
                     'category_id'   => $category->id,

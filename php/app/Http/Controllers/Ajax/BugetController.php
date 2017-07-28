@@ -10,82 +10,56 @@ Use App\Models\User;
 Use App\Models\Buget;
 Use App\Models\Shoper;
 Use App\Models\Voucher;
+Use App\Models\Category;
 Use App\Models\UserBuget;
 
 class BugetController extends Controller
 {
     public function putSubmitData(Request $req)
     {
-        $data = $req->input('data');
-        $categories = $req->input('categories');
-        $buget_name = $req->input('buget_name');
-        $response = $data;
+        $response = collect();
 
-        $data_map = [
-        'bsn_hash'  => array_search('NR. PERS', $data[0]),
-        'name'      => array_search('NAAM PERS', $data[0]),
-        'buget'     => array_search('BETAALD CRED', $data[0]),
-        ];
+        $data = collect($req->input('data'));
 
-        $data = array_map(function($row) use ($data_map) {
-            $name = explode(' ', $row[$data_map['name']]);
+        $buget = Buget::where('id', 1)->first();
+        $shoper = Shoper::where('id', 1)->first();
+        $category = Category::where('id', 1)->first();
 
-            return [
-            "bsn_hash"      => $row[$data_map['bsn_hash']],
-            "first_name"    => $name[0],
-            "last_name"     => $name[1],
-            "buget"         => $row[$data_map['buget']]
-            ];
-        }, array_slice($data, 1));
+        $users = User::generateCitizens($data);
 
-        $users = User::generateCitizensByHash($data);
+        if (($sum_childs = $data->sum('count_childs')) == 0)
+            throw new Exception("Error Processing Request", 1);
 
-        $shoper_user = Role::where('key', 'shoper')->first()->users->first();
-        $buget = Buget::create(['name' => $buget_name]);
-        $shoper = Shoper::create([
-            'name'      => 'Shoper #' . rand(100000, 999999),
-            'user_id'   => $shoper_user->id
-            ]);
+        $buget_per_child = $buget->amount / $sum_childs;
 
-        $buget->categories()->attach($categories);
-        $shoper->categories()->attach($categories);
+        $vouchers = collect();
 
-        $vouchers = $users->map(function($user, $user_key) use ($buget, $data, $shoper) {
+        foreach ($users as $key => $user) {
             $user_buget = UserBuget::create([
                 'buget_id' => $buget->id,
                 'user_id' => $user->id,
-                'amount' => floatval($data[$user_key]['buget'])
+                'amount' => $data[$key]['count_childs'] * $buget_per_child
                 ]);
 
             $code = Voucher::generateCode();
 
-            return Voucher::create([
+            $vouchers[$key] = Voucher::create([
                 'code'          => $code,
                 'user_buget_id' => $user_buget->id,
                 'shoper_id'     => $shoper->id,
-                'category_id'   => $shoper->categories->random(1)->first()->id,
-                'max_amount'    => floatval($data[$user_key]['buget']),
+                'category_id'   => $category->id,
+                'max_amount'    => null,
                 ]);
-        });
+        }
 
-        $export_rows = collect($data)->map(
-            function($row, $key) use ($data_map, $vouchers) {
-                return [
-                $row['bsn_hash'], 
-                $vouchers[$key]->code
-                ];
-            })->toArray();
-
-        $response = array_merge(
-            [['BSN_HEX', 'VOUCHER CODE']], 
-            $export_rows);
+        foreach ($data as $key => $data_row) {
+            $response[$key] = [
+            'id' => $key,
+            'code' => $vouchers[$key]->code,
+            'count_childs' => $data[$key]['count_childs'],
+            ];
+        }
 
         return compact('response');
     }
 }
-
-
-/*code
-user_buget_id
-shoper_id
-max_amount*/

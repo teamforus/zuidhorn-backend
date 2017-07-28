@@ -22,4 +22,16 @@ class UserBuget extends Model
     {
         return $this->hasMany('App\Models\Voucher');
     }
+
+    public function transactions()
+    {
+        return $this->hasManyThrough(
+            'App\Models\VoucherTransaction', 
+            'App\Models\Voucher');
+    }
+
+    public function getAvailableFunds()
+    {
+        return ($this->amount - $this->transactions->sum('amount'));
+    }
 }

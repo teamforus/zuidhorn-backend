@@ -14,26 +14,8 @@ class CategoriesTableSeeder extends DatabaseSeeder
     {
         Category::create([
             'id'        => 1,
-            'name'      => 'Transport',
+            'name'      => 'Kind Pakket',
             'parent_id' => null,
-            ]);
-
-        Category::create([
-            'id'        => 2,
-            'name'      => 'Cars',
-            'parent_id' => 1,
-            ]);
-
-        Category::create([
-            'id'        => 3,
-            'name'      => 'Bikes',
-            'parent_id' => 1,
-            ]);
-
-        Category::create([
-            'id'        => 4,
-            'name'      => 'Moto',
-            'parent_id' => 1,
             ]);
     }
 }

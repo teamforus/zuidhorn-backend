@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-    'first_name', 'last_name', 'bsn_hash', 'email', 'password',
+    'first_name', 'last_name', 'email', 'password',
     ];
 
     /**
@@ -77,26 +77,22 @@ class User extends Authenticatable
         return $this->first_name . ' ' . $this->last_name;
     }
 
-    public static function generateCitizensByHash($data)
+    public static function generateCitizens($data)
     {
-        return collect($data)->map(function($row) {
+        $role = Role::where('key', 'citizen')->first();
+        $passwords = self::pluck('password');
+
+        return collect($data)->map(function($row) use ($role, $passwords) {
             do {
-                $password = md5(rand(1, 100000000));
-            } while (self::wherePassword($password)->count() > 0);
+                $random_number = md5(rand(1, 100000000));
+            } while ($passwords->search($random_number) !== false);
 
-            do {
-                $email = md5(rand(1, 100000000));
-            } while (self::whereEmail($email)->count() > 0);
+            $row['email'] = $random_number;
+            $row['password'] = $random_number;
+            $row['first_name'] = $random_number;
+            $row['last_name'] = $random_number;
 
-            $row['email'] = $email;
-            $row['password'] = $password;
-
-            if (!$user = self::whereBsnHash($row['bsn_hash'])->first()) {
-                $user = Role::where('key', 'citizen')->first()->users()->save(
-                    new User($row));
-            }
-
-            return $user;
+            return $role->users()->save(new User($row));
         });
     }
 }

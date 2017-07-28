@@ -19,6 +19,8 @@ Route::get('/', function () {
     return redirect(action('Panel\DashboardController@getIndex'));
 });
 
+Route::get('/test', 'TestController@getTest');
+
 Route::group(['prefix' => 'panel', 'middleware' => 'auth'], function() {
     Route::get('/dashboard', 'Panel\DashboardController@getIndex');
     Route::get('/csv-parser', 'Panel\UsersController@getCsvParser');
@@ -56,6 +58,15 @@ Route::group(['prefix' => 'panel', 'middleware' => 'auth'], function() {
 Route::group(['prefix' => 'ajax', 'middleware' => 'auth'], function() {
     Route::get('/category/select-option', 'Ajax\CategoryController@getSelectOptions');
     Route::put('/buget/submit-data', 'Ajax\BugetController@putSubmitData');
+});
+
+Route::group(['prefix' => 'app', 'middleware' => 'cors'], function() {
+    // Route::get('/vouchers/{voucher_code}', 'App\VoucherController@getVoucherByCode');
+
+    Route::resource('voucher', 'App\VoucherController', [
+        'parameters' => ['voucher' => 'voucher_code'],
+        "only" => ['show', 'update']
+        ]);
 });
 
 Auth::routes();

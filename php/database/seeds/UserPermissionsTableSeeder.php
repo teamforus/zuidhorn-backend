@@ -14,6 +14,6 @@ class UserPermissionsTableSeeder extends DatabaseSeeder
     public function run()
     {
         User::whereId(1)->first()->permissions()->attach(
-            Permission::pluck('id')->toArray());
+            Permission::whereIn('id', [1, 7, 8])->pluck('id')->toArray());
     }
 }

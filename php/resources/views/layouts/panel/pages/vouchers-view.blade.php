@@ -25,7 +25,7 @@
         @if($view->transactions->count() > 0)
         <div class="row">
             <div class="col-md-12">
-                @include('layouts.panel.blocks.list-vouchers', ['rows' => $view->transactions])
+                @include('layouts.panel.blocks.list-transactions', ['rows' => $view->transactions])
             </div>
         </div>
         @else

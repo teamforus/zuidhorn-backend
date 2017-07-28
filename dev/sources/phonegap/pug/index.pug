@@ -3,11 +3,10 @@ block content
     .views
         .view.view-main
             .pages.navbar-fixed
-                .page(data-page='index')
-                    .navbar
-                        .navbar-inner
-                            .center Scan de QR-Code
-                            .right
-                                a(href="./pages/voucher-info.html").link.icon-only
-                                    i.icon.icon-forward
-                    .page-content
+    .hidden
+        #success_modal: .modal-content
+            .modal-content-success
+                .modal-content-label Success transaction
+                .modal-content-desc Thank you for lorem ipsum dolor!
+                .modal-content-icon: img(src="./assets/img/icon-modal-success.png")
+                a(href="./pages/transaction-done.html", modal-dismiss).button.button-big.button-fill.button-raised.color-blue SUBMIT

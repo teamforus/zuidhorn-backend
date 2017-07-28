@@ -63,4 +63,21 @@ class Voucher extends Model
 
         return $code;
     }
+
+    public function getAvailableFunds()
+    {
+        $funds_available = $this->user_buget->getAvailableFunds();
+        $max_amount = $this->max_amount;
+
+        if (is_null($max_amount))
+            $max_amount = $funds_available;
+
+        return floatval(min($max_amount, $funds_available));
+    }
+
+    public function makeTransaction($amount)
+    {
+        return !!$this->transactions()->save(
+            new VoucherTransaction(compact('amount')));
+    }
 }

@@ -9,4 +9,37 @@
                 a(href="./pages/info.html").link.icon-only
                     i.f7-icons info
     .page-content
-        a(href="./pages/voucher-value.html").btn.btn-default Confirm
+        .content-block
+            .block-voucher-code
+                .voucher-code-label
+                    em.mdi.mdi-check-circle
+                    | Voucher value
+                .voucher-value-container
+                    .voucher-value €{{toFixed voucher.max_amount}}
+                    i.f7-icons info
+        div(voucher-form="")
+            .content-block-title
+                | Please enter the purchase price, up to 
+                strong €{{toFixed voucher.max_amount}}
+                | .
+            div(form-root=""): div(f-form="")
+                form#my-form.list-block
+                    ul
+                        li
+                            .item-content
+                                .item-inner
+                                    .item-title.label All funds
+                                    .item-input
+                                        label.label-switch
+                                            input( type='checkbox' name="full_amount" value="1" data-all-founds)
+                                            .checkbox
+                        li#founds-value
+                            .item-content
+                                .item-inner
+                                    .item-title.label Funds amount 
+                                    .item-input
+                                        input(type='number' name='amount' placeholder='Purchase price...')
+
+                .content-block
+                    p(validation-errors) 
+                    a(href="#" submit-btn='').button.button-big.button-fill.button-raised.color-deeppink Confirm
