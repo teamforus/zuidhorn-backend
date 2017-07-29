@@ -17,6 +17,7 @@
             Voucher code: <strong class="text-primary">{{ $view->code }}</strong><br>
             Created at: <strong class="text-primary">{{ $view->created_at->format('M d, Y H:i') }}</strong><br>
             Status: <strong class="text-primary">{{ strtoupper($view->status) }}</strong><br>
+            Funds available: <strong>€{{ number_format($view->getAvailableFunds(), 2) }}</strong>
         </p>
         <br>
 

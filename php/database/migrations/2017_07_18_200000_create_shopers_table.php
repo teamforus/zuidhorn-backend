@@ -17,6 +17,7 @@ class CreateShopersTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->integer('user_id')->unsigned();
+            $table->string('iban')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')

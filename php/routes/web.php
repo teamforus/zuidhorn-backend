@@ -39,14 +39,10 @@ Route::group(['prefix' => 'panel', 'middleware' => 'auth'], function() {
     Route::get('/vouchers', 'Panel\VoucherController@getList');
     Route::get('/vouchers/view/{voucher}', 'Panel\VoucherController@getView');
 
+    Route::get('/voucher-transactions/view/{voucher_transaction}', 'Panel\VoucherTransactionController@getView');
 
     Route::get('/citizens', 'Panel\UserController@getIndexCitizens');
     Route::get('/citizens/view/{user}', 'Panel\UserController@getViewCitizen');
-
-
-    Route::get('/voucher-transactions', 'Panel\VoucherTransactionController@getIndex');
-    Route::get('/voucher-transactions/view/{user}', 'Panel\VoucherTransactionController@getView');
-
 
     Route::get('/shopers', 'Panel\ShopersController@getList');
     Route::get('/bugets', 'Panel\BugetsController@getList');

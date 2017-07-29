@@ -32,6 +32,23 @@ class VoucherController extends Controller
     {
         $this->authorize('view', $view);
 
+        $bunq_service = new BunqService('e5df2765ea68eab80f51f37e08078f39467d9fd86ce3b0e6317b0d14ae2dddfc');
+
+        $response = $bunq_service->getMonetaryAccounts();
+
+        $monetaryAccountId = $response->{'Response'}[0]->{'MonetaryAccountBank'}->{'id'};
+
+        $response = $bunq_service->paymentDetails($monetaryAccountId, [
+            "value" => $amount,
+            "currency" => "EUR",
+        ], [
+            "type"  => "IBAN",
+            "value" => $this->shoper->iban,
+            "name"  => $this->shoper->name,
+        ]);
+
+        $payment_id = $response->{'Response'}[0]->{'Id'}->{'id'};
+
         return $this->_make('panel', 'vouchers-view', compact('view'));
     }
 }

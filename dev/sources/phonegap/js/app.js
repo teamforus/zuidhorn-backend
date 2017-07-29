@@ -63,7 +63,7 @@ var qr_scanner_service = new QrScannerService({
 });
 
 var voucher_service = new VoucherService({
-    api_host: !cordova ? 'http://127.0.0.1:8000' : 'http://192.168.2.66:8000'
+    api_host: !cordova ? 'http://127.0.0.1:8000' : 'http://192.168.0.106:8000'
 });
 
 mainView = myApp.addView('.view-main');

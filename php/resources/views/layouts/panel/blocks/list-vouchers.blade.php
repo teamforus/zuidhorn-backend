@@ -6,6 +6,7 @@
             <th>Code</th>
             <th>Citizen</th>
             <th>Buget</th>
+            <th>Funds available</th>
             <th>Category</th>
             <th>Shoper</th>
             <th>Max. amount</th>
@@ -28,6 +29,7 @@
                 ['class' => 'text-primary']) }}
             </td>
             <td>{{ Html::link($row->user_buget->buget->urlPanelView(), $row->user_buget->buget->name, ['class' => 'text-primary']) }}</td>
+            <td>€{{ number_format($row->getAvailableFunds(), 2) }}</td>
             <td>{{ Html::link($row->category->urlPanelView(), $row->category->name, ['class' => 'text-primary']) }}</td>
             <td>{{ Html::link($row->shoper->urlPanelView(), $row->shoper->name, ['class' => 'text-primary']) }}</td>
             <td>

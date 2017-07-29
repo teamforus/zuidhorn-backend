@@ -20,7 +20,7 @@
             </td>
             <td>{{ Html::link($row->voucher->urlPanelView(), $row->voucher->code, ['class' => 'text-primary']) }}</td>
             <td>
-                <strong>{{ $row->amount }}</strong>
+                <strong>€{{ number_format($row->amount, 2) }}</strong>
             </td>
             <td>
                 <strong>{{ $row->created_at->format('M d, Y H:i') }}</strong>
@@ -29,17 +29,6 @@
                 <div class="btn-group">
                     @can('view', $row)
                     {{ Html::link($row->urlPanelView(), 'View') }} &nbsp; 
-                    @endcan
-
-                    @can('update', $row)
-                    {{ Html::link($row->urlPanelEdit(), 'Edit') }} &nbsp; 
-                    @endcan
-
-                    @can('delete', $row)
-                    {{ Html::link($row->urlPanelDelete(), 'Delete', [
-                        'confirm-box data-box-title'    => "Are you sure?", 
-                        'data-box-text'                 => "This action cannot be undone, double check before continue."]) 
-                    }}
                     @endcan
                 </div>
             </td>

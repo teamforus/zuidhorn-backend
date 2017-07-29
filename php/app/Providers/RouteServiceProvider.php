@@ -29,6 +29,7 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::model('category', \App\Models\Category::class);
         Route::model('voucher', \App\Models\Voucher::class);
+        Route::model('voucher_transaction', \App\Models\VoucherTransaction::class);
         Route::model('user', \App\Models\User::class);
 
         Route::bind('voucher_code', function ($code) {

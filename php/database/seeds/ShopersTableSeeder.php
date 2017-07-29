@@ -20,7 +20,8 @@ class ShopersTableSeeder extends DatabaseSeeder
         $users->each(function($user) {
             Shoper::create([
                 'name'      => 'Shoper #1',
-                'user_id'   => $user->id
+                'user_id'   => $user->id,
+                'iban'      => 'MD87MO2259ASV72028867100',
                 ]);
         });
     }
