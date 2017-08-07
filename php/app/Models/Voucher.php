@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Services\BunqService\BunqService;
+use App\Jobs\BunqProcessTransactionJob;
 
 class Voucher extends Model
 {
@@ -58,7 +59,7 @@ class Voucher extends Model
                 $rand_generator, 
                 $keys) 
             {
-                return $rand_generator(4, $keys);
+                return $rand_generator(6, $keys);
             })->implode('-');
         } while (self::whereCode($code)->count() > 0);
 
@@ -76,26 +77,14 @@ class Voucher extends Model
         return floatval(min($max_amount, $funds_available));
     }
 
-    public function makeTransaction($amount)
+    public function logTransaction($amount)
     {
-        $bunq_service = new BunqService('e5df2765ea68eab80f51f37e08078f39467d9fd86ce3b0e6317b0d14ae2dddfc');
+        $transaction = new VoucherTransaction(compact('amount'));
+        $transaction = $this->transactions()->save($transaction);
 
-        $response = $bunq_service->getMonetaryAccounts();
+        dispatch(new BunqProcessTransactionJob($transaction));
 
-        $monetaryAccountId = $response->{'Response'}[0]->{'MonetaryAccountBank'}->{'id'};
-
-        $response = $bunq_service->makePayment($monetaryAccountId, [
-            "value" => $amount,
-            "currency" => "EUR",
-        ], [
-            "type"  => "IBAN",
-            "value" => $this->shoper->iban,
-            "name"  => $this->shoper->name,
-        ]);
-
-        $payment_id = $response->{'Response'}[0]->{'Id'}->{'id'};
-
-        return !!$this->transactions()->save(
-            new VoucherTransaction(compact('amount', 'payment_id')));
+        return !!$transaction;
     }
+
 }

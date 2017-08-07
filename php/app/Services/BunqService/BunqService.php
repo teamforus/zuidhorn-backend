@@ -5,8 +5,9 @@ use App\Services\BunqService\BunqServiceBase;
 
 class BunqService extends BunqServiceBase 
 {
-    function __construct($api_key) { 
-        parent::__construct($api_key);
+    function __construct($api_key = FALSE) 
+    {
+        parent::__construct($api_key ? $api_key : env('BUNQ_KEY'));
     }
     
     public function getMonetaryAccounts()

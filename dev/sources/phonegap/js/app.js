@@ -54,7 +54,7 @@ var qr_scanner_service = new QrScannerService({
     showTorchButton: true,
     torchOn: false,
     saveHistory: false,
-    prompt: "Place a barcode inside the scan area",
+    prompt: "Plaats een QR-code in het vierkant",
     resultDisplayDuration: 100,
     formats: "QR_CODE",
     orientation: "portrait",
@@ -181,7 +181,7 @@ myApp.onPageInit('scan-qr-code', function(page) {
 
             successResolver(data.response);
         }, function(response) {
-            failResolver('Server response error.');
+            failResolver('De QR-code is niet herkend.');
         });
     };
 

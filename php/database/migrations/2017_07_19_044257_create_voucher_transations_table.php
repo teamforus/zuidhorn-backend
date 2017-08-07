@@ -17,7 +17,8 @@ class CreateVoucherTransationsTable extends Migration
             $table->increments('id');
             $table->integer('voucher_id')->unsigned();
             $table->float('amount');
-            $table->integer('payment_id')->unsigned();
+            $table->integer('payment_id')->unsigned()->nullable();
+            $table->string('status')->default('pending');
             $table->timestamps();
 
             $table->foreign('voucher_id')

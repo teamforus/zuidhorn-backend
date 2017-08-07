@@ -41,7 +41,7 @@ class VoucherController extends Controller
 
         $amount = $request->input('full_amount') ? $max_amount : $request->input('amount');
 
-        $success = $voucher->makeTransaction($amount);
+        $success = $voucher->logTransaction($amount);
 
         return compact('success', 'response');
     }

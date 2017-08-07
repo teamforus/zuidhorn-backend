@@ -3,6 +3,7 @@
 .list-block {
     margin: 32px 0;
     font-size: 16px;
+    background-color: #fff;
     ul {
         list-style: none;
         padding: 0;
@@ -83,8 +84,8 @@
         position: relative;
         .hairline(bottom, @listBlockBorderColor);
         width: 100%;
-        padding-top: 8px;
-        padding-bottom: 8px;
+        padding-top: 16px;
+        padding-bottom: 16px;
         min-height: 48px;
         box-sizing:border-box;
         -webkit-box-flex:1;
@@ -95,14 +96,25 @@
         .align-items(center);
         .align-self(stretch);
     }
+
     .item-title {
         min-width: 0;
         .flex-shrink(1);
-        white-space: nowrap;
         position: relative;
-        overflow: hidden;
-        text-overflow: ellipsis;
         max-width: 100%;
+        width: 50% !important;
+        font-size: 14px;
+        padding-right: 10px;
+    }
+
+    .item-input {
+        font-size: 15px;
+        margin-bottom: 0 !important;
+        width: 50%;
+
+        input {
+            font-size: 14px !important;
+        }
     }
 
     .item-after {

@@ -4,7 +4,7 @@
             .left
                 a(href="./index.html").back.link.icon-only
                     i.icon.icon-back
-            .center FORUS
+            .center Succesvolle scan
             .right
                 a(href="./pages/info.html").link.icon-only
                     i.f7-icons info
@@ -13,33 +13,37 @@
             .block-voucher-code
                 .voucher-code-label
                     em.mdi.mdi-check-circle
-                    | Voucher value
+                    | Huidige waarde van de voucher
                 .voucher-value-container
                     .voucher-value €{{toFixed voucher.max_amount}}
                     i.f7-icons info
-        div(voucher-form="")
-            .content-block-title
-                | Please enter the purchase price, up to 
+        .content-block(style='margin: 0 0 -20px;')
+            p(style='margin: 0; color: #777;')
+                | Vul het bedrag in dat wordt besteed. 
+                br
+                | Maximaal 
                 strong €{{toFixed voucher.max_amount}}
                 | .
-            div(form-root=""): div(f-form="")
-                form#my-form.list-block
-                    ul
-                        li
-                            .item-content
-                                .item-inner
-                                    .item-title.label All funds
-                                    .item-input
-                                        label.label-switch
-                                            input( type='checkbox' name="full_amount" value="1" data-all-founds)
-                                            .checkbox
-                        li#founds-value
-                            .item-content
-                                .item-inner
-                                    .item-title.label Funds amount 
-                                    .item-input
-                                        input(type='number' name='amount' placeholder='Purchase price...')
+        div(voucher-form='')
+            div(form-root='')
+                div(f-form='')
+                    form#my-form.list-block
+                        ul
+                            li
+                                .item-content
+                                    .item-inner
+                                        .item-title.label Gebruik de totale waarde van de voucher
+                                        .item-input
+                                            label.label-switch
+                                                input( type='checkbox' name="full_amount" value="1" data-all-founds)
+                                                .checkbox
+                            li#founds-value
+                                .item-content
+                                    .item-inner
+                                        .item-title.label Bedrag dat wordt besteed 
+                                        .item-input
+                                            input(type='number' name='amount' placeholder='Bedrag…')
 
-                .content-block
-                    p(validation-errors) 
-                    a(href="#" submit-btn='').button.button-big.button-fill.button-raised.color-deeppink Confirm
+                    .content-block
+                        p(validation-errors) 
+                        a(href="#" submit-btn='').button.button-big.button-fill.button-raised.color-deeppink Bevestig
