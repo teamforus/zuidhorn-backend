@@ -3,15 +3,16 @@
     <tHead>
         <tr>
             <th>Id</th>
-            <th>Code</th>
-            <th>Citizen</th>
-            <th>Buget</th>
-            <th>Funds available</th>
-            <th>Category</th>
-            <th>ShopKeeper</th>
-            <th>Max. amount</th>
+            <th>Name</th>
+            <th>Kvk-number</th>
+            <th>IBAN</th>
+            <th>E-mail</th>
+            <th>Phone</th>
             <th>Status</th>
+            <th>Categories</th>
+            @if(!isset($no_actions) || !$no_actions)
             <th class="text-right">Actions</th>
+            @endif
         </tr>
     </tHead>
     <tBody>
@@ -19,27 +20,32 @@
         <tr>
             <td>
                 <strong>
-                    {{ Html::link($row->urlPanelView(), '#' . str_pad($row->id, 5, 0, STR_PAD_LEFT), 
-                    ['class' => 'text-primary']) }}
+                    {{ Html::link($row->urlPanelView(), '#' . str_pad($row->id, 5, 0, STR_PAD_LEFT), ['class' => 'text-primary']) }}
                 </strong>
             </td>
-            <td>{{ Html::link($row->urlPanelView(), $row->code, ['class' => 'text-primary']) }}</td>
             <td>
-                {{ Html::link($row->user_buget->user->urlPanelView(), $row->user_buget->user->first_name . ' ' . $row->user_buget->user->last_name, 
-                ['class' => 'text-primary']) }}
-            </td>
-            <td>{{ Html::link($row->user_buget->buget->urlPanelView(), $row->user_buget->buget->name, ['class' => 'text-primary']) }}</td>
-            <td>€{{ number_format($row->getAvailableFunds(), 2) }}</td>
-            <td>{{ Html::link($row->category->urlPanelView(), $row->category->name, ['class' => 'text-primary']) }}</td>
-            <td>{{ Html::link($row->shop_keeper->urlPanelView(), $row->shop_keeper->name, ['class' => 'text-primary']) }}</td>
-            <td>
-                @if(!is_null($row->max_amount))
-                €{{ number_format($row->max_amount, 2) }}
+                @can('view', $row)
+                <strong>
+                    {{ Html::link($row->urlPanelView(), $row->name, ['class' => 'text-primary']) }}
+                </strong>
                 @else
-                <span class="text-muted">Not restricted</span>
+                {{ $row->name }}
+                @endcan
+            </td>
+            <td>{{ $row->kvk_number }}</td>
+            <td>{{ $row->iban }}</td>
+            <td>{{ $row->user->email }}</td>
+            <td>{{ $row->phone_number }}</td>
+            <td><strong>{{ ucfirst(strtolower($row->state)) }}</strong></td>
+            <td>
+                @if($row->categories->count())
+                {{ str_limit($row->categories->pluck('name')->implode(','), 32) }}
+                @else
+                <strong class="text-muted">N/A</strong>
                 @endif
             </td>
-            <td><strong>{{ $row->status }}</strong></td>
+
+            @if(!isset($no_actions) || !$no_actions)
             <td class="text-right">
                 <div class="btn-group">
                     @can('view', $row)
@@ -58,6 +64,7 @@
                     @endcan
                 </div>
             </td>
+            @endif
         </tr>
         @endforeach
     </tBody>

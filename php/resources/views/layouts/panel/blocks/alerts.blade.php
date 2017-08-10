@@ -1,5 +1,5 @@
 @if (session()->has('alert_default'))
-<div class="alert alert-md alert-default">{{ session()->get('alert_default') }}</div>
+<div class="alert alert-md alert-success">{{ session()->get('alert_default') }}</div>
 @endif
 
 @if (session()->has('alert_danger'))

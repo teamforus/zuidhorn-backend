@@ -32,8 +32,8 @@ class PermissionsTableSeeder extends DatabaseSeeder
         
         Permission::create([
             'id'    => 4,
-            'key'   => 'manage_shopers',
-            'name'  => 'Manage shopers',
+            'key'   => 'manage_shop-keepers',
+            'name'  => 'Manage Shop Keepers',
             ]);
 
         Permission::create([

@@ -16,7 +16,10 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\VoucherTransaction::class => \App\Policies\VoucherTransactionPolicy::class,
         \App\Models\Category::class => \App\Policies\CategoryPolicy::class,
         \App\Models\Voucher::class => \App\Policies\VoucherPolicy::class,
+        \App\Models\ShopKeeper::class => \App\Policies\ShopKeeperPolicy::class,
+        \App\Models\ShopKeeperCategory::class => \App\Policies\ShopKeeperCategoryPolicy::class,
         \App\Models\User::class => \App\Policies\UserPolicy::class,
+        \App\Models\Buget::class => \App\Policies\BugetPolicy::class,
     ];
 
     /**
@@ -40,8 +43,8 @@ class AuthServiceProvider extends ServiceProvider
             return $user->permissions()->where('key', 'manage_citizens')->count();
         });
 
-        Gate::define('manage_shopers', function ($user) {
-            return $user->permissions()->where('key', 'manage_shopers')->count();
+        Gate::define('manage_shop-keepers', function ($user) {
+            return $user->permissions()->where('key', 'manage_shop-keepers')->count();
         });
 
         Gate::define('manage_bugets', function ($user) {

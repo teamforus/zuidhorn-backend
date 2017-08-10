@@ -20,8 +20,8 @@ class RolesTableSeeder extends DatabaseSeeder
 
         Role::create([
             'id' => 2,
-            'key' => 'shoper',
-            'name' => 'Shoper',
+            'key' => 'shop-keeper',
+            'name' => 'Shop Keeper',
             ]);
 
         Role::create([

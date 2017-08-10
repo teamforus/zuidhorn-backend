@@ -16,7 +16,7 @@ class CreateBugetsTable extends Migration
         Schema::create('bugets', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->float('amount');
+            $table->float('amount_per_child');
             $table->timestamps();
         });
     }

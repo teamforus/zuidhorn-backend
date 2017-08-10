@@ -29,6 +29,9 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::model('category', \App\Models\Category::class);
         Route::model('voucher', \App\Models\Voucher::class);
+        Route::model('shopKeeper', \App\Models\ShopKeeper::class);
+        Route::model('shopKeeperCategory', \App\Models\ShopKeeperCategory::class);
+        
         Route::model('voucher_transaction', \App\Models\VoucherTransaction::class);
         Route::model('user', \App\Models\User::class);
 

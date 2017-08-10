@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-    'first_name', 'last_name', 'email', 'password', 'iban',
+    'first_name', 'last_name', 'email', 'password',
     ];
 
     /**
@@ -94,5 +94,10 @@ class User extends Authenticatable
 
             return $role->users()->save(new User($row));
         });
+    }
+
+    public function unlink()
+    {
+        return $this->delete();
     }
 }

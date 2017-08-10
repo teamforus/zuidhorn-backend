@@ -8,7 +8,7 @@ class Buget extends Model
 {
     use Traits\Urls\BugetUrlsTrait;
 
-    protected $fillable = ['name', 'amount'];
+    protected $fillable = ['name', 'amount_per_child'];
 
     public function users()
     {
@@ -22,5 +22,10 @@ class Buget extends Model
         return $this->belongsToMany(
             'App\Models\Category', 
             'buget_categories');
+    }
+
+    public function unlink()
+    {
+        return $this->delete();
     }
 }

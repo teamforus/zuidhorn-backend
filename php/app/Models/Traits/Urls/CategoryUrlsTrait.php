@@ -9,16 +9,16 @@ trait CategoryUrlsTrait
 {
     public function urlPanelView()
     {
-        return url('panel/categories/view/' . $this->id);
+        return url('panel/categories/' . $this->id);
     }
 
     public function urlPanelEdit()
     {
-        return url('panel/categories/edit/' . $this->id);
+        return url('panel/categories/' . $this->id . '/edit');
     }
 
     public function urlPanelDelete()
     {
-        return url('panel/categories/delete/' . $this->id);
+        return url('panel/categories/' . $this->id . '/destroy');
     }
 }

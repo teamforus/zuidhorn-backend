@@ -25,17 +25,6 @@ Route::group(['prefix' => 'panel', 'middleware' => 'auth'], function() {
     Route::get('/dashboard', 'Panel\DashboardController@getIndex');
     Route::get('/csv-parser', 'Panel\UsersController@getCsvParser');
 
-
-    Route::get('/categories', 'Panel\CategoryController@getIndex');
-    Route::get('/categories/edit/{category?}', 'Panel\CategoryController@getEdit');
-    Route::get('/categories/create', 'Panel\CategoryController@getCreate');
-    Route::get('/categories/view/{category}', 'Panel\CategoryController@getView');
-    Route::get('/categories/delete/{category}', 'Panel\CategoryController@getDelete');
-
-    Route::put('/categories/edit/{category}', 'Panel\CategoryController@putEdit');
-    Route::put('/categories/create', 'Panel\CategoryController@putCreate');
-
-
     Route::get('/vouchers', 'Panel\VoucherController@getList');
     Route::get('/vouchers/view/{voucher}', 'Panel\VoucherController@getView');
 
@@ -44,8 +33,18 @@ Route::group(['prefix' => 'panel', 'middleware' => 'auth'], function() {
     Route::get('/citizens', 'Panel\UserController@getIndexCitizens');
     Route::get('/citizens/view/{user}', 'Panel\UserController@getViewCitizen');
 
-    Route::get('/shopers', 'Panel\ShopersController@getList');
-    Route::get('/bugets', 'Panel\BugetsController@getList');
+    Route::resource('/categories', 'Panel\CategoryController');
+    Route::get('/categories/{category}/destroy', 'Panel\CategoryController@destroy');
+
+    Route::resource('/shop-keepers', 'Panel\ShopKeeperController');
+    Route::get('/shop-keepers/{shopKeeper}/destroy', 'Panel\ShopKeeperController@destroy');
+
+    Route::resource('/shop-keeper-categories', 'Panel\ShopKeeperCategoryController');
+    Route::get('/shop-keeper-categories/{shopKeeperCategory}/destroy', 'Panel\ShopKeeperCategoryController@destroy');
+
+    Route::resource('/bugets', 'Panel\BugetController');
+    Route::get('/bugets/{buget}/destroy', 'Panel\BugetController@destroy');
+
     Route::get('/users', 'Panel\UsersController@getAdminsList');
     Route::get('/permissions', 'Panel\UsersController@getPermissions');
 });

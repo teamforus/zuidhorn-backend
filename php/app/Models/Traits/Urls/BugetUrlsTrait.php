@@ -9,16 +9,16 @@ trait BugetUrlsTrait
 {
     public function urlPanelView()
     {
-        return url('panel/bugets/view/' . $this->id);
+        return url('panel/bugets/' . $this->id);
     }
 
     public function urlPanelEdit()
     {
-        return url('panel/bugets/edit/' . $this->id);
+        return url('panel/bugets/' . $this->id . '/edit');
     }
 
     public function urlPanelDelete()
     {
-        return url('panel/bugets/delete/' . $this->id);
+        return url('panel/bugets/' . $this->id . '/destroy');
     }
 }

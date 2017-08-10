@@ -50,8 +50,8 @@ QrScannerService.prototype.scanVoucher = function(success, fail) {
 
 var qr_scanner_service = new QrScannerService({
     preferFrontCamera: false,
-    showFlipCameraButton: true,
-    showTorchButton: true,
+    showFlipCameraButton: false,
+    showTorchButton: false,
     torchOn: false,
     saveHistory: false,
     prompt: "Plaats een QR-code in het vierkant",
@@ -75,13 +75,12 @@ myApp.onPageInit('voucher-info', function(page) {
         voucher: page.query
     }));
 
-    var checkbox_all_funds = $(page.container).find('[data-all-founds]');
-    var form_root = $(page.container).find('[form-root]');
-    var submit_button = form_root.find('[submit-btn]');
-    var errors_root = form_root.find('[validation-errors]');
-
     if (page.query.max_amount <= 0)
         $(page.container).find('[voucher-form]').css('display', 'none');
+
+    var form_root = $(page.container).find('[voucher-form]');
+    var submit_button = form_root.find('[submit-btn]');
+    var errors_root = form_root.find('[validation-errors]');
 
     var pending = false;
 
@@ -108,14 +107,6 @@ myApp.onPageInit('voucher-info', function(page) {
         });
     };
 
-    checkbox_all_funds.unbind('change').bind('change', function(e) {
-        if ($(this).prop('checked')) {
-            $(page.container).find('#founds-value').fadeOut(200);
-        } else {
-            $(page.container).find('#founds-value').fadeIn(200);
-        }
-    });
-
     submit_button.unbind('click').bind('click', function(e) {
         e.preventDefault() & e.stopPropagation();
 
@@ -131,7 +122,7 @@ myApp.onPageInit('voucher-info', function(page) {
             data[$(this).attr('name')] = $(this).val();
         });
 
-        data.full_amount = data.full_amount ? '1' : '0';
+        data.full_amount = '0';
 
         pending = true;
 

@@ -33,11 +33,11 @@ class Category extends Model
             'buget_users');
     }
 
-    public function shopers()
+    public function shop_keepers()
     {
         return $this->belongsToMany(
-            'App\Models\Shoper', 
-            'shoper_categories');
+            'App\Models\ShopKeeper', 
+            'shop_keeper_categories');
     }
 
     public function unlink()

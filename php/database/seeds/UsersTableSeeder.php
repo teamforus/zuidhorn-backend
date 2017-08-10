@@ -23,10 +23,10 @@ class UsersTableSeeder extends DatabaseSeeder
 
         User::create([
             'id'            => 2,
-            'first_name'    => 'Shoper',
+            'first_name'    => 'ShopKeeper',
             'last_name'     => '001',
-            'email'         => 'forus-shoper@weget.nl',
-            'password'      => Hash::make('mvp-shoper-pass'),
+            'email'         => 'forus-shop-keeper@weget.nl',
+            'password'      => Hash::make('mvp-shop-keeper-pass'),
             ]);
 
         User::create([

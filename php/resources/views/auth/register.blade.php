@@ -6,7 +6,7 @@
         <section>
             <ul class="nav nav-tabs nav-justified">
                 <li>{{ Html::link(route('login'), 'Login') }}</li>
-                <li class="active">{{ Html::link(route('register'), 'Shoper registration') }}</li>
+                <li class="active">{{ Html::link(route('register'), 'ShopKeeper registration') }}</li>
             </ul>
             <div class="tab-content tabs-login col-lg-12 col-md-12 col-sm-12 cols-xs-12">
                 <div class="tab-pane fade active in">

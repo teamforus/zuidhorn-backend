@@ -15,30 +15,20 @@
         <tr>
             <td>
                 <strong>
-                    {{ Html::link($row->urlPanelView(), '#' . str_pad($row->id, 5, 0, STR_PAD_LEFT), 
+                    {{ Html::link($row->category->urlPanelView(), '#' . str_pad($row->category->id, 5, 0, STR_PAD_LEFT), 
                     ['class' => 'text-primary']) }}
                 </strong>
             </td>
-            <td>{{ Html::link($row->urlPanelView(), $row->name, ['class' => 'text-primary']) }}</td>
+            <td>{{ Html::link($row->category->urlPanelView(), $row->category->name, ['class' => 'text-primary']) }}</td>
             <td>
-                @if(!$row->parent_id)
+                @if(!$row->category->parent_id)
                 <span class="text-muted">No parent</span>
                 @else 
-                {{ Html::link($row->parent->urlPanelView(), $row->parent->name, ['class' => 'text-primary']) }}
+                {{ Html::link($row->category->parent->urlPanelView(), $row->category->parent->name, ['class' => 'text-primary']) }}
                 @endif
             </td>
-
-            @if(!isset($no_actions) || !$no_actions)
             <td class="text-right">
                 <div class="btn-group">
-                    @can('view', $row)
-                    {{ Html::link($row->urlPanelView(), 'View') }} &nbsp; 
-                    @endcan
-
-                    @can('update', $row)
-                    {{ Html::link($row->urlPanelEdit(), 'Edit') }} &nbsp; 
-                    @endcan
-
                     @can('delete', $row)
                     {{ Html::link($row->urlPanelDelete(), 'Delete', [
                         'confirm-box data-box-title'    => "Are you sure?", 
@@ -47,7 +37,6 @@
                     @endcan
                 </div>
             </td>
-            @endif
         </tr>
         @endforeach
     </tBody>

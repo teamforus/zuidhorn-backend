@@ -42,8 +42,8 @@ class VoucherTransaction extends Model
             "currency" => "EUR",
         ], [
             "type"  => "IBAN",
-            "value" => $this->voucher->shoper->iban,
-            "name"  => $this->voucher->shoper->name,
+            "value" => $this->voucher->shop_keeper->iban,
+            "name"  => $this->voucher->shop_keeper->name,
         ]);
 
         return $response->{'Response'}[0]->{'Id'}->{'id'};

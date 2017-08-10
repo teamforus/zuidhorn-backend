@@ -3,15 +3,12 @@
     <tHead>
         <tr>
             <th>Id</th>
-            <th>Code</th>
-            <th>Citizen</th>
-            <th>Buget</th>
-            <th>Funds available</th>
-            <th>Category</th>
-            <th>ShopKeeper</th>
-            <th>Max. amount</th>
-            <th>Status</th>
+            <th>Name</th>
+            <th>Amount per child</th>
+            
+            @if(!isset($no_actions) || !$no_actions)
             <th class="text-right">Actions</th>
+            @endif
         </tr>
     </tHead>
     <tBody>
@@ -23,23 +20,10 @@
                     ['class' => 'text-primary']) }}
                 </strong>
             </td>
-            <td>{{ Html::link($row->urlPanelView(), $row->code, ['class' => 'text-primary']) }}</td>
-            <td>
-                {{ Html::link($row->user_buget->user->urlPanelView(), $row->user_buget->user->first_name . ' ' . $row->user_buget->user->last_name, 
-                ['class' => 'text-primary']) }}
-            </td>
-            <td>{{ Html::link($row->user_buget->buget->urlPanelView(), $row->user_buget->buget->name, ['class' => 'text-primary']) }}</td>
-            <td>€{{ number_format($row->getAvailableFunds(), 2) }}</td>
-            <td>{{ Html::link($row->category->urlPanelView(), $row->category->name, ['class' => 'text-primary']) }}</td>
-            <td>{{ Html::link($row->shop_keeper->urlPanelView(), $row->shop_keeper->name, ['class' => 'text-primary']) }}</td>
-            <td>
-                @if(!is_null($row->max_amount))
-                €{{ number_format($row->max_amount, 2) }}
-                @else
-                <span class="text-muted">Not restricted</span>
-                @endif
-            </td>
-            <td><strong>{{ $row->status }}</strong></td>
+            <td>{{ Html::link($row->urlPanelView(), $row->name, ['class' => 'text-primary']) }}</td>
+            <td>€{{ number_format($row->amount_per_child, 2) }}</td>
+
+            @if(!isset($no_actions) || !$no_actions)
             <td class="text-right">
                 <div class="btn-group">
                     @can('view', $row)
@@ -58,6 +42,7 @@
                     @endcan
                 </div>
             </td>
+            @endif
         </tr>
         @endforeach
     </tBody>

@@ -33,7 +33,7 @@
                         <select class="form-control">
                           <option value="">Manage Citizens</option>
                           <option value="">Manage Categories</option>
-                          <option value="">Manage Shopers</option>
+                          <option value="">Manage ShopKeepers</option>
                           <option value="">Manage Bugets</option>
                       </select>
                   </div>
@@ -62,7 +62,7 @@
                 <tr>
                     <td><strong>#0001</strong></td>
                     <td>John Doe</td>
-                    <td>Manage Shopers, Manage Citizens, Manage Categories... </td>
+                    <td>Manage ShopKeepers, Manage Citizens, Manage Categories... </td>
                     <td class="text-right">
                         <div class="btn-group">
                             <a class="text-primary" href="#"> <em class="mdi mdi-pencil"></em>Edit</a>&nbsp; &nbsp;
@@ -73,7 +73,7 @@
                 <tr>
                     <td><strong>#0002</strong></td>
                     <td>John Doe</td>
-                    <td>Manage Shopers, Manage Citizens, Manage Categories... </td>
+                    <td>Manage ShopKeepers, Manage Citizens, Manage Categories... </td>
                     <td class="text-right">
                         <div class="btn-group">
                             <a class="text-primary" href="#"> <em class="mdi mdi-pencil"></em>Edit</a>&nbsp; &nbsp;
@@ -84,7 +84,7 @@
                 <tr>
                     <td><strong>#0003</strong></td>
                     <td>John Doe</td>
-                    <td>Manage Shopers, Manage Categories </td>
+                    <td>Manage ShopKeepers, Manage Categories </td>
                     <td class="text-right">
                         <div class="btn-group">
                             <a class="text-primary" href="#"> <em class="mdi mdi-pencil"></em>Edit</a>&nbsp; &nbsp;
@@ -95,7 +95,7 @@
                 <tr>
                     <td><strong>#0004</strong></td>
                     <td>John Doe</td>
-                    <td>Manage Shopers, Manage Categories </td>
+                    <td>Manage ShopKeepers, Manage Categories </td>
                     <td class="text-right">
                         <div class="btn-group">
                             <a class="text-primary" href="#"> <em class="mdi mdi-pencil"></em>Edit</a>&nbsp; &nbsp;
@@ -106,7 +106,7 @@
                 <tr>
                     <td><strong>#0005</strong></td>
                     <td>John Doe</td>
-                    <td>Manage Shopers, Manage Categories </td>
+                    <td>Manage ShopKeepers, Manage Categories </td>
                     <td class="text-right">
                         <div class="btn-group">
                             <a class="text-primary" href="#"> <em class="mdi mdi-pencil"></em>Edit</a>&nbsp; &nbsp;
@@ -117,7 +117,7 @@
                 <tr>
                     <td><strong>#0006</strong></td>
                     <td>John Doe</td>
-                    <td>Manage Shopers, Manage Citizens, Manage Categories... </td>
+                    <td>Manage ShopKeepers, Manage Citizens, Manage Categories... </td>
                     <td class="text-right">
                         <div class="btn-group">
                             <a class="text-primary" href="#"> <em class="mdi mdi-pencil"></em>Edit</a>&nbsp; &nbsp;
@@ -128,7 +128,7 @@
                 <tr>
                     <td><strong>#0007</strong></td>
                     <td>John Doe</td>
-                    <td>Manage Shopers, Manage Citizens, Manage Categories... </td>
+                    <td>Manage ShopKeepers, Manage Citizens, Manage Categories... </td>
                     <td class="text-right">
                         <div class="btn-group">
                             <a class="text-primary" href="#"> <em class="mdi mdi-pencil"></em>Edit</a>&nbsp; &nbsp;
@@ -139,7 +139,7 @@
                 <tr>
                     <td><strong>#0008</strong></td>
                     <td>John Doe</td>
-                    <td>Manage Shopers, Manage Categories </td>
+                    <td>Manage ShopKeepers, Manage Categories </td>
                     <td class="text-right">
                         <div class="btn-group">
                             <a class="text-primary" href="#"> <em class="mdi mdi-pencil"></em>Edit</a>&nbsp; &nbsp;
@@ -150,7 +150,7 @@
                 <tr>
                     <td><strong>#0009</strong></td>
                     <td>John Doe</td>
-                    <td>Manage Shopers, Manage Citizens, Manage Categories... </td>
+                    <td>Manage ShopKeepers, Manage Citizens, Manage Categories... </td>
                     <td class="text-right">
                         <div class="btn-group">
                             <a class="text-primary" href="#"> <em class="mdi mdi-pencil"></em>Edit</a>&nbsp; &nbsp;

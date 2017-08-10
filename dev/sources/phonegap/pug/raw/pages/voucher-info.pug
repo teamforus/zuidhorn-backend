@@ -25,25 +25,15 @@
                 strong €{{toFixed voucher.max_amount}}
                 | .
         div(voucher-form='')
-            div(form-root='')
-                div(f-form='')
-                    form#my-form.list-block
-                        ul
-                            li
-                                .item-content
-                                    .item-inner
-                                        .item-title.label Gebruik de totale waarde van de voucher
-                                        .item-input
-                                            label.label-switch
-                                                input( type='checkbox' name="full_amount" value="1" data-all-founds)
-                                                .checkbox
-                            li#founds-value
-                                .item-content
-                                    .item-inner
-                                        .item-title.label Bedrag dat wordt besteed 
-                                        .item-input
-                                            input(type='number' name='amount' placeholder='Bedrag…')
+            form#my-form.list-block
+                ul
+                    li#founds-value
+                        .item-content
+                            .item-inner
+                                .item-title.label Bedrag dat wordt besteed 
+                                .item-input
+                                    input(type='number' min="0.1"  name='amount' placeholder='Bedrag…')
 
-                    .content-block
-                        p(validation-errors) 
-                        a(href="#" submit-btn='').button.button-big.button-fill.button-raised.color-deeppink Bevestig
+            .content-block
+                p(validation-errors) 
+                a(href="#" submit-btn='').button.button-big.button-fill.button-raised.color-deeppink Bevestig   

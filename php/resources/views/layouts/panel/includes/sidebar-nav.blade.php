@@ -17,15 +17,6 @@
             </a>
         </div>
         @endcan
-        
-        @can('manage_categories')
-        <div class="aside-nav-item">
-            <a class="{{ strpos($view_page, 'categories') === 0 ? 'active' : '' }} aside-nav-link" href="{{ url('/panel/categories') }}">
-                <em class="aside-nav-icon mdi mdi-view-list"></em>
-                Categories
-            </a>
-        </div>
-        @endcan
 
         @can('manage_citizens')
         <div class="aside-nav-item">
@@ -36,20 +27,29 @@
         </div>
         @endcan
 
-        @can('manage_shopers')
-        <div class="aside-nav-item">
-            <a class="{{ strpos($view_page, 'shopers') === 0 ? 'active' : '' }} aside-nav-link" href="{{ url('/panel/shopers') }}">
-                <em class="aside-nav-icon mdi mdi-shopping"></em>
-                Shopers
-            </a>
-        </div>
-        @endcan
-
         @can('manage_bugets')
         <div class="aside-nav-item">
             <a class="{{ strpos($view_page, 'bugets') === 0 ? 'active' : '' }} aside-nav-link" href="{{ url('/panel/bugets') }}">
                 <em class="aside-nav-icon mdi mdi-coins"></em>
                 Bugets
+            </a>
+        </div>
+        @endcan
+
+        @can('manage_shop-keepers')
+        <div class="aside-nav-item">
+            <a class="{{ strpos($view_page, 'shop-keepers') === 0 ? 'active' : '' }} aside-nav-link" href="{{ url('/panel/shop-keepers') }}">
+                <em class="aside-nav-icon mdi mdi-shopping"></em>
+                ShopKeepers
+            </a>
+        </div>
+        @endcan
+        
+        @can('manage_categories')
+        <div class="aside-nav-item">
+            <a class="{{ strpos($view_page, 'categories') === 0 ? 'active' : '' }} aside-nav-link" href="{{ url('/panel/categories') }}">
+                <em class="aside-nav-icon mdi mdi-view-list"></em>
+                Categories
             </a>
         </div>
         @endcan

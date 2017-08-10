@@ -16,7 +16,7 @@ class Voucher extends Model
      * @var array
      */
     protected $fillable = [
-    'code', 'user_buget_id', 'shoper_id', 'max_amount', 'category_id', 
+    'code', 'user_buget_id', 'shop_keeper_id', 'max_amount', 'category_id', 
     'status'
     ];
 
@@ -25,9 +25,9 @@ class Voucher extends Model
         return $this->belongsTo('App\Models\UserBuget');
     }
 
-    public function shoper()
+    public function shop_keeper()
     {
-        return $this->belongsTo('App\Models\Shoper');
+        return $this->belongsTo('App\Models\ShopKeeper');
     }
 
     public function category()

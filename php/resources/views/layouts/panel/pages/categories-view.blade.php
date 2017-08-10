@@ -1,9 +1,17 @@
 @extends("layouts.{$view_layout}.{$view_layout}_layout")
 
 @section('content')
-<h4 class="heading-title">{{ 'View category: ' . $view->name }}</h4>
+<h4 class="heading-title">
+    {{ 'View category: ' . $view->name }}
+    <div class="btn-group pull-right">
+        <a class="btn btn-primary" href="{{ $view->urlPanelEdit() }}">
+            <em class="glyphicon glyphicon-edit"> </em> 
+            Edit
+        </a>
+    </div>
+</h4>
+</h4>
 <hr>
-{{ Form::open(['method' => 'POST', 'class' => 'form']) }}
 <div class="row">
     <div class="col-xs-12">
         <h4>Base details</h4>
@@ -33,6 +41,10 @@
         </p>
         @endif
     </div>
+    <div class="col-md-12">
+        <h4>Shop Keepers</h4>
+        <hr>
+        @include('layouts.panel.blocks.list-shop_keepers', ['rows' => $view->shop_keepers, 'no_actions' => true])
+    </div>
 </div>
-{{ Form::close() }}
 @endsection
