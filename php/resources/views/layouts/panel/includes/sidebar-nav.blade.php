@@ -38,7 +38,7 @@
 
         @can('manage_shop-keepers')
         <div class="aside-nav-item">
-            <a class="{{ strpos($view_page, 'shop-keepers') === 0 ? 'active' : '' }} aside-nav-link" href="{{ url('/panel/shop-keepers') }}">
+            <a class="{{ strpos($view_page, 'shop_keepers') === 0 ? 'active' : '' }} aside-nav-link" href="{{ url('/panel/shop-keepers') }}">
                 <em class="aside-nav-icon mdi mdi-shopping"></em>
                 ShopKeepers
             </a>
@@ -63,6 +63,7 @@
         </div>
         @endcan
 
+        @if(FALSE)
         @can('manage_bugets')
         <div class="aside-nav-item">
             <a class="{{ strpos($view_page, 'users') === 0 ? 'active' : '' }} aside-nav-link" href="{{ url('/panel/users') }}">
@@ -71,6 +72,7 @@
             </a>
         </div>
         @endcan
+        @endif
 
         @can('manage_permissions')
         <div class="aside-nav-item">

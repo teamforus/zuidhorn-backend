@@ -25,8 +25,7 @@
             </td>
             <td>{{ Html::link($row->urlPanelView(), $row->code, ['class' => 'text-primary']) }}</td>
             <td>
-                {{ Html::link($row->user_buget->user->urlPanelView(), $row->user_buget->user->first_name . ' ' . $row->user_buget->user->last_name, 
-                ['class' => 'text-primary']) }}
+                {{ $row->user_buget->user->full_name }}
             </td>
             <td>{{ Html::link($row->user_buget->buget->urlPanelView(), $row->user_buget->buget->name, ['class' => 'text-primary']) }}</td>
             <td>€{{ number_format($row->getAvailableFunds(), 2) }}</td>
