@@ -40,7 +40,7 @@ class Voucher extends Model
         return $this->hasMany('App\Models\VoucherTransaction');
     }
 
-    public static function generateCode()
+    public static function generateCode($cache = false)
     {
         $keys = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -61,7 +61,7 @@ class Voucher extends Model
             {
                 return $rand_generator(6, $keys);
             })->implode('-');
-        } while (self::whereCode($code)->count() > 0);
+        } while (!$cache ? (self::whereCode($code)->count() > 0) : collect($cache)->search($code));
 
         return $code;
     }

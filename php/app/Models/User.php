@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use App\Notifications\MailResetPasswordToken;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -80,20 +81,40 @@ class User extends Authenticatable
     public static function generateCitizens($data)
     {
         $role = Role::where('key', 'citizen')->first();
-        $passwords = self::pluck('password');
+        $passwords = self::pluck('password')->toArray();
 
-        return collect($data)->map(function($row) use ($role, $passwords) {
+        $users = collect($data)->map(function($val) use (&$passwords) {
             do {
                 $random_number = md5(rand(1, 100000000));
-            } while ($passwords->search($random_number) !== false);
+            } while (in_array($random_number, $passwords) !== false);
 
-            $row['email'] = $random_number;
-            $row['password'] = $random_number;
-            $row['first_name'] = $random_number;
-            $row['last_name'] = $random_number;
+            array_push($passwords, $random_number);
 
-            return $role->users()->save(new User($row));
+            $user = [];
+
+            $user['first_name'] = $random_number;
+            $user['last_name']  = $random_number;
+            $user['email']      = $random_number;
+            $user['password']   = $random_number;
+
+            return $user;
         });
+
+        User::insert($users->toArray());
+
+        $old_users = self::get()->keyBy('password');
+
+        $users = $users->map(function($user) use (&$old_users) {
+            if (isset($old_users[$user['password']]))
+                return $old_users[$user['password']];
+        })->filter(function($user) {
+            return $user;
+        });
+
+        $role->users()->attach($users->pluck("id")->toArray());
+
+        return $users;
+
     }
 
     public function unlink()

@@ -32,30 +32,50 @@ class BugetController extends Controller
 
         $amount_per_child = $buget->amount_per_child;
 
-        $vouchers = collect();
+        $vouchers = [];
+        $user_bugets = [];
 
         foreach ($users as $key => $user) {
-            $user_buget = UserBuget::create([
-                'buget_id' => $buget->id,
-                'user_id' => $user->id,
-                'amount' => $data[$key]['count_childs'] * $amount_per_child
-                ]);
-
-            $code = Voucher::generateCode();
-
-            $vouchers[$key] = Voucher::create([
-                'code'              => $code,
-                'user_buget_id'     => $user_buget->id,
-                'shop_keeper_id'    => $shopKeeper->id,
-                'category_id'       => $category->id,
-                'max_amount'        => null,
-                ]);
+            $user_bugets[$key] = [
+            'buget_id' => $buget->id,
+            'user_id' => $user->id,
+            'amount' => $data[$key]['count_childs'] * $amount_per_child
+            ];
         }
+
+        UserBuget::insert($user_bugets);
+
+        $inserted_user_bugets = UserBuget::whereBugetId($buget->id)->doesntHave('vouchers')->get();
+
+        foreach ($inserted_user_bugets as $inserted_user_buget) {
+            foreach ($user_bugets as &$user_buget) {
+                if ($inserted_user_buget->user_id == $user_buget['user_id'])
+                    $user_buget = $inserted_user_buget;
+            }
+        }
+
+        $codes = Voucher::pluck('code');
+
+        foreach ($user_bugets as $key => $user_buget) {
+            $code = Voucher::generateCode($codes);
+
+            $codes->push($code);
+
+            $vouchers[$key] = [
+            'code'              => $code,
+            'user_buget_id'     => $user_buget->id,
+            'shop_keeper_id'    => $shopKeeper->id,
+            'category_id'       => $category->id,
+            'max_amount'        => null,
+            ];
+        }
+
+        Voucher::insert(array_values($vouchers));
 
         foreach ($data as $key => $data_row) {
             $response[$key] = [
             'id' => $key,
-            'code' => $vouchers[$key]->code,
+            'code' => $vouchers[$key]['code'],
             'count_childs' => $data[$key]['count_childs'],
             ];
         }
