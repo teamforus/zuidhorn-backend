@@ -17,6 +17,11 @@ class Buget extends Model
             'buget_users');
     }
 
+    public function buget_categories()
+    {
+        return $this->hasMany('App\Models\BugetCategory');
+    }
+
     public function categories()
     {
         return $this->belongsToMany(

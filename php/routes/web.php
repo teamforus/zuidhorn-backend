@@ -46,6 +46,9 @@ Route::group(['prefix' => 'panel', 'middleware' => 'auth'], function() {
     Route::resource('/bugets', 'Panel\BugetController');
     Route::get('/bugets/{buget}/destroy', 'Panel\BugetController@destroy');
 
+    Route::resource('/buget-categories', 'Panel\BugetCategoryController');
+    Route::get('/buget-categories/{bugetCategory}/destroy', 'Panel\BugetCategoryController@destroy');
+
     Route::get('/users', 'Panel\UsersController@getAdminsList');
     Route::get('/permissions', 'Panel\UsersController@getPermissions');
 });

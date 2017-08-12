@@ -20,6 +20,7 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\ShopKeeperCategory::class => \App\Policies\ShopKeeperCategoryPolicy::class,
         \App\Models\User::class => \App\Policies\UserPolicy::class,
         \App\Models\Buget::class => \App\Policies\BugetPolicy::class,
+        \App\Models\BugetCategory::class => \App\Policies\BugetCategoryPolicy::class,
     ];
 
     /**

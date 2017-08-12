@@ -46,5 +46,10 @@
         <hr>
         @include('layouts.panel.blocks.list-shop_keepers', ['rows' => $view->shop_keepers, 'no_actions' => true])
     </div>
+    <div class="col-md-12">
+        <h4>Bugets</h4>
+        <hr>
+        @include('layouts.panel.blocks.list-bugets', ['rows' => $view->bugets, 'no_actions' => true])
+    </div>
 </div>
 @endsection

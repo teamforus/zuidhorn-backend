@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Http\Requests\BugetCategoryStoreRequest;
+
+use App\Models\Buget;
 use App\Models\Category;
-use App\Models\ShopKeeper;
-use App\Models\ShopKeeperCategory;
-
-use App\Http\Requests\ShopKeeperCategoryStoreRequest;
-
+use App\Models\BugetCategory;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class ShopKeeperCategoryController extends Controller
+class BugetCategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -36,17 +35,17 @@ class ShopKeeperCategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\ShopKeeperCategoryStoreRequest  $request
+     * @param  \App\Http\Requests\BugetCategoryStoreRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ShopKeeperCategoryStoreRequest $request)
+    public function store(BugetCategoryStoreRequest $request)
     {
-        $this->authorize('create', ShopKeeperCategory::class);
+        $this->authorize('create', BugetCategory::class);
 
-        $shopKeeper = ShopKeeper::find($request->input('shop_keeper_id'));
+        $buget = Buget::find($request->input('buget_id'));
         $category = Category::find($request->input('category_id'));
         
-        if ($shopKeeper->categories()->attach($category->id)) {
+        if ($buget->categories()->attach($category->id)) {
             session()->flash('alert_default', 'New category attached!');
         }
 
@@ -56,10 +55,10 @@ class ShopKeeperCategoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ShopKeeperCategory  $shopKeeperCategory
+     * @param  \App\Models\BugetCategory  $bugetCategory
      * @return \Illuminate\Http\Response
      */
-    public function show(ShopKeeperCategory $shopKeeperCategory)
+    public function show(BugetCategory $bugetCategory)
     {
         //
     }
@@ -67,10 +66,10 @@ class ShopKeeperCategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\ShopKeeperCategory  $shopKeeperCategory
+     * @param  \App\Models\BugetCategory  $bugetCategory
      * @return \Illuminate\Http\Response
      */
-    public function edit(ShopKeeperCategory $shopKeeperCategory)
+    public function edit(BugetCategory $bugetCategory)
     {
         //
     }
@@ -79,10 +78,10 @@ class ShopKeeperCategoryController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ShopKeeperCategory  $shopKeeperCategory
+     * @param  \App\Models\BugetCategory  $bugetCategory
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ShopKeeperCategory $shopKeeperCategory)
+    public function update(Request $request, BugetCategory $bugetCategory)
     {
         //
     }
@@ -90,15 +89,15 @@ class ShopKeeperCategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ShopKeeperCategory  $shopKeeperCategory
+     * @param  \App\Models\BugetCategory  $bugetCategory
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ShopKeeperCategory $shopKeeperCategory)
+    public function destroy(BugetCategory $bugetCategory)
     {
-        $this->authorize('delete', $shopKeeperCategory);
+        $this->authorize('delete', $bugetCategory);
         
-        if ($shopKeeperCategory->unlink())
-            session()->flash('alert_default', 'Shop Keeper Category deleted!');
+        if ($bugetCategory->unlink())
+            session()->flash('alert_default', 'Buget Category deleted!');
 
         return redirect()->back();
     }
