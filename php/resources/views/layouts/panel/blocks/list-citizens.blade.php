@@ -1,5 +1,5 @@
 @if($rows->count() > 0)
-<table class="table table-striped">
+<table class="table table-striped table-align-middle">
     <tHead>
         <tr>
             <th>Id</th>

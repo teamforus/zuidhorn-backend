@@ -21,4 +21,14 @@ trait ShopKeeperUrlsTrait
     {
         return url('panel/shop-keepers/' . $this->id . '/destroy');
     }
+
+    public function urlPanelValidateStatus()
+    {
+        return $this->urlPanelView() . "#shop_keeper-categories";
+    }
+
+    public function urlPanelStateApprove()
+    {
+        return url('panel/shop-keepers/' . $this->id . '/state/approve');
+    }
 }

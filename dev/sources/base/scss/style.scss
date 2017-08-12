@@ -200,3 +200,9 @@ body {
         }
     }
 }
+
+.table.table-align-middle {
+    tbody>tr>td, thead>tr>th {
+        vertical-align: middle;
+    }
+}

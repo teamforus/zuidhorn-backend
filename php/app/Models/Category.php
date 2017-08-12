@@ -33,13 +33,6 @@ class Category extends Model
             'buget_users');
     }
 
-    public function shop_keepers()
-    {
-        return $this->belongsToMany(
-            'App\Models\ShopKeeper', 
-            'shop_keeper_categories');
-    }
-
     public function unlink()
     {
         $this->childs->each(function($child) {

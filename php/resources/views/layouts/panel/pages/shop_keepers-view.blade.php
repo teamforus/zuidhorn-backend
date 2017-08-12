@@ -11,6 +11,7 @@
     </div>
 </h4>
 <hr>
+@include('layouts.panel.blocks.alerts')
 <div class="row">
     <div class="col-xs-12">
         <h4>User details</h4>
@@ -36,12 +37,15 @@
             <br>
             <strong>Bussines address:</strong> {{ $view->bussines_address }}
             <br>
-            <strong>Status:</strong> <strong>{{ ucfirst(strtolower($view->state)) }}</strong>
+            <strong>Status:</strong>
+            <strong class="{{ @["declined" => "text-danger", "approved" => "text-success"][strtolower($view->state)] }}">
+                {{ ucfirst(strtolower($view->state)) }}
+            </strong>
         </p>
         <br>
     </div>
 </div>
-<div class="row">
+<div class="row" id="shop_keeper-categories">
     <div class="col-md-12">
         <h4>Shop categories</h4>
         <hr>
@@ -74,4 +78,29 @@
         @include('layouts.panel.blocks.list-shop_keeper_categories', ['rows' => $view->shop_keeper_categories])
     </div>
 </div>
+@if(($view->state != 'approved') && ($view->shop_keeper_categories->count() == 0))
+<div class="row">
+    <div class="col-md-12">
+        <br>
+        <div class="alert alert-default">Shop Keeper should have at least one category selected, in order to be approve.</div>
+        <br>
+    </div>
+</div>
+@elseif($view->state != 'approved')
+<div class="row" id="shop_keeper-categories">
+    <div class="col-md-12">
+        <h4>Approve this Shop Keeper</h4>
+        <hr>
+        {{ Form::open(['class' => 'form', 'method' => 'PUT', 'url' => $view->urlPanelStateApprove()]) }}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    {{ Form::submit('Approve', ['class' => 'btn btn-primary']) }}
+                </div>
+            </div>
+        </div>
+        {{ Form::close() }}
+    </div>
+</div>
+@endif
 @endsection

@@ -1,15 +1,14 @@
 @if($rows->count() > 0)
-<table class="table table-striped">
+<table class="table table-striped table-align-middle">
     <tHead>
         <tr>
             <th>Id</th>
             <th>Name</th>
             <th>Kvk-number</th>
             <th>IBAN</th>
-            <th>E-mail</th>
-            <th>Phone</th>
-            <th>Status</th>
+            <th>E-mail/Phone</th>
             <th>Categories</th>
+            <th>Status</th>
             @if(!isset($no_actions) || !$no_actions)
             <th class="text-right">Actions</th>
             @endif
@@ -34,15 +33,22 @@
             </td>
             <td>{{ $row->kvk_number }}</td>
             <td>{{ $row->iban }}</td>
-            <td>{{ $row->user->email }}</td>
-            <td>{{ $row->phone_number }}</td>
-            <td><strong>{{ ucfirst(strtolower($row->state)) }}</strong></td>
+            <td>{{ $row->user->email }}<br>{{ $row->phone_number }}</td>
             <td>
                 @if($row->categories->count())
                 {{ str_limit($row->categories->pluck('name')->implode(','), 32) }}
                 @else
                 <strong class="text-muted">N/A</strong>
                 @endif
+            </td>
+            <td>
+                <strong class="{{ @["declined" => "text-danger", "approved" => "text-success"][strtolower($row->state)] }}">
+                    @if(strtolower($row->state) != 'pending')
+                    {{ ucfirst(strtolower($row->state)) }}
+                    @else
+                    <a href="{{ $row->urlPanelValidateStatus() }}" class="btn btn-default">Validate</a>
+                    @endif
+                </strong>
             </td>
 
             @if(!isset($no_actions) || !$no_actions)

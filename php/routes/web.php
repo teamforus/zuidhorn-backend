@@ -38,6 +38,7 @@ Route::group(['prefix' => 'panel', 'middleware' => 'auth'], function() {
 
     Route::resource('/shop-keepers', 'Panel\ShopKeeperController');
     Route::get('/shop-keepers/{shopKeeper}/destroy', 'Panel\ShopKeeperController@destroy');
+    Route::put('/shop-keepers/{shopKeeper}/state/approve', 'Panel\ShopKeeperController@stateApprove');
 
     Route::resource('/shop-keeper-categories', 'Panel\ShopKeeperCategoryController');
     Route::get('/shop-keeper-categories/{shopKeeperCategory}/destroy', 'Panel\ShopKeeperCategoryController@destroy');

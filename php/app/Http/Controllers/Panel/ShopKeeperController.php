@@ -159,4 +159,19 @@ class ShopKeeperController extends Controller
 
         return redirect()->back();
     }
+
+
+    /**
+     * Set ShopKeeper state to "approved"
+     *
+     * @param  \App\Models\ShopKeeper  $shopKeeper
+     * @return \Illuminate\Http\Response
+     */
+    public function stateApprove(ShopKeeper $shopKeeper)
+    {
+        if ($shopKeeper->update(['state' => 'approved']))
+            session()->flash('alert_default', 'Shop Keeper has been approved!');
+
+        return redirect()->back();
+    }
 }

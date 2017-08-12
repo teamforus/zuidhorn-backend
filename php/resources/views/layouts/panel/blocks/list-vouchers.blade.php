@@ -1,5 +1,5 @@
 @if($rows->count() > 0)
-<table class="table table-striped">
+<table class="table table-striped table-align-middle">
     <tHead>
         <tr>
             <th>Id</th>
@@ -7,8 +7,6 @@
             <th>Citizen</th>
             <th>Buget</th>
             <th>Funds available</th>
-            <th>Category</th>
-            <th>ShopKeeper</th>
             <th>Max. amount</th>
             <th>Status</th>
             <th class="text-right">Actions</th>
@@ -30,8 +28,6 @@
             </td>
             <td>{{ Html::link($row->user_buget->buget->urlPanelView(), $row->user_buget->buget->name, ['class' => 'text-primary']) }}</td>
             <td>€{{ number_format($row->getAvailableFunds(), 2) }}</td>
-            <td>{{ Html::link($row->category->urlPanelView(), $row->category->name, ['class' => 'text-primary']) }}</td>
-            <td>{{ Html::link($row->shop_keeper->urlPanelView(), $row->shop_keeper->name, ['class' => 'text-primary']) }}</td>
             <td>
                 @if(!is_null($row->max_amount))
                 €{{ number_format($row->max_amount, 2) }}

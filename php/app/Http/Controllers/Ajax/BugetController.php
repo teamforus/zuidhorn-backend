@@ -22,9 +22,6 @@ class BugetController extends Controller
         $data = collect($req->input('data'));
 
         $buget = Buget::where('id', 1)->first();
-        $shopKeeper = ShopKeeper::where('id', 1)->first();
-        $category = Category::where('id', 1)->first();
-
         $users = User::generateCitizens($data);
 
         if (($sum_childs = $data->sum('count_childs')) == 0)
@@ -64,8 +61,6 @@ class BugetController extends Controller
             $vouchers[$key] = [
             'code'              => $code,
             'user_buget_id'     => $user_buget->id,
-            'shop_keeper_id'    => $shopKeeper->id,
-            'category_id'       => $category->id,
             'max_amount'        => null,
             ];
         }
