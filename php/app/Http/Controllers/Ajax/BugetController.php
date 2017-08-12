@@ -53,6 +53,8 @@ class BugetController extends Controller
 
         $codes = Voucher::pluck('code');
 
+        $voucher_created_date = date('Y-m-d H:i:s', time());
+
         foreach ($user_bugets as $key => $user_buget) {
             $code = Voucher::generateCode($codes);
 
@@ -62,6 +64,7 @@ class BugetController extends Controller
             'code'              => $code,
             'user_buget_id'     => $user_buget->id,
             'max_amount'        => null,
+            'created_at'        => $voucher_created_date
             ];
         }
 

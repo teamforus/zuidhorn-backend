@@ -85,7 +85,7 @@ class User extends Authenticatable
 
         $users = collect($data)->map(function($val) use (&$passwords) {
             do {
-                $random_number = md5(rand(1, 100000000));
+                $random_number = substr(md5(rand(1, 100000000)), 0, 10);
             } while (in_array($random_number, $passwords) !== false);
 
             array_push($passwords, $random_number);
