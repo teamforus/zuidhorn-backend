@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Category;
 
-class CategoryEditRequest extends FormRequest
+class AuthSignUpRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +23,11 @@ class CategoryEditRequest extends FormRequest
      */
     public function rules()
     {
-        $allowed_parents = array_keys(Category::hierarchicalSelectOptions());
-
         return [
-        'name'      => 'required|between:2,300',
-        'parent_id' => 'in:' . collect($allowed_parents)->implode(',')
+            'kvk_number'    => 'required',
+            'iban'          => 'required',
+            'email'         => 'required|string|email|max:255|unique:users',
+            'password'      => 'required|string|min:6',
         ];
     }
 }

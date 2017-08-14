@@ -59,13 +59,4 @@ Route::group(['prefix' => 'ajax', 'middleware' => 'auth'], function() {
     Route::put('/buget/submit-data', 'Ajax\BugetController@putSubmitData');
 });
 
-Route::group(['prefix' => 'app', 'middleware' => 'cors'], function() {
-    // Route::get('/vouchers/{voucher_code}', 'App\VoucherController@getVoucherByCode');
-
-    Route::resource('voucher', 'App\VoucherController', [
-        'parameters' => ['voucher' => 'voucher_code'],
-        "only" => ['show', 'update']
-        ]);
-});
-
 Auth::routes();

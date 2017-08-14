@@ -9,11 +9,17 @@ class VoucherTransaction extends Model
 {
     use Traits\Urls\VoucherTransactionUrlsTrait;
     
-    protected $fillable = ['voucher_id', 'amount', 'payment_id', 'status'];
+    protected $fillable = [
+    'voucher_id', 'amount', 'shop_keeper_id', 'payment_id', 'status'];
 
     public function voucher()
     {
         return $this->belongsTo('App\Models\Voucher');
+    }
+
+    public function shop_keeper()
+    {
+        return $this->belongsTo('App\Models\ShopKeeper');
     }
 
     public function transactionDetails()
@@ -42,8 +48,8 @@ class VoucherTransaction extends Model
             "currency" => "EUR",
         ], [
             "type"  => "IBAN",
-            "value" => $this->voucher->shop_keeper->iban,
-            "name"  => $this->voucher->shop_keeper->name,
+            "value" => $this->shop_keeper->iban,
+            "name"  => $this->shop_keeper->name,
         ]);
 
         return $response->{'Response'}[0]->{'Id'}->{'id'};

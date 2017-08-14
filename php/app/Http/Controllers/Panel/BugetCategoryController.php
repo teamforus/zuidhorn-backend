@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Panel;
 
-use App\Http\Requests\BugetCategoryStoreRequest;
+use App\Http\Requests\Panel\BugetCategoryStoreRequest;
 
 use App\Models\Buget;
 use App\Models\Category;

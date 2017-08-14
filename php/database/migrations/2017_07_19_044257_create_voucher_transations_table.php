@@ -16,6 +16,7 @@ class CreateVoucherTransationsTable extends Migration
         Schema::create('voucher_transactions', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('voucher_id')->unsigned();
+            $table->integer('shop_keeper_id')->unsigned();
             $table->float('amount');
             $table->integer('payment_id')->unsigned()->nullable();
             $table->string('status')->default('pending');
@@ -23,6 +24,10 @@ class CreateVoucherTransationsTable extends Migration
 
             $table->foreign('voucher_id')
             ->references('id')->on('vouchers')
+            ->onDelete('cascade');
+
+            $table->foreign('shop_keeper_id')
+            ->references('id')->on('shop_keepers')
             ->onDelete('cascade');
         });
     }

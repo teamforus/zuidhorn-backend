@@ -66,9 +66,10 @@ class Voucher extends Model
         return floatval(min($max_amount, $funds_available));
     }
 
-    public function logTransaction($amount)
+    public function logTransaction($shop_keeper_id, $amount)
     {
-        $transaction = new VoucherTransaction(compact('amount'));
+        $transaction = new VoucherTransaction(compact(
+            'shop_keeper_id', 'amount'));
         $transaction = $this->transactions()->save($transaction);
 
         dispatch(new BunqProcessTransactionJob($transaction));

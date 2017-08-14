@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\App;
 
+use \App\Models\ShopKeeper;
+
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
@@ -13,9 +15,9 @@ class VoucherSubmitRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(Request $request)
     {
-        return true;
+        return ShopKeeper::whereUserId($request->user()->id)->first();
     }
 
     /**

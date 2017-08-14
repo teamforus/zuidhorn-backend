@@ -98,6 +98,29 @@
                 "port": 3000
             }
         },
+        "oauth-testing-html": {
+            "libs": {
+                "jquery": true,
+                "bootstrap_3": true,
+                "angular": true,
+                "angular_2": false,
+                "underscore": true,
+                "underscore.string": false,
+                "mdi": true
+            },
+            "source": "oauth-testing",
+            "paths": {
+                "root": "../oauth-testing-html",
+                "assets_root": "../oauth-testing-html/assets",
+                "clean_paths": [
+                    "../oauth-testing-html"
+                ]
+            },
+            "server": {
+                "path": "/",
+                "port": 3000
+            }
+        },
         "phonegap": {
             "source": "phonegap",
             "libs": {

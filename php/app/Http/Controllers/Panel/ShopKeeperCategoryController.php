@@ -6,7 +6,7 @@ use App\Models\Category;
 use App\Models\ShopKeeper;
 use App\Models\ShopKeeperCategory;
 
-use App\Http\Requests\ShopKeeperCategoryStoreRequest;
+use App\Http\Requests\Panel\ShopKeeperCategoryStoreRequest;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;

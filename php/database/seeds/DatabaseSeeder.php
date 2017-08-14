@@ -24,5 +24,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UserBugetsTableSeeder::class);
         $this->call(VouchersTableSeeder::class);
         $this->call(VoucherTransactionsTableSeeder::class);
+        $this->call(OauthClientsTableSeeder::class);
     }
 }

@@ -13,6 +13,12 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('/shop-keeper/sign-up', 'Api\ShopKeeperController@signUp');
+
+Route::group(['prefix' => '', 'middleware' => 'auth:api'], function() {
+    Route::get('user', 'Api\UserController@curentUser');
+
+    Route::resource('/vouchers', 'Api\VoucherController', [
+        'parameters' => ['vouchers' => 'voucher_code']]);
+    Route::resource('/shop-keepers', 'Api\ShopKeeperController');
 });
