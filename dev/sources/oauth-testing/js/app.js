@@ -17,7 +17,7 @@ oauth2App.config(['$httpProvider', function($httpProvider) {
 }]);
 
 oauth2App.service('AuthService', ['$http', function($http) {
-    var base_url = 'http://forus-mvp.dev.net'
+    var base_url = 'http://localhost:8000'
 
     return new(function() {
         this.signIn = function(values) {
@@ -48,7 +48,7 @@ oauth2App.service('AuthService', ['$http', function($http) {
 }]);
 
 oauth2App.service('VoucherService', ['$http', function($http) {
-    var base_url = 'http://forus-mvp.dev.net'
+    var base_url = 'http://localhost:8000'
 
     return new(function() {
         this.checkCode = function(credentails, code) {
@@ -196,7 +196,7 @@ oauth2App.controller('BaseController', [
                 form.reset();
                 $scope.navigation.loadPanel();
             }, function() {
-                form.errors.email = "Wrong E-mail or Password.";
+                form.errors.email = ["Wrong E-mail or Password."];
             });
         };
 
@@ -217,8 +217,8 @@ oauth2App.controller('BaseController', [
                     $scope.navigation.signInSubmit(false, form);
 
                 form.reset();
-            }, function() {
-                form.errors.email = "Wrong E-mail or Password.";
+            }, function(response) {
+                form.errors = response.data;
             });
         };
 
