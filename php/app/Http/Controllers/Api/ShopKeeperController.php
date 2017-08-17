@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\ShopKeeper;
+use App\Models\ShopKeeperDevice;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -96,6 +97,8 @@ class ShopKeeperController extends Controller
     {
         $role = Role::where('key', 'shop-keeper')->first();
 
+        $device_id = $request->header('Device-Id');
+
         $last_user_id = User::orderBy('id', 'DESC')->first();
         $last_user_id = ($last_user_id ? $last_user_id->id : 0);
         $new_user_id = $last_user_id + 1;
@@ -108,7 +111,7 @@ class ShopKeeperController extends Controller
             'password'      => Hash::make($request->input('password')),
             ]));
         
-        ShopKeeper::create([
+        $shopKeeper = ShopKeeper::create([
             'name'              => 'ShopKeeper #' . $new_user_id,
             'user_id'           => $user->id,
             'iban'              => $request->input('iban'),
@@ -117,6 +120,11 @@ class ShopKeeperController extends Controller
             'phone_number'      => 'N\A',
             'state'             => 'pending',
             ]);
+
+        $shopKeeper->shop_keeper_devices()->save(new ShopKeeperDevice([
+            'device_id' => $device_id,
+            'status'    => 'approved'
+            ]));
 
         return ['success' => true];
     }

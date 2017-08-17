@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\ShopKeeperDevice;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -38,6 +39,10 @@ class RouteServiceProvider extends ServiceProvider
         
         Route::model('voucher_transaction', \App\Models\VoucherTransaction::class);
         Route::model('user', \App\Models\User::class);
+
+        Route::bind('device_approve_token', function ($token) {
+            return \App\Models\ShopKeeperDevice::whereApproveToken($token)->first();
+        });
 
         Route::bind('voucher_code', function ($code) {
             return \App\Models\Voucher::whereCode($code)->first();

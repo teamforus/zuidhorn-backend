@@ -23,7 +23,7 @@ class Cors
 
         $allowed_headers = collect([
             'Content-Type', 'Access-Control-Allow-Headers', 'Authorization', 
-            'X-Requested-With']);
+            'X-Requested-With', 'Device-Id']);
         
         $response = $next($request);
 

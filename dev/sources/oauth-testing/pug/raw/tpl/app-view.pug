@@ -11,21 +11,23 @@ div(ng-show="view == 'welcome'"): .row
         a(href="#", ng-click="navigation.signIn($event)").btn.btn-default Sign In
         | &nbsp;&nbsp;&nbsp;
         a(href="#", ng-click="navigation.signUp($event)").btn.btn-primary Sign Up
+        | &nbsp;&nbsp;&nbsp;
+        a(href="#", ng-click="navigation.loadSettings($event)").btn.btn-danger Settings
 
 div(ng-show="view == 'sign_in'"): .row
     .col-xs-12
         .form-group
             label(for='email') E-mail
             input#email.form-control(name='email', type='email', ng-model="forms.sign_in.values.email")
-            p(ng-show="forms.sign_in.errors.email", ng-repeat="err in forms.sign_in.errors.email", ng-bind="err").text-danger
+            p(ng-show="forms.sign_in.errors.email", ng-repeat="err in forms.sign_in.errors.email track by $index", ng-bind="err").text-danger
         .form-group
             label(for='password') Password
             input#password.form-control(name='password', type='password', ng-model="forms.sign_in.values.password")
-            p(ng-show="forms.sign_in.errors.password", ng-repeat="err in forms.sign_in.errors.password", ng-bind="err").text-danger
+            p(ng-show="forms.sign_in.errors.password", ng-repeat="err in forms.sign_in.errors.password track by $index", ng-bind="err").text-danger
         .form-group.text-center
             a(href="#", ng-click="navigation.signInSubmit($event, forms.sign_in)").btn.btn-primary Submit
             | &nbsp;&nbsp;&nbsp;
-            a(href="#", ng-click="navigation.signInCancel($event)").btn.btn-default Cancel
+            a(href="#", ng-click="navigation.signInCancel($event, forms.sign_in)").btn.btn-default Cancel
 
 div(ng-show="view == 'sign_up'"): .row
     .col-xs-12
@@ -48,7 +50,7 @@ div(ng-show="view == 'sign_up'"): .row
         .form-group.text-center
             a(href="#", ng-click="navigation.signUpSubmit($event, forms.sign_up)").btn.btn-primary Submit
             | &nbsp;&nbsp;&nbsp;
-            a(href="#", ng-click="navigation.signUpSubmit($event)").btn.btn-default Cancel
+            a(href="#", ng-click="navigation.signUpCancel($event, forms.sign_up)").btn.btn-default Cancel
 
 div(ng-show="view == 'panel'"): .row
     .col-xs-12
@@ -92,3 +94,18 @@ div(ng-show="view == 'voucher_success_screen'"): .row
             h1.mdi.mdi-check.text-center.text-primary
             h4 Success!
             p: a(href="#", ng-click="navigation.closeVoucherSuccessScreen($event)").btn.btn-primary Close
+
+div(ng-show="view == 'settings'"): .row
+    .col-xs-12
+        .form-group
+            label(for='device_id') Device ID
+            select(name="device_id" select ng-options="item as item.name for item in deviceIdService.getOptions() track by item.id" ng-model="forms.settings.values.device_id").form-control
+        .form-group.text-center
+            a(href="#", ng-click="navigation.settingsFormSubmit($event, forms.settings)").btn.btn-primary Submit
+            | &nbsp;&nbsp;&nbsp;
+            a(href="#", ng-click="navigation.settingsFormCancel($event)").btn.btn-default Cancel
+
+div(ng-show="view == 'device_pending_screen'"): .row
+    .col-xs-12.text-center
+        p This is first time then you use this device, that's why this device should be approved. Confirmation link is already was sent to your primary address email.
+        p: a(href="#" ng-click="navigation.refresh($e)").btn.btn-primary Refresh 

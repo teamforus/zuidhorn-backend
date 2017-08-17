@@ -116,6 +116,29 @@
                     "../oauth-testing-html"
                 ]
             },
+            "server": false,
+            "tasks": {
+                "settings": {
+                    "less": [],
+                    "js": [{
+                        "src": [
+                            "angular/oauth2App.js",
+                            "angular/controllers/*.js",
+                            "angular/directives/*.js",
+                            "angular/providers/*.js",
+                            "angular/services/*.js",
+                            "angular/filters/*.js",
+                            "app.js"
+                        ],
+                        "dest": "/",
+                        "name": "app.js"
+                    }, {
+                        "path": "/raw",
+                        "src": "raw/**/*.js",
+                        "dest": "/"
+                    }]
+                }
+            },
             "server": {
                 "path": "/",
                 "port": 3000

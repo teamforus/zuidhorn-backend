@@ -80,6 +80,11 @@ class User extends Authenticatable
         return $this->first_name . ' ' . $this->last_name;
     }
 
+    public function hasRole($role)
+    {
+        return $this->roles()->where('key', $role)->count() > 0;
+    }
+
     public static function generateCitizens($data)
     {
         $role = Role::where('key', 'citizen')->first();

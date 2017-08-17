@@ -20,6 +20,14 @@ Route::get('/', function () {
 });
 
 Route::get('/test', 'TestController@getTest');
+Route::get('/device/approve/{device_approve_token}', function(Request $request, $device_approve_token) {
+    if ($device_approve_token->status == 'approved')
+        return 'You device is already approved!';
+    
+    $device_approve_token->update(['status' => 'approved']);
+
+    return "Success!";
+});
 
 Route::group(['prefix' => 'panel', 'middleware' => 'auth'], function() {
     Route::get('/dashboard', 'Panel\DashboardController@getIndex');
