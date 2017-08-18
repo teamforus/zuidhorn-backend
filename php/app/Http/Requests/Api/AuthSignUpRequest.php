@@ -27,7 +27,6 @@ class AuthSignUpRequest extends FormRequest
             'kvk_number'    => 'required',
             'iban'          => 'required',
             'email'         => 'required|string|email|max:255|unique:users',
-            'password'      => 'required|string|min:6',
         ];
     }
 }

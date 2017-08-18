@@ -31,5 +31,14 @@ class OauthClientsTableSeeder extends Seeder
                 'INSERT INTO `oauth_clients` (`' . $fields->implode('`, `') . 
                 '`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', $row);
         }
+
+        $fields = collect(['id', 'client_id', 'created_at', 'updated_at']);
+        $rows = collect([[1, 1, '2017-08-13 18:33:44', '2017-08-13 18:33:44']]);
+
+        foreach ($rows as $key => $row) {
+            DB::insert(
+                'INSERT INTO `oauth_personal_access_clients` (`' . $fields->implode('`, `') . 
+                '`) VALUES (?, ?, ?, ?)', $row);
+        }
     }
 }

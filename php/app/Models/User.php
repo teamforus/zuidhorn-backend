@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
-    use Traits\Urls\UserUrlsTrait;
+    use Traits\GenerateUidsTrait, Traits\Urls\UserUrlsTrait;
     use HasApiTokens, Notifiable;
 
     /**

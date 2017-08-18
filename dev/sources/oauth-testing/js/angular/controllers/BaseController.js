@@ -96,10 +96,13 @@ oauth2App.controller('BaseController', [
             form.resetErrors();
 
             AuthService.signUp(form.values).then(function(response) {
-                if (response.data.success)
-                    $scope.navigation.signInSubmit(false, form);
+                $scope.data.credentails = response.data;
+
+                window.localStorage.setItem(
+                    'credentails', JSON.stringify($scope.data.credentails));
 
                 form.reset();
+                $scope.navigation.loadPanel();
             }, function(response) {
                 form.errors = response.data;
             });

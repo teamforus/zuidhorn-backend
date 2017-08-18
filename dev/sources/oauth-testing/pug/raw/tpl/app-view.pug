@@ -43,10 +43,6 @@ div(ng-show="view == 'sign_up'"): .row
             label(for='email') E-mail
             input#email.form-control(name='email', type='email', ng-model="forms.sign_up.values.email")
             p(ng-show="forms.sign_up.errors.email", ng-repeat="err in forms.sign_up.errors.email track by $index", ng-bind="err").text-danger
-        .form-group
-            label(for='password') Password
-            input#password.form-control(name='password', type='password', ng-model="forms.sign_up.values.password")
-            p(ng-show="forms.sign_up.errors.password", ng-repeat="err in forms.sign_up.errors.password track by $index", ng-bind="err").text-danger
         .form-group.text-center
             a(href="#", ng-click="navigation.signUpSubmit($event, forms.sign_up)").btn.btn-primary Submit
             | &nbsp;&nbsp;&nbsp;
@@ -107,5 +103,5 @@ div(ng-show="view == 'settings'"): .row
 
 div(ng-show="view == 'device_pending_screen'"): .row
     .col-xs-12.text-center
-        p This is first time then you use this device, that's why this device should be approved. Confirmation link is already was sent to your primary address email.
+        p This is the first time then you use this device, that's why this device should be approved. Confirmation link was sent to your primary email address.
         p: a(href="#" ng-click="navigation.refresh($e)").btn.btn-primary Refresh 

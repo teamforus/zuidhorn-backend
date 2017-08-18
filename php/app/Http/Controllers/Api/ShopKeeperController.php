@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\Api\AuthSignUpRequest;
 
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 use App\Models\User;
 use App\Models\Role;
@@ -103,12 +104,16 @@ class ShopKeeperController extends Controller
         $last_user_id = ($last_user_id ? $last_user_id->id : 0);
         $new_user_id = $last_user_id + 1;
 
+        do {
+            $password = User::generateUid([], 'password', 8);
+        } while(User::wherePassword(bcrypt($password))->count() > 0);
+
         $user = $role->users()->save(new User([
             'id'            => $new_user_id,
             'first_name'    => 'ShopKeeper',
             'last_name'     => '#' . str_pad($new_user_id, 3, 0, STR_PAD_LEFT),
             'email'         => $request->input('email'),
-            'password'      => Hash::make($request->input('password')),
+            'password'      => Hash::make($password),
             ]));
         
         $shopKeeper = ShopKeeper::create([
@@ -126,6 +131,15 @@ class ShopKeeperController extends Controller
             'status'    => 'approved'
             ]));
 
-        return ['success' => true];
+        Mail::send(
+            'emails.shopkeeper-account-details', compact('user', 'password'), function ($message) use ($user) {
+                $message->to($user->email, $user->full_name);
+                $message->subject('Forus - shopkeeper account details.');
+                $message->priority(3);
+            });
+
+        return [
+        'success' => true, 
+        'access_token' => $user->createToken('Token Name')->accessToken];
     }
 }
