@@ -55,6 +55,11 @@ class ShopKeeperController extends Controller
      */
     public function show(ShopKeeper $shopKeeper)
     {
+        if (!$shopKeeper->id)
+            return response(collect([
+                'message' => 'Shopkeeper not found!'
+                ]), 404);
+
         return $shopKeeper->load('user');
     }
 

@@ -1,6 +1,4 @@
 oauth2App.provider('ApiRequest', function() {
-    var base_url = 'http://forus-mvp.dev.net'
-
     return new(function() {
         var host = false;
 

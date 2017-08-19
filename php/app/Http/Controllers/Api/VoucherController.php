@@ -19,7 +19,9 @@ class VoucherController extends Controller
     public function show(Voucher $voucher)
     {
         if (!$voucher->id)
-            return abort(404);
+            return response(collect([
+                'message' => 'Voucher not found!'
+                ]), 404);
 
         $code = $voucher->code;
         $max_amount = $voucher->getAvailableFunds();
@@ -36,6 +38,11 @@ class VoucherController extends Controller
      */
     public function update(VoucherSubmitRequest $request, Voucher $voucher)
     {
+        if (!$voucher->id)
+            return response(collect([
+                'message' => 'Voucher not found!'
+                ]), 404);
+        
         $user = $request->user();
         $shop_keeper = ShopKeeper::whereUserId($user->id)->first();
 
