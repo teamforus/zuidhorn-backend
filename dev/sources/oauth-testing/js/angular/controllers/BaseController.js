@@ -20,8 +20,8 @@ oauth2App.controller('BaseController', [
             'sign_up': 'Sign Up',
             'sign_in': 'Sign In',
             'panel': 'Panel',
-            'scan_screen': 'Scan QR-Code',
-            'voucher_screen': 'Voucher found',
+            'voucher_scan_screen': 'Scan QR-Code',
+            'voucher_form_screen': 'Voucher found',
             'settings': 'Settings',
             'device_pending_screen': 'Device confirmation',
         };
