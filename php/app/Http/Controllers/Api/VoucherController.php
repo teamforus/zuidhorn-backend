@@ -21,11 +21,10 @@ class VoucherController extends Controller
         if (!$voucher->id)
             return abort(404);
 
-        $response = collect($voucher)->only(['code', 'max_amount']);
-        $response['max_amount'] = $voucher->getAvailableFunds();
-        $success = true;
+        $code = $voucher->code;
+        $max_amount = $voucher->getAvailableFunds();
 
-        return compact('success', 'response');
+        return compact('code', 'max_amount');
     }
 
     /**
@@ -37,8 +36,6 @@ class VoucherController extends Controller
      */
     public function update(VoucherSubmitRequest $request, Voucher $voucher)
     {
-        $response = [];
-
         $user = $request->user();
         $shop_keeper = ShopKeeper::whereUserId($user->id)->first();
 
@@ -46,8 +43,6 @@ class VoucherController extends Controller
 
         $amount = $request->input('full_amount') ? $max_amount : $request->input('amount');
 
-        $success = $voucher->logTransaction($shop_keeper->id, $amount);
-
-        return compact('success', 'response');
+        return $voucher->logTransaction($shop_keeper->id, $amount);
     }
 }

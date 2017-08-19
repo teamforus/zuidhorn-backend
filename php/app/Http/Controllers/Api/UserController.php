@@ -93,6 +93,6 @@ class UserController extends Controller
         $user->shop_keeper = ShopKeeper::whereUserId($user->id)->first();
         $user->role = $user->roles()->first();
 
-        return ['response' => $user];
+        return $user;
     }
 }

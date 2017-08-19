@@ -74,7 +74,7 @@ class Voucher extends Model
 
         dispatch(new BunqProcessTransactionJob($transaction));
 
-        return !!$transaction;
+        return $transaction;
     }
 
 }

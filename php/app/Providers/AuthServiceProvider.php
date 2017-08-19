@@ -34,7 +34,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Passport::routes();
+        Passport::routes(null, [
+            'prefix' => 'api/oauth'
+            ]);
 
         Gate::define('upload_bugets', function ($user) {
             return $user->permissions()->where('key', 'upload_bugets')->count();

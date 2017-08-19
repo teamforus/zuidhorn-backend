@@ -55,9 +55,7 @@ class ShopKeeperController extends Controller
      */
     public function show(ShopKeeper $shopKeeper)
     {
-        return [
-        'response' => $shopKeeper->load('user'),
-        ];
+        return $shopKeeper->load('user');
     }
 
     /**
@@ -138,8 +136,6 @@ class ShopKeeperController extends Controller
                 $message->priority(3);
             });
 
-        return [
-        'success' => true, 
-        'access_token' => $user->createToken('Token Name')->accessToken];
+        return ['access_token' => $user->createToken('Token Name')->accessToken];
     }
 }

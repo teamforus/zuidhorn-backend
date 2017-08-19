@@ -195,7 +195,7 @@ oauth2App.controller('BaseController', [
             $scope.data.auth_user = {};
 
             AuthService.getUser($scope.data.credentails).then(function(response) {
-                $scope.data.auth_user = response.data.response;
+                $scope.data.auth_user = response.data;
 
                 $scope.view = 'panel';
             }, function(response) {
@@ -239,7 +239,7 @@ oauth2App.controller('BaseController', [
             ).then(function(response) {
                 console.log(response);
 
-                $scope.data.voucher = response.data.response;
+                $scope.data.voucher = response.data;
 
                 $scope.navigation.loadVoucherFormScreen();
             }, function(response) {
