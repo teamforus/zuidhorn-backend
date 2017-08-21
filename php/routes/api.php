@@ -21,12 +21,12 @@ Route::group(['prefix' => '', 'middleware' => 'auth:api'], function() {
         'Api\UserController@curentUser');
 
     Route::resource(
-        '/vouchers', 
+        '/voucher', 
         'Api\VoucherController', 
-        ['parameters' => ['vouchers' => 'voucher_code']]);
+        ['parameters' => ['voucher' => 'voucher_code']]);
 
     Route::resource(
-        '/shop-keepers', 
+        '/shop-keeper', 
         'Api\ShopKeeperController');
 
     Route::get('/status', function() {

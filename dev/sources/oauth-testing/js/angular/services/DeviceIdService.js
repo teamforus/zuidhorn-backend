@@ -26,6 +26,9 @@ oauth2App.service('DeviceIdService', ['$http', function($http) {
         };
 
         this.getDeviceId = function() {
+            if (!window.localStorage.getItem('device_id'))
+                this.setDeviceId(this.getOptions()[0]);
+
             return JSON.parse(window.localStorage.getItem('device_id'));
         };
     });

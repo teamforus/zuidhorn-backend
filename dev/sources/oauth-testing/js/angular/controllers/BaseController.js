@@ -38,7 +38,7 @@ oauth2App.controller('BaseController', [
 
         $scope.deviceIdService = DeviceIdService;
 
-        if ($scope.deviceIdService.getDeviceId() === null)
+        if ($scope.deviceIdService.getDeviceId() == null)
             $scope.deviceIdService.setDeviceId($scope.deviceIdService.getOptions()[0]);
 
         $scope.forms.settings.values.device_id = $scope.deviceIdService.getDeviceId();
@@ -232,6 +232,9 @@ oauth2App.controller('BaseController', [
                 'VIES-2F9M-J8RR-TC5W');
 
             $scope.navigation.loadVoucherScanScreen();
+
+            if (qr_code == null)
+                return $scope.navigation.loadPanel();
 
             VoucherService.checkCode(
                 $scope.data.credentails,

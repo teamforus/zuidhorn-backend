@@ -7,11 +7,9 @@ oauth2App.service('VoucherService', [
         DeviceIdService,
         ApiRequest
     ) {
-        var base_url = 'http://forus-mvp.dev.net'
-
         return new(function() {
             this.checkCode = function(credentails, code) {
-                return ApiRequest.get('/api/vouchers/' + code);
+                return ApiRequest.get('/api/voucher/' + code);
             };
 
             this.makeTransaction = function(credentails, code, values) {
@@ -19,7 +17,7 @@ oauth2App.service('VoucherService', [
 
                 values._method = 'PUT';
                 
-                return ApiRequest.post('/api/vouchers/' + code, values);
+                return ApiRequest.post('/api/voucher/' + code, values);
             };
         });
     }
