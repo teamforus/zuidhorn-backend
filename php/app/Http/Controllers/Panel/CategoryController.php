@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Panel\CategoryStoreRequest;
 use App\Http\Requests\Panel\CategoryUpdateRequest;
 
+use App\Models\Media;
 use App\Models\Category;
 
 class CategoryController extends Controller
@@ -60,8 +61,36 @@ class CategoryController extends Controller
     {
         $this->authorize('create', Category::class);
 
-        if (Category::create($request->all()))
+        if ($category = Category::create($request->all())) {
             session()->flash('alert_default', 'Category created!');
+
+            $edit = $category;
+
+            // media details
+            $original_type  = 'original';
+            $preview_type   = 'preview';
+            $mediable_type  = Category::class;
+            $mediable_id    = $edit->id;
+
+            // upload photo
+            if ($request->file('image')) {
+                $media_info = Media::uploadSingle(
+                    $original_type, $mediable_type, 'image');
+
+                // confirm uploaded photo
+                $media = Media::confirmSingle(
+                    $original_type, $mediable_type, 
+                    $mediable_id, $media_info['mediaId']);
+
+                $media_info = Media::uploadSingle(
+                    $preview_type, $mediable_type, 'image');
+
+                // confirm uploaded photo
+                $media = Media::confirmSingle(
+                    $preview_type, $mediable_type, 
+                    $mediable_id, $media_info['mediaId']);
+            }
+        }
 
         return redirect(action('Panel\CategoryController@index'));
     }
@@ -108,8 +137,34 @@ class CategoryController extends Controller
         $edit = $category;
         $this->authorize('update', $edit);
 
-        if ($edit->update($request->all()))
+        if ($edit->update($request->all())) {
             session()->flash('alert_default', 'Category updated!');
+
+            // media details
+            $original_type  = 'original';
+            $preview_type   = 'preview';
+            $mediable_type  = Category::class;
+            $mediable_id    = $edit->id;
+
+            // upload photo
+            if ($request->file('image')) {
+                $media_info = Media::uploadSingle(
+                    $original_type, $mediable_type, 'image');
+
+                // confirm uploaded photo
+                $media = Media::confirmSingle(
+                    $original_type, $mediable_type, 
+                    $mediable_id, $media_info['mediaId']);
+
+                $media_info = Media::uploadSingle(
+                    $preview_type, $mediable_type, 'image');
+
+                // confirm uploaded photo
+                $media = Media::confirmSingle(
+                    $preview_type, $mediable_type, 
+                    $mediable_id, $media_info['mediaId']);
+            }
+        }
 
         return redirect(action('Panel\CategoryController@index'));
     }

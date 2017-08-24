@@ -34,6 +34,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('shopKeeper', \App\Models\ShopKeeper::class);
         Route::model('shopKeeperCategory', \App\Models\ShopKeeperCategory::class);
         
+        Route::model('office', \App\Models\ShopKeeperOffice::class);
         Route::model('buget', \App\Models\Buget::class);
         Route::model('bugetCategory', \App\Models\BugetCategory::class);
         
@@ -56,6 +57,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
+        $this->mapClientRoutes();
+
         $this->mapApiRoutes();
 
         $this->mapWebRoutes();
@@ -90,5 +93,20 @@ class RouteServiceProvider extends ServiceProvider
         ->middleware('api')
         ->namespace($this->namespace)
         ->group(base_path('routes/api.php'));
+    }
+
+    /**
+     * Define the "api" routes for the application.
+     *
+     * These routes are typically stateless.
+     *
+     * @return void
+     */
+    protected function mapClientRoutes()
+    {
+        Route::prefix('client')
+        ->middleware('client-api')
+        ->namespace($this->namespace)
+        ->group(base_path('routes/client-api.php'));
     }
 }

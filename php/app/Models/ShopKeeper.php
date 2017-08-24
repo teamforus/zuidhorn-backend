@@ -47,6 +47,11 @@ class ShopKeeper extends Model
         return $this->hasMany('App\Models\ShopKeeperDevice');
     }
 
+    public function shop_keeper_offices()
+    {
+        return $this->hasMany('App\Models\ShopKeeperOffice');
+    }
+
     public function categories()
     {
         return $this->belongsToMany(

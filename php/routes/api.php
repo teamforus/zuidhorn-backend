@@ -36,4 +36,8 @@ Route::group(['prefix' => '', 'middleware' => 'auth:api'], function() {
     Route::get('/{any}', function ($any) {
         return response(['message' => 'Endpoint not found.'], 404);
     })->where('any', '.*');
+
+    Route::get('/', function () {
+        return response(['message' => 'Endpoint not found.'], 404);
+    });
 });

@@ -124,8 +124,8 @@ class ShopKeeperController extends Controller
             'user_id'           => $user->id,
             'iban'              => $request->input('iban'),
             'kvk_number'        => $request->input('kvk_number'),
-            'bussines_address'  => 'N\A',
-            'phone_number'      => 'N\A',
+            'bussines_address'  => '',
+            'phone_number'      => '',
             'state'             => 'pending',
             ]);
 

@@ -51,6 +51,9 @@ Route::group(['prefix' => 'panel', 'middleware' => 'auth'], function() {
     Route::resource('/shop-keeper-categories', 'Panel\ShopKeeperCategoryController');
     Route::get('/shop-keeper-categories/{shopKeeperCategory}/destroy', 'Panel\ShopKeeperCategoryController@destroy');
 
+    Route::resource('shop-keepers.offices', 'Panel\ShopKeeperOfficeController');
+    Route::get('/shop-keepers/{shopKeeper}/offices/{office}/destroy', 'Panel\ShopKeeperOfficeController@destroy');
+
     Route::resource('/bugets', 'Panel\BugetController');
     Route::get('/bugets/{buget}/destroy', 'Panel\BugetController@destroy');
 

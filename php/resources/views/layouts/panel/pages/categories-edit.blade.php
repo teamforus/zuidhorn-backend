@@ -14,13 +14,18 @@
 </h4>
 <hr>
 @include('layouts.panel.blocks.alerts')
-{{ Form::open(['method' => $edit ? 'PATCH' : 'POST', 'class' => 'form', 'url' => $edit ? '/panel/categories/' . $edit->id : '/panel/categories']) }}
+{{ Form::open(['method' => $edit ? 'PATCH' : 'POST', 'class' => 'form', 'url' => $view_url . '/../', 'files' => true]) }}
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-4 col-xs-12">
         <div class="form-group">
             {{ Form::label('name', 'Category name') }}
             {{ Form::text('name', $edit ? $edit->name : '', ['class' => 'form-control', 'placeholder' => 'Name']) }}
             {!! $errors->first('name', '<p class="text-danger">:message</p>') !!}
+        </div>
+        <div class="form-group">
+            {{ Form::label('image', 'Category photo') }}
+            {{ Form::file('image', ['class' => 'form-control', 'accept' => 'image/*']) }}
+            {!! $errors->first('image', '<p class="text-danger">:message</p>') !!}
         </div>
         <div class="form-group">
             <label class="form-label">Parent category:</label>

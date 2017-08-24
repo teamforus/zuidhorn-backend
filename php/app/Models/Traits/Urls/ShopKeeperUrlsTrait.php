@@ -31,4 +31,9 @@ trait ShopKeeperUrlsTrait
     {
         return url('panel/shop-keepers/' . $this->id . '/state/approve');
     }
+
+    public function urlPanelAddOffice()
+    {
+        return url('panel/shop-keepers/' . $this->id . '/offices/create');
+    }
 }

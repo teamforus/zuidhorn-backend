@@ -9,11 +9,13 @@ oauth2App.provider('ApiRequest', function() {
         this.$get = [
             '$q',
             '$http',
+            '$state',
             '$rootScope',
             'DeviceIdService',
             function(
                 $q,
                 $http,
+                $state,
                 $rootScope,
                 DeviceIdService
             ) {
@@ -22,6 +24,7 @@ oauth2App.provider('ApiRequest', function() {
                     var credentails = JSON.parse(localStorage.getItem('credentails'));
 
                     return {
+                        'Accept': 'application/json',
                         'Authorization': 'Bearer ' + (credentails ? credentails.access_token : ''),
                         'Device-Id': DeviceIdService.getDeviceId().id,
                     };
@@ -35,11 +38,11 @@ oauth2App.provider('ApiRequest', function() {
                     return ajax('POST', endpoint, data, headers);
                 };
 
-                var ajax = function(method, endpoint, data, headers) {
+                var ajax = function(method, endpoint, data, headers, debug) {
                     var params = {};
 
                     params.data = data || {};
-                    params.headers = Object.assign(headers || {}, makeHeaders());
+                    params.headers = Object.assign(makeHeaders(), headers || {});
 
                     params.url = host + endpoint;
                     params.method = method;
@@ -48,7 +51,7 @@ oauth2App.provider('ApiRequest', function() {
                         $http(params).then(function(response) {
                             done(response);
                         }, function(response) {
-                            if (response.status == 401) {
+                            if (!debug && (response.status == 401)) {
                                 if ((response.data.error == 'device-pending') ||
                                     (response.data.error == 'device-unknown'))
                                     return $rootScope.$broadcast(

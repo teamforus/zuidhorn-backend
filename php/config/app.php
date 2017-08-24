@@ -183,6 +183,9 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
 
         Laravel\Passport\PassportServiceProvider::class,
+
+        // Image lib
+        Intervention\Image\ImageServiceProvider::class,
     ],
 
     /*
@@ -237,6 +240,8 @@ return [
 
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
+
+        'Image' => Intervention\Image\Facades\Image::class,
 
     ],
 

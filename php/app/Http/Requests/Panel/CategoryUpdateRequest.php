@@ -26,6 +26,7 @@ class CategoryUpdateRequest extends FormRequest
         return [
             'name'      => 'required|string|min:1|max:100',
             'parent_id' => 'nullable|exists:categories,id',
+            'image'     => 'nullable|image',
         ];
     }
 }

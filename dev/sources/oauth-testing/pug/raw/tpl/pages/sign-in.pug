@@ -1,0 +1,14 @@
+.row
+    .col-xs-12
+        .form-group
+            label(for='email') E-mail
+            input#email.form-control(name='email', type='email', ng-model="$ctrl.form.values.email")
+            p(ng-show="$ctrl.form.errors.email", ng-repeat="err in $ctrl.form.errors.email track by $index", ng-bind="err").text-danger
+        .form-group
+            label(for='password') Password
+            input#password.form-control(name='password', type='password', ng-model="$ctrl.form.values.password")
+            p(ng-show="$ctrl.form.errors.password", ng-repeat="err in $ctrl.form.errors.password track by $index", ng-bind="err").text-danger
+        .form-group.text-center
+            a(href="#", ng-click="$ctrl.submit($event)").btn.btn-primary Submit
+            | &nbsp;&nbsp;&nbsp;
+            a(ui-sref="welcome").btn.btn-default Cancel

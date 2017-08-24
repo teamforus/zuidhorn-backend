@@ -1,30 +1,48 @@
 oauth2App.controller('BaseController', [
     '$scope',
+    '$state',
     '$http',
     'AuthService',
     'VoucherService',
     'DeviceIdService',
+    'CredentialsService',
     'FormBuilderService',
     function(
         $scope,
+        $state,
         $http,
         AuthService,
         VoucherService,
         DeviceIdService,
+        CredentialsService,
         FormBuilderService,
     ) {
-        $scope.view = "welcome";
+        $scope.$state = $state;
 
-        $scope.titles = {
-            'welcome': 'Welcome',
-            'sign_up': 'Sign Up',
-            'sign_in': 'Sign In',
-            'panel': 'Panel',
-            'voucher_scan_screen': 'Scan QR-Code',
-            'voucher_form_screen': 'Voucher found',
-            'settings': 'Settings',
-            'device_pending_screen': 'Device confirmation',
-        };
+        $scope.$on('auth:sign-in', function() {
+            $scope.credentials = CredentialsService.get();
+        });
+
+        $scope.$on('auth:sign-up', function() {
+            $scope.credentials = CredentialsService.get();
+        });
+
+        $scope.$on('auth:sign-out', function() {
+            $scope.credentials = false;
+        });
+
+        $scope.$on('device:unauthorized', function() {
+            $state.go('device-pending');
+        });
+
+        $scope.credentials = CredentialsService.get();
+
+        setTimeout(function() {
+            if ($scope.credentials && $state.current.name == 'welcome')
+                $state.go('panel');
+        }, 100);
+
+        return;
 
         $scope.forms = {
             sign_in: FormBuilderService.build(),

@@ -24,6 +24,14 @@
             @else
             <span class="text-muted">No parent</span>
             @endif
+            <br>
+            <strong>Original photo:</strong>
+            <em class="mdi mdi-open-in-new"></em> 
+            {{ Html::link($view->urlOriginal(), 'link', ['class' => 'text-primary', 'target' => '_blank']) }}
+            <br>
+            <strong>Preview photo:</strong>
+            <br> 
+            {{ Html::image($view->urlPreview(), '', ['class' => 'thumbnail']) }}
         </p>
         <br>
 

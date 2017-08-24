@@ -45,6 +45,8 @@
         <br>
     </div>
 </div>
+
+<!-- Shop Keeper Categories -->
 <div class="row" id="shop_keeper-categories">
     <div class="col-md-12">
         <h4>Shop categories</h4>
@@ -103,4 +105,25 @@
     </div>
 </div>
 @endif
+<br>
+
+<!-- Shop Keeper Offices -->
+<div class="row" id="shop_keeper-categories">
+    <div class="col-md-12">
+        <h4>Shop offices</h4>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    {{ Html::link($view->urlPanelAddOffice(), 'Add office', ['class' => 'btn btn-primary']) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        @include('layouts.panel.blocks.list-shop_keeper_offices', ['rows' => $view->shop_keeper_offices])
+    </div>
+</div>
 @endsection

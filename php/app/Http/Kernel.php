@@ -42,6 +42,11 @@ class Kernel extends HttpKernel
             'bindings',
             \App\Http\Middleware\DeviceIdMiddleware::class,
         ],
+
+        'client-api' => [
+            'throttle:60,1',
+            'bindings',
+        ],
     ];
 
     /**

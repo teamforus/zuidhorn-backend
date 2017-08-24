@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Forus.io Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700,700italic,500italic,500,400italic,300,100italic,100,300italic&amp;subset=latin,cyrillic,latin-ext" rel="stylesheet" type="text/css">
+    <link link rel="icon" type="image/x-icon" sizes="16x16" href="assets/img/favicon.ico">
+    <link rel="stylesheet" href="assets/dist/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="assets/dist/angular/angular-csp.css">
+    <link rel="stylesheet" href="assets/dist/sweetalert/sweetalert.css">
+    <link rel="stylesheet" href="assets/css/style.min.css">
+  </head>
+  <body>
+    <!-- include includes/dev-pages-->
+    <header></header>
+    <div class="aside">
+      <div class="aside-nav">
+        <div class="aside-nav-item"> 
+          <h4 class="heading-title">Navigation</h4>
+        </div>
+        <hr>
+        <div class="aside-nav-item"><a class="aside-nav-link" href="./index.html"><em class="aside-nav-icon mdi mdi-speedometer"></em>Dashboard</a></div>
+        <div class="aside-nav-item"><a class="aside-nav-link" href="./csv-parser.html"><em class="aside-nav-icon mdi mdi-database"></em>CSV parser</a></div>
+        <div class="aside-nav-item"><a class="aside-nav-link" href="./categories.html"><em class="aside-nav-icon mdi mdi-view-list"></em>Categories</a></div>
+        <div class="aside-nav-item"><a class="aside-nav-link" href="./citizens.html"><em class="aside-nav-icon mdi mdi-account-multiple"></em>Citizens</a></div>
+        <div class="aside-nav-item"><a class="aside-nav-link" href="./shopers.html"><em class="aside-nav-icon mdi mdi-shopping"></em>Shopers</a></div>
+        <div class="aside-nav-item"><a class="aside-nav-link" href="./bugets.html"><em class="aside-nav-icon mdi mdi-coins"></em>Bugets</a></div>
+        <div class="aside-nav-item"><a class="active aside-nav-link" href="./users.html"><em class="aside-nav-icon mdi mdi-account-circle"></em>System Users</a></div>
+        <div class="aside-nav-item"><a class="aside-nav-link" href="./permissions.html"><em class="aside-nav-icon mdi mdi-lock"></em>Permissions</a></div>
+        <div class="aside-nav-item"><a class="aside-nav-link" href="./login.html"><em class="aside-nav-icon mdi mdi-logout"></em>Quit</a></div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="content-inner">
+        <h4 class="heading-title">
+           System Users
+          <div class="btn-group pull-right"><a class="btn btn-default" href="./categories-edit.html"><em class="glyphicon glyphicon-plus"> </em> Add new</a><a class="btn btn-default" href="#"><em class="glyphicon glyphicon-upload"> </em> Import .csv</a><a class="btn btn-default" href="#"><em class="glyphicon glyphicon-download"> </em> Export .csv</a></div>
+        </h4>
+        <hr>
+        <div class="alert alert-md alert-default">Lorem ipsum dolor sit amet.</div>
+        <div class="row">
+          <div class="col-md-12">
+            <form class="form">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Id</label>
+                    <input class="form-control" type="number" name="" placeholder="Id">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Name</label>
+                    <input class="form-control" name="" placeholder="Name">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Permission</label>
+                    <select class="form-control">
+                      <option value="">Manage Citizens</option>
+                      <option value="">Manage Categories</option>
+                      <option value="">Manage Shopers</option>
+                      <option value="">Manage Bugets</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <input class="btn btn-default" type="button" value="Filter">
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <table class="table table-striped">
+              <tHead>
+                <tr>
+                  <th>Id</th>
+                  <th>Full name</th>
+                  <th>Permissions</th>
+                  <th class="text-right">Actions</th>
+                </tr>
+              </tHead>
+              <tBody>
+                                <tr>
+                                  <td><strong>#0001</strong></td>
+                                  <td>John Doe</td>
+                                  <td>Manage Shopers, Manage Citizens, Manage Categories... </td>
+                                  <td class="text-right">
+                                    <div class="btn-group"><a class="text-primary" href="#"> <em class="mdi mdi-pencil"></em>Edit</a>&nbsp;
+                                      &nbsp;<a class="text-primary" href="#" confirm-box data-box-title="Are you sure?" data-box-text="This action cannot be undone, double check before continue."><em class="mdi mdi-delete"></em>Delete </a>
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td><strong>#0002</strong></td>
+                                  <td>John Doe</td>
+                                  <td>Manage Shopers, Manage Citizens, Manage Categories... </td>
+                                  <td class="text-right">
+                                    <div class="btn-group"><a class="text-primary" href="#"> <em class="mdi mdi-pencil"></em>Edit</a>&nbsp;
+                                      &nbsp;<a class="text-primary" href="#" confirm-box data-box-title="Are you sure?" data-box-text="This action cannot be undone, double check before continue."><em class="mdi mdi-delete"></em>Delete </a>
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td><strong>#0003</strong></td>
+                                  <td>John Doe</td>
+                                  <td>Manage Shopers, Manage Categories </td>
+                                  <td class="text-right">
+                                    <div class="btn-group"><a class="text-primary" href="#"> <em class="mdi mdi-pencil"></em>Edit</a>&nbsp;
+                                      &nbsp;<a class="text-primary" href="#" confirm-box data-box-title="Are you sure?" data-box-text="This action cannot be undone, double check before continue."><em class="mdi mdi-delete"></em>Delete </a>
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td><strong>#0004</strong></td>
+                                  <td>John Doe</td>
+                                  <td>Manage Shopers, Manage Categories </td>
+                                  <td class="text-right">
+                                    <div class="btn-group"><a class="text-primary" href="#"> <em class="mdi mdi-pencil"></em>Edit</a>&nbsp;
+                                      &nbsp;<a class="text-primary" href="#" confirm-box data-box-title="Are you sure?" data-box-text="This action cannot be undone, double check before continue."><em class="mdi mdi-delete"></em>Delete </a>
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td><strong>#0005</strong></td>
+                                  <td>John Doe</td>
+                                  <td>Manage Shopers, Manage Categories </td>
+                                  <td class="text-right">
+                                    <div class="btn-group"><a class="text-primary" href="#"> <em class="mdi mdi-pencil"></em>Edit</a>&nbsp;
+                                      &nbsp;<a class="text-primary" href="#" confirm-box data-box-title="Are you sure?" data-box-text="This action cannot be undone, double check before continue."><em class="mdi mdi-delete"></em>Delete </a>
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td><strong>#0006</strong></td>
+                                  <td>John Doe</td>
+                                  <td>Manage Shopers, Manage Citizens, Manage Categories... </td>
+                                  <td class="text-right">
+                                    <div class="btn-group"><a class="text-primary" href="#"> <em class="mdi mdi-pencil"></em>Edit</a>&nbsp;
+                                      &nbsp;<a class="text-primary" href="#" confirm-box data-box-title="Are you sure?" data-box-text="This action cannot be undone, double check before continue."><em class="mdi mdi-delete"></em>Delete </a>
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td><strong>#0007</strong></td>
+                                  <td>John Doe</td>
+                                  <td>Manage Shopers, Manage Citizens, Manage Categories... </td>
+                                  <td class="text-right">
+                                    <div class="btn-group"><a class="text-primary" href="#"> <em class="mdi mdi-pencil"></em>Edit</a>&nbsp;
+                                      &nbsp;<a class="text-primary" href="#" confirm-box data-box-title="Are you sure?" data-box-text="This action cannot be undone, double check before continue."><em class="mdi mdi-delete"></em>Delete </a>
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td><strong>#0008</strong></td>
+                                  <td>John Doe</td>
+                                  <td>Manage Shopers, Manage Categories </td>
+                                  <td class="text-right">
+                                    <div class="btn-group"><a class="text-primary" href="#"> <em class="mdi mdi-pencil"></em>Edit</a>&nbsp;
+                                      &nbsp;<a class="text-primary" href="#" confirm-box data-box-title="Are you sure?" data-box-text="This action cannot be undone, double check before continue."><em class="mdi mdi-delete"></em>Delete </a>
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td><strong>#0009</strong></td>
+                                  <td>John Doe</td>
+                                  <td>Manage Shopers, Manage Citizens, Manage Categories... </td>
+                                  <td class="text-right">
+                                    <div class="btn-group"><a class="text-primary" href="#"> <em class="mdi mdi-pencil"></em>Edit</a>&nbsp;
+                                      &nbsp;<a class="text-primary" href="#" confirm-box data-box-title="Are you sure?" data-box-text="This action cannot be undone, double check before continue."><em class="mdi mdi-delete"></em>Delete </a>
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td><strong>#0010</strong></td>
+                                  <td>John Doe</td>
+                                  <td>Manage Permissions </td>
+                                  <td class="text-right">
+                                    <div class="btn-group"><a class="text-primary" href="#"> <em class="mdi mdi-pencil"></em>Edit</a>&nbsp;
+                                      &nbsp;<a class="text-primary" href="#" confirm-box data-box-title="Are you sure?" data-box-text="This action cannot be undone, double check before continue."><em class="mdi mdi-delete"></em>Delete </a>
+                                    </div>
+                                  </td>
+                                </tr>
+              </tBody>
+            </table>
+            <nav aria-label="Page navigation">
+              <ul class="pagination">
+                <li><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="footer">WIP version 0.01a</footer>
+    <script>var qdt_c = {"platform":{"source":"panel","libs":{"jquery":true,"bootstrap_3":true,"angular":true,"angular_2":false,"underscore":true,"underscore.string":false,"mdi":true},"libs_data":{},"paths":{"root":"../panel-html","assets_root":"../panel-html/assets","clean_paths":["../panel-html"]},"assets":[{"from":"resources/assets/**/*","to":"assets"},{"from":"../../node_modules/sweetalert/dist/sweetalert.min.js","to":"assets/dist/sweetalert/"},{"from":"../../node_modules/sweetalert/dist/sweetalert.css","to":"assets/dist/sweetalert/"},{"from":"../../node_modules/papaparse/papaparse.min.js","to":"assets/dist/papaparse/"},{"from":"../../node_modules/angular-sanitize/angular-sanitize.min.js","to":"assets/dist/angular-sanitize"},{"from":"../../node_modules/@uirouter/angularjs/release/angular-ui-router.min.js","to":"assets/dist/@uirouter/angularjs"},{"from":"../../node_modules/file-saver/FileSaver.min.js","to":"assets/dist/file-saver"},{"from":"../../node_modules/jshashes/hashes.min.js","to":"assets/dist/jshashes"}],"server":{"path":"/","port":3000},"tasks":{"disabled":{"pug":false,"ts":true,"js":false,"assets":false},"settings":{"less":[],"js":[{"src":["angular/angular.app.js","angular/controllers/**/**.js","angular/components/**/**.js","angular/directives/**/**.js","angular/services/**/**.js","angular/filters/**/**.js","app.js"],"dest":["/"],"name":"app.js"},{"path":"/raw","src":["raw/**/*.js"],"dest":["/"],"name":""}],"scss":[{"src":["style.scss"],"watch":["includes/**/*.scss"],"dest":["/"],"name":"style.min.css"}],"pug":[{"path":"/","src":["*.pug"],"watch":["layout/**/*.pug"],"dest":["/"]},{"path":"/raw/tpl","src":["raw/**/*.pug"],"dest":["/tpl"],"watch":[]}]}},"name":"panel-html"}};
+      
+    </script>
+    <script src="assets/dist/jquery/jquery.min.js"></script>
+    <script src="assets/dist/underscore/underscore-min.js"></script>
+    <script src="assets/dist/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/dist/angular/angular.min.js"></script>
+    <script src="assets/dist/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="assets/dist/sweetalert/sweetalert.min.js"></script>
+    <script src="assets/dist/papaparse/papaparse.min.js"></script>
+    <script src="assets/js/app.js"></script>
+  </body>
+</html>

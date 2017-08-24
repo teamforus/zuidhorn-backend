@@ -33,6 +33,9 @@
                 "from": "../../node_modules/angular-sanitize/angular-sanitize.min.js",
                 "to": "assets/dist/angular-sanitize"
             }, {
+                "from": "../../node_modules/@uirouter/angularjs/release/angular-ui-router.min.js",
+                "to": "assets/dist/@uirouter/angularjs"
+            }, {
                 "from": "../../node_modules/file-saver/FileSaver.min.js",
                 "to": "assets/dist/file-saver"
             }, {
@@ -52,10 +55,11 @@
                     "js": [{
                         "src": [
                             "angular/angular.app.js",
-                            "angular/controllers/*.js",
-                            "angular/directives/*.js",
-                            "angular/services/*.js",
-                            "angular/filters/*.js",
+                            "angular/controllers/**/**.js",
+                            "angular/components/**/**.js",
+                            "angular/directives/**/**.js",
+                            "angular/services/**/**.js",
+                            "angular/filters/**/**.js",
                             "app.js"
                         ],
                         "dest": "/",
@@ -98,6 +102,20 @@
                 "port": 3000
             }
         },
+        "panel-html": {
+            "source": "panel",
+            "paths": {
+                "root": "../panel-html",
+                "assets_root": "../panel-html/assets",
+                "clean_paths": [
+                    "../panel-html"
+                ]
+            },
+            "server": {
+                "path": "/",
+                "port": 3000
+            }
+        },
         "oauth-testing-html": {
             "libs": {
                 "jquery": true,
@@ -123,11 +141,12 @@
                     "js": [{
                         "src": [
                             "angular/oauth2App.js",
-                            "angular/controllers/*.js",
-                            "angular/directives/*.js",
-                            "angular/providers/*.js",
-                            "angular/services/*.js",
-                            "angular/filters/*.js",
+                            "angular/controllers/**/**.js",
+                            "angular/components/**/**.js",
+                            "angular/directives/**/**.js",
+                            "angular/providers/**/**.js",
+                            "angular/services/**/**.js",
+                            "angular/filters/**/**.js",
                             "app.js"
                         ],
                         "dest": "/",
@@ -315,6 +334,7 @@
             }
         },
         "php": {
+            "source": "panel",
             "paths": {
                 "root": "../php/public",
                 "assets_root": "../php/public/assets",

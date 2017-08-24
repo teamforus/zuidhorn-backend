@@ -1,0 +1,18 @@
+.row
+    .col-xs-12
+        .form-group
+            label(for='kvk_number') Kvk number
+            input#kvk_number.form-control(name='kvk_number', type='text', ng-model="$ctrl.form.values.kvk_number")
+            p(ng-show="$ctrl.form.errors.kvk_number", ng-repeat="err in $ctrl.form.errors.kvk_number track by $index", ng-bind="err").text-danger
+        .form-group
+            label(for='iban') IBAN
+            input#iban.form-control(name='iban', type='text', ng-model="$ctrl.form.values.iban")
+            p(ng-show="$ctrl.form.errors.iban", ng-repeat="err in $ctrl.form.errors.iban track by $index", ng-bind="err").text-danger
+        .form-group
+            label(for='email') E-mail
+            input#email.form-control(name='email', type='email', ng-model="$ctrl.form.values.email")
+            p(ng-show="$ctrl.form.errors.email", ng-repeat="err in $ctrl.form.errors.email track by $index", ng-bind="err").text-danger
+        .form-group.text-center
+            a(href="#", ng-click="$ctrl.submit($event)").btn.btn-primary Submit
+            | &nbsp;&nbsp;&nbsp;
+            a(ui-sref="welcome").btn.btn-default Cancel

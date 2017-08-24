@@ -6,6 +6,7 @@
 /phonegap-html
 /phonegap/www
 /php/public/assets/*
+/php/public/uploads/*
 
 # Compiled source #
 ###################

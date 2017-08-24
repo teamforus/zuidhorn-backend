@@ -1,6 +1,4 @@
-oauth2App.service('DeviceIdService', ['$http', function($http) {
-    var base_url = 'http://forus-mvp.dev.net'
-
+oauth2App.service('DeviceIdService', ['$http', '$q', function($http, $q) {
     return new(function() {
         this.getOptions = function(credentails, code) {
             return [{

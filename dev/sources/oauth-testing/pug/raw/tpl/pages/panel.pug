@@ -1,0 +1,22 @@
+.row
+    .col-xs-12
+        h4 
+            | Hello, 
+            span.text-primary {{ $ctrl.user.first_name }} {{ $ctrl.user.last_name }}
+            | .
+        br
+        h4 Let's make some acction!
+        p: a(href="#", ng-click="$ctrl.scanQrCode($event)").btn.btn-primary 
+            em.mdi.mdi-qrcode 
+            | Scan QR-Code!
+        p: a(ui-sref="settings").btn.btn-danger 
+            em.mdi.mdi-settings 
+            | Settings
+        p: a(ui-sref="debug").btn.btn-default 
+            em.mdi.mdi-console 
+            | Debug
+        br
+
+        h4 User details
+        pre {{ $ctrl.user | pretty_json }} 
+        br

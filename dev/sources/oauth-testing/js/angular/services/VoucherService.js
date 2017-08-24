@@ -8,11 +8,11 @@ oauth2App.service('VoucherService', [
         ApiRequest
     ) {
         return new(function() {
-            this.checkCode = function(credentails, code) {
+            this.checkCode = function(code) {
                 return ApiRequest.get('/api/voucher/' + code);
             };
 
-            this.makeTransaction = function(credentails, code, values) {
+            this.makeTransaction = function(code, values) {
                 var values = JSON.parse(JSON.stringify(values));
 
                 values._method = 'PUT';
