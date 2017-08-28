@@ -2,20 +2,17 @@
 
 namespace App\Http\Middleware;
 
-use \App\Models\ShopKeeper;
+use App\Models\ShopKeeper;
 use Closure;
 
-class DeviceIdMiddleware
+class ShopKeeperStateMiddleware
 {
     /**
      * The URIs that should be excluded from CSRF verification.
      *
      * @var array
      */
-    protected $except = [
-        '/api/shop-keeper/sign-up',
-        '/api/shop-keeper/device'
-    ];
+    protected $except = [];
 
     /**
      * Handle an incoming request.
@@ -26,33 +23,30 @@ class DeviceIdMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if ($this->inExceptArray($request)) {
+        if ($this->inExceptArray($request) || !$request->user()) {
             return $next($request);
         }
 
         $target_user = $request->user();
         $shop_keeper = ShopKeeper::whereUserId($target_user->id)->first();
 
-        if (!$target_user->hasRole('shop-keeper') || !$shop_keeper)
-            abort(401);
-
-        $device_id = $request->header('Device-Id');
-
-        if (!$device_id) {
-            return response(collect(['error' => 'no-device-id']), 401);
+        if ($shop_keeper->state == 'pending') {
+            return response(collect([
+                'error'         => 'shopkeeper-pending',
+                'description'   => "Shopkeeper account is yet to be validated."
+                ]), 401);
         }
-        
-        $device_status = $shop_keeper->checkDevice($device_id);
 
-        if (!$device_status) {
-            $shop_keeper->requestDeviceApprovement($device_id);
-            return response(collect(['error' => 'device-unknown']), 401);
-        } elseif ($device_status->status == 'pending') {
-            return response(collect(['error' => 'device-pending']), 401);
+        if ($shop_keeper->state == 'declined') {
+            return response(collect([
+                'error'         => 'shopkeeper-declined',
+                'description'   => "Shopkeeper account was declined."
+                ]), 401);
         }
-        
+
         return $next($request);
     }
+        
 
     /**
      * Determine if the request has a URI that should pass through CSRF verification.

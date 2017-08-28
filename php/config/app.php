@@ -186,6 +186,9 @@ return [
 
         // Image lib
         Intervention\Image\ImageServiceProvider::class,
+
+        // App services
+        App\Services\KvkApiService\KvkApiServiceProvider::class,
     ],
 
     /*
@@ -243,6 +246,7 @@ return [
 
         'Image' => Intervention\Image\Facades\Image::class,
 
+        'KvkApi' => App\Services\KvkApiService\Facades\KvkApi::class,
     ],
 
 ];

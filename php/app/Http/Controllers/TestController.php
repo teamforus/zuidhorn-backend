@@ -8,6 +8,8 @@ use App\Models\Voucher;
 use App\Models\User;
 use App\Services\BunqService\BunqService;
 
+use App\Services\KvkApiService\Facades\KvkApi;
+
 class TestController extends Controller
 {
     public function getTest(Request $request)

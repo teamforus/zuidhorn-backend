@@ -13,6 +13,8 @@ return [
     |
     */
 
+    'iban'                 => 'The :attribute must a valid IBAN number.',
+    'kvk_number'           => 'The :attribute must a existing KVK number.',
     'accepted'             => 'The :attribute must be accepted.',
     'active_url'           => 'The :attribute is not a valid URL.',
     'after'                => 'The :attribute must be a date after :date.',

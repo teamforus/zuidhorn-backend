@@ -14,8 +14,11 @@ use Illuminate\Http\Request;
 */
 
 Route::post('/shop-keeper/sign-up', 'Api\ShopKeeperController@signUp');
+Route::post('/shop-keeper/device', 'Api\ShopKeeperController@registerDevice');
 
 Route::group(['prefix' => '', 'middleware' => 'auth:api'], function() {
+    Route::post('/shop-keeper/device/token', 'Api\ShopKeeperController@createDeviceToken');
+
     Route::get(
         '/user', 
         'Api\UserController@curentUser');

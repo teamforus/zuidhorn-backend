@@ -33,7 +33,7 @@ class ShopKeeperOfficeController extends Controller
         $edit = false;
         $this->authorize('create', ShopKeeperOffice::class);
 
-        return $this->_make('panel', 'shop_keeper_offices-edit', compact('edit'));
+        return $this->_make('panel', 'shop_keeper_offices-edit', compact('edit', 'shopKeeper'));
     }
 
     /**
@@ -48,23 +48,8 @@ class ShopKeeperOfficeController extends Controller
         if (!$shopKeeper->id)
             abort(404);
 
-        $getCoordinates = function($address) {
-             
-            // replace all the white space with "+" sign to match with google search pattern
-            $address = str_replace(" ", "+", $address); 
-             
-            $url = "http://maps.google.com/maps/api/geocode/json?sensor=false&address=$address";
-             
-            $response = file_get_contents($url);
-             
-            //generate array object from the response from the web
-            $json = json_decode($response,TRUE); 
-            
-            return $json['results'][0]['geometry']['location']; 
-        };
-
         $office = $request->only(['address']);
-        $coordinates = $getCoordinates($office['address']);
+        $coordinates = ShopKeeperOffice::getCoordinates($office['address']);
 
         $office['lon'] = $coordinates['lng'];
         $office['lat'] = $coordinates['lat'];
@@ -131,7 +116,7 @@ class ShopKeeperOfficeController extends Controller
         $edit = $shopKeeperOffice;
         $this->authorize('update', $edit);
 
-        return $this->_make('panel', 'shop_keeper_offices-edit', compact('edit'));
+        return $this->_make('panel', 'shop_keeper_offices-edit', compact('edit', 'shopKeeper'));
     }
 
     /**

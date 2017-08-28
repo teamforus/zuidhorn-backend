@@ -41,6 +41,7 @@ class Kernel extends HttpKernel
             'throttle:60,1',
             'bindings',
             \App\Http\Middleware\DeviceIdMiddleware::class,
+            \App\Http\Middleware\ShopKeeperStateMiddleware::class,
         ],
 
         'client-api' => [

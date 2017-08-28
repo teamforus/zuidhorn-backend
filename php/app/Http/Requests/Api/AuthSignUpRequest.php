@@ -24,8 +24,8 @@ class AuthSignUpRequest extends FormRequest
     public function rules()
     {
         return [
-            'kvk_number'    => 'required',
-            'iban'          => 'required',
+            'kvk_number'    => 'required|kvk_number',
+            'iban'          => 'required|iban',
             'email'         => 'required|string|email|max:255|unique:users',
         ];
     }

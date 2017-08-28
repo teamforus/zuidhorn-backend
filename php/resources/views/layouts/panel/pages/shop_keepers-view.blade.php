@@ -31,7 +31,7 @@
             <br>
             <strong>IBAN:</strong> {{ $view->iban }}
             <br>
-            <strong>KVK number:</strong> {{ $view->iban }}
+            <strong>KVK number:</strong> {{ $view->kvk_number }}
             <br>
             <strong>Phone number:</strong> {{ $view->phone_number }}
             <br>

@@ -15,7 +15,7 @@ class ShopKeeper extends Model
      */
     protected $fillable = [
     'user_id', 'name', 'kvk_number', 'bussines_address', 'phone_number', 
-    'state', 'iban'
+    'state', 'iban','kvk_data'
     ];
 
     /**
@@ -45,6 +45,11 @@ class ShopKeeper extends Model
     public function shop_keeper_devices()
     {
         return $this->hasMany('App\Models\ShopKeeperDevice');
+    }
+
+    public function shop_keeper_device_tokens()
+    {
+        return $this->hasMany('App\Models\ShopKeeperDeviceToken');
     }
 
     public function shop_keeper_offices()

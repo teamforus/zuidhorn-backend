@@ -1,8 +1,8 @@
 var oauth2App = angular.module('oauth2App', ['ui.router']);
 
 oauth2App.config(['ApiRequestProvider', function(ApiRequestProvider) {
-    //ApiRequestProvider.setHost('http://192.168.0.108:8000');
-    ApiRequestProvider.setHost('http://mvp.forus.io');
+    ApiRequestProvider.setHost('http://192.168.0.108:8000');
+    //ApiRequestProvider.setHost('http://mvp.forus.io');
 }]);
 
 oauth2App.config(['$stateProvider', function($stateProvider) {
@@ -40,6 +40,14 @@ oauth2App.config(['$stateProvider', function($stateProvider) {
 
                 $scope.$emit('auth:sign-out');
             }]
+        })
+        .state({
+            url: '/device-token',
+            name: 'device-token',
+            component: 'deviceTokenComponent',
+            data: {
+                title: "Device Token"
+            }
         })
         .state({
             url: '/settings',
@@ -94,6 +102,22 @@ oauth2App.config(['$stateProvider', function($stateProvider) {
             component: 'devicePendingComponent',
             data: {
                 title: "Unauthorised device"
+            }
+        })
+        .state({
+            url: '/shopkeeper-pending',
+            name: 'shopkeeper-pending',
+            component: 'shopkeeperPendingComponent',
+            data: {
+                title: "Shopkeeper pending"
+            }
+        })
+        .state({
+            url: '/shopkeeper-declined',
+            name: 'shopkeeper-declined',
+            component: 'shopkeeperDeclinedComponent',
+            data: {
+                title: "Shopkeeper declined"
             }
         });
 }]);

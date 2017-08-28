@@ -9,14 +9,11 @@ oauth2App.service('AuthService', [
             apiRequest = ApiRequest;
 
             this.signIn = function(values) {
-                return ApiRequest.post('/api/oauth/token', {
-                    'grant_type': 'password',
-                    'client_id': 2,
-                    'client_secret': 'DKbwNT3Afz8bovp0BXvJX5jWudIRRW9VZPbzieVJ',
-                    'username': values.email || '',
-                    'password': values.password || '',
-                    'scope': '*',
-                });
+                return ApiRequest.post('/api/shop-keeper/device', values);
+            };
+
+            this.createDeviceToken = function(values) {
+                return ApiRequest.post('/api/shop-keeper/device/token', values);
             };
 
             this.signUp = function(values) {

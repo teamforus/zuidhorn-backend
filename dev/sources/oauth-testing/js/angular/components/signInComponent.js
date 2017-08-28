@@ -30,11 +30,11 @@ oauth2App.component('signInComponent', {
                     CredentialsService.set(response.data);
                     ctrl.form.reset();
                     $state.go('panel');
-
+                    
                     $scope.$emit('auth:sign-in');
-                }, function() {
+                }, function(response) {
                     ctrl.form.submited = false;
-                    ctrl.form.errors.email = ["Wrong E-mail or Password."];
+                    ctrl.form.errors.token = [response.data.message];
                 });
             };
         }

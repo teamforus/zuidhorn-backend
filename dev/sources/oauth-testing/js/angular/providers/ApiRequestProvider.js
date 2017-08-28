@@ -57,6 +57,19 @@ oauth2App.provider('ApiRequest', function() {
                                     return $rootScope.$broadcast(
                                         'device:unauthorized',
                                         response.data);
+
+                                if ((response.data.error == 'shopkeeper-pending'))
+                                    return $rootScope.$broadcast(
+                                        'shopkeeper:pending', response.data);
+
+                                if ((response.data.error == 'shopkeeper-declined'))
+                                    return $rootScope.$broadcast(
+                                        'shopkeeper:declined', response.data);
+
+                                if ((response.data.error == 'Unauthenticated.')) {
+                                    return $rootScope.$broadcast(
+                                        'auth:unauthenticated', response.data);
+                                }
                             }
 
                             reject(response);

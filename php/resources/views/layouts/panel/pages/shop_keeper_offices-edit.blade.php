@@ -14,7 +14,7 @@
 </h4>
 <hr>
 @include('layouts.panel.blocks.alerts')
-{{ Form::open(['method' => $edit ? 'PATCH' : 'POST', 'class' => 'form', 'url' => $view_url . '/../', 'files' => true]) }}
+{{ Form::open(['method' => $edit ? 'PATCH' : 'POST', 'class' => 'form', 'url' => ($edit ? "/panel/shop-keepers/{$shopKeeper->id}/offices/{$edit->id}" : "/panel/shop-keepers/{$shopKeeper->id}/offices"), 'files' => true]) }}
 <div class="row">
     <div class="col-md-4 col-xs-12">
         <div class="form-group">
