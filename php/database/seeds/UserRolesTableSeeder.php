@@ -13,7 +13,7 @@ class UserRolesTableSeeder extends DatabaseSeeder
     public function run()
     {
         User::whereId(1)->first()->roles()->attach(1);
-        User::whereId(2)->first()->roles()->attach(2);
-        User::whereId(3)->first()->roles()->attach(3);
+        // User::whereId(2)->first()->roles()->attach(2);
+        // User::whereId(3)->first()->roles()->attach(3);
     }
 }

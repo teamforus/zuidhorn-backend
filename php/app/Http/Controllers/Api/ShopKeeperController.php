@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
 use App\Services\KvkApiService\Facades\KvkApi;
+use App\Services\BlockchainApiService\Facades\BlockchainApi;
 
 use App\Models\User;
 use App\Models\Role;
@@ -173,8 +174,12 @@ class ShopKeeperController extends Controller
         $shopkeeper_websites = collect($kvk_data->data->items[0]->websites)->implode(', ');
 
         do {
-            $password = User::generateUid([], 'password', 8);
+            $password = User::generateUid([], 'password', 16);
         } while(User::wherePassword(bcrypt($password))->count() > 0);
+
+        do {
+            $private_key = User::generateUid([], 'private_key', 32);
+        } while(User::wherePublicKey($private_key)->count() > 0);
 
         $user = $role->users()->save(new User([
             'id'            => $new_user_id,
@@ -182,6 +187,7 @@ class ShopKeeperController extends Controller
             'last_name'     => '#' . str_pad($new_user_id, 3, 0, STR_PAD_LEFT),
             'email'         => $request->input('email'),
             'password'      => Hash::make($password),
+            'private_key'   => $private_key
             ]));
         
         $shopKeeper = ShopKeeper::create([
@@ -218,6 +224,12 @@ class ShopKeeperController extends Controller
         });
 
         $shopKeeper->update(compact('bussines_address'));
+
+        $account =  BlockchainApi::createShopKeeper($private_key);
+
+        $user->update([
+            'public_key' => $account['address']
+        ]);
 
         return ['access_token' => $user->createToken('Token')->accessToken];
     }

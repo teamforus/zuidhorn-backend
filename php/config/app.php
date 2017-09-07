@@ -189,6 +189,7 @@ return [
 
         // App services
         App\Services\KvkApiService\KvkApiServiceProvider::class,
+        App\Services\BlockchainApiService\BlockchainApiServiceProvider::class,
     ],
 
     /*
@@ -247,6 +248,7 @@ return [
         'Image' => Intervention\Image\Facades\Image::class,
 
         'KvkApi' => App\Services\KvkApiService\Facades\KvkApi::class,
+        'BlockchainApi' => App\Services\BlockchainApiService\Facades\BlockchainApi::class,
     ],
 
 ];

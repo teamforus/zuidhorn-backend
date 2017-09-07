@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Services\BunqService\BunqService;
 use App\Jobs\BunqProcessTransactionJob;
+use App\Services\BlockchainApiService\Facades\BlockchainApi;
+use App\Models\ShopKeeper;
 
 class Voucher extends Model
 {
@@ -16,7 +18,16 @@ class Voucher extends Model
      * @var array
      */
     protected $fillable = [
-    'code', 'user_buget_id', 'shop_keeper_id', 'max_amount'
+    'code', 'user_buget_id', 'shop_keeper_id', 'max_amount', 'private_key'
+    ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+    'private_key'
     ];
 
     public function user_buget()
@@ -57,6 +68,9 @@ class Voucher extends Model
 
     public function getAvailableFunds()
     {
+        return BlockchainApi::getBalance($this->code)['balance'];
+
+        // TODO: Optimize to user blockchain 
         $funds_available = $this->user_buget->getAvailableFunds();
         $max_amount = $this->max_amount;
 
@@ -68,9 +82,18 @@ class Voucher extends Model
 
     public function logTransaction($shop_keeper_id, $amount)
     {
+        $shopKeeper = ShopKeeper::find($shop_keeper_id);
+
         $transaction = new VoucherTransaction(compact(
             'shop_keeper_id', 'amount'));
         $transaction = $this->transactions()->save($transaction);
+
+        BlockchainApi::requestFunds(
+            $this->code,
+            $shopKeeper->user->public_key,
+            $shopKeeper->user->private_key,
+            $amount
+            );
 
         dispatch(new BunqProcessTransactionJob($transaction));
 

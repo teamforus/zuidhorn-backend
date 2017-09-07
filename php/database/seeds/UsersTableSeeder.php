@@ -20,9 +20,11 @@ class UsersTableSeeder extends DatabaseSeeder
             'last_name'     => '001',
             'email'         => 'forus-admin@dev-weget.nl',
             'password'      => Hash::make('mvp-admin-pass'),
+            'public_key'    => "0x5210c29f6f8e3cf841dfa22d35b2db88f1d353dc",
+            'private_key'   => "qX2EZAQzdWEg45qvtxQrCYLmDHXFJU32",
             ]);
 
-        User::create([
+        /*User::create([
             'id'            => 2,
             'first_name'    => 'ShopKeeper',
             'last_name'     => '001',
@@ -36,6 +38,6 @@ class UsersTableSeeder extends DatabaseSeeder
             'last_name'     => '001',
             'email'         => 'forus-citizen@weget.nl',
             'password'      => Hash::make('mvp-citizen-pass'),
-            ]);
+            ]);*/
     }
 }

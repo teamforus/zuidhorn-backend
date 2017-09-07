@@ -16,6 +16,7 @@ class CreateVouchersTable extends Migration
         Schema::create('vouchers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('code');
+            $table->string('private_key');
             $table->integer('user_buget_id')->unsigned();
             $table->float('max_amount')->unsigned()->nullable();
             $table->string('status')->default('active');

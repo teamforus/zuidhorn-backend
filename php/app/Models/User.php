@@ -21,7 +21,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-    'first_name', 'last_name', 'email', 'password',
+    'first_name', 'last_name', 'email', 'password', 'public_key', 'private_key'
     ];
 
     /**
@@ -30,7 +30,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-    'password', 'remember_token',
+    'password', 'remember_token', 'private_key'
     ];
 
     /**
@@ -89,20 +89,27 @@ class User extends Authenticatable
     {
         $role = Role::where('key', 'citizen')->first();
         $passwords = self::pluck('password')->toArray();
+        $private_keys = self::pluck('private_key')->toArray();
 
-        $users = collect($data)->map(function($val) use (&$passwords) {
+        $users = collect($data)->map(function($val) use (&$passwords, &$private_keys) {
             do {
                 $random_number = substr(md5(rand(1, 100000000)), 0, 10);
             } while (in_array($random_number, $passwords) !== false);
 
+            do {
+                $private_key = substr(md5(rand(1, 100000000)), 0, 10);
+            } while (in_array($private_key, $private_keys) !== false);
+
             array_push($passwords, $random_number);
+            array_push($private_keys, $private_key);
 
             $user = [];
 
-            $user['first_name'] = $random_number;
-            $user['last_name']  = $random_number;
-            $user['email']      = $random_number;
-            $user['password']   = $random_number;
+            $user['private_key']    = $private_key;
+            $user['first_name']     = $random_number;
+            $user['last_name']      = $random_number;
+            $user['email']          = $random_number;
+            $user['password']       = $random_number;
 
             return $user;
         });

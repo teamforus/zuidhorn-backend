@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use \App\Http\Requests\Panel\ShopKeeperStoreRequest;
 use \App\Http\Requests\Panel\ShopKeeperUpdateRequest;
+use App\Services\BlockchainApiService\Facades\BlockchainApi;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -138,6 +139,10 @@ class ShopKeeperController extends Controller
             unset($data['password_confirmation']);
         }
 
+        BlockchainApi::setShopKeeperState(
+            $shopKeeper->user->public_key, 
+            $data['state'] == 'approved');
+
         if ($edit->update($data) && $edit->user->update($data))
             session()->flash('alert_default', 'Shop Keeper updated!');
 
@@ -171,6 +176,8 @@ class ShopKeeperController extends Controller
     {
         if ($shopKeeper->update(['state' => 'approved']))
             session()->flash('alert_default', 'Shop Keeper has been approved!');
+
+        BlockchainApi::setShopKeeperState($shopKeeper->user->public_key, true);
 
         return redirect()->back();
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\ShopKeeper;
+use App\Services\BlockchainApiService\Facades\BlockchainApi;
 use Closure;
 
 class ShopKeeperStateMiddleware
@@ -30,7 +31,13 @@ class ShopKeeperStateMiddleware
         $target_user = $request->user();
         $shop_keeper = ShopKeeper::whereUserId($target_user->id)->first();
 
-        if ($shop_keeper->state == 'pending') {
+        if (!BlockchainApi::checkShopKeeperState($target_user->public_key)['state'])
+            return response(collect([
+                'error'         => 'shopkeeper-pending',
+                'description'   => "Shopkeeper account is yet to be validated."
+                ]), 401);
+
+        /*if ($shop_keeper->state == 'pending') {
             return response(collect([
                 'error'         => 'shopkeeper-pending',
                 'description'   => "Shopkeeper account is yet to be validated."
@@ -42,7 +49,7 @@ class ShopKeeperStateMiddleware
                 'error'         => 'shopkeeper-declined',
                 'description'   => "Shopkeeper account was declined."
                 ]), 401);
-        }
+        }*/
 
         return $next($request);
     }

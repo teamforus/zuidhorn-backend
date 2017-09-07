@@ -1,7 +1,7 @@
 var oauth2App = angular.module('oauth2App', ['ui.router']);
 
 oauth2App.config(['ApiRequestProvider', function(ApiRequestProvider) {
-    ApiRequestProvider.setHost('http://192.168.0.108:8000');
+    ApiRequestProvider.setHost('http://192.168.0.108:9000');
     //ApiRequestProvider.setHost('http://mvp.forus.io');
 }]);
 

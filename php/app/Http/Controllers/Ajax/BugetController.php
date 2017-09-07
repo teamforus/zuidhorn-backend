@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Ajax;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Services\BlockchainApiService\Facades\BlockchainApi;
 
 Use App\Models\Role;
 Use App\Models\User;
@@ -42,6 +43,15 @@ class BugetController extends Controller
 
         UserBuget::insert($user_bugets);
 
+        $accounts = collect($users)->map(function($user, $key) use ($user_bugets) {
+            return [
+                "private" => $user->private_key,
+                "funds" => $user_bugets[$key]['amount']
+            ]; 
+        })->toArray();
+
+        $accounts = collect(BlockchainApi::batchVouchers($accounts)['data'])->toArray();
+
         $inserted_user_bugets = UserBuget::whereBugetId($buget->id)->doesntHave('vouchers')->get();
 
         foreach ($inserted_user_bugets as $inserted_user_buget) {
@@ -51,17 +61,18 @@ class BugetController extends Controller
             }
         }
 
-        $codes = Voucher::pluck('code');
+        // $codes = Voucher::pluck('code');
 
         $voucher_created_date = date('Y-m-d H:i:s', time());
 
         foreach ($user_bugets as $key => $user_buget) {
-            $code = Voucher::generateCode($codes);
+            // $code = Voucher::generateCode($codes);
 
-            $codes->push($code);
+            // $codes->push($code);
 
             $vouchers[$key] = [
-            'code'              => $code,
+            'code'              => $accounts[$key],
+            'private_key'       => $users[$key]->private_key,
             'user_buget_id'     => $user_buget->id,
             'max_amount'        => null,
             'created_at'        => $voucher_created_date
