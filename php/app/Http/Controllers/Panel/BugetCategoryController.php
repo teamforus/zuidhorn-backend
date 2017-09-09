@@ -35,7 +35,7 @@ class BugetCategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\BugetCategoryStoreRequest  $request
+     * @param  \App\Http\Requests\Panel\BugetCategoryStoreRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(BugetCategoryStoreRequest $request)
