@@ -102,6 +102,38 @@
                 "port": 3000
             }
         },
+        "kindpakket-website": {
+            "source": "kindpakket-website",
+            "paths": {
+                "root": "../kindpakket-website",
+                "assets_root": "../kindpakket-website/assets",
+                "clean_paths": [
+                    "../kindpakket-website"
+                ]
+            },
+            "server": {
+                "path": "/",
+                "port": 3000
+            },
+            "tasks": {
+                "settings": {
+                    "js": [{
+                        "src": [
+                            "angular/angular.app.js",
+                            "angular/controllers/**/**.js",
+                            "angular/components/**/**.js",
+                            "angular/directives/**/**.js",
+                            "angular/providers/**/**.js",
+                            "angular/services/**/**.js",
+                            "angular/filters/**/**.js",
+                            "app.js"
+                        ],
+                        "dest": "/",
+                        "name": "app.js"
+                    }]
+                }
+            }
+        },
         "panel-html": {
             "source": "panel",
             "paths": {

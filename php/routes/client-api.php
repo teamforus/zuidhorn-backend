@@ -20,6 +20,7 @@ Route::get('/api/categories', 'ClientApi\CategoryController@index');
 
 Route::group(['prefix' => 'api', 'middleware' => 'auth:api'], function() {
     Route::get('/user/voucher', 'ClientApi\VoucherController@target');
+    Route::get('/user/voucher/qr-code', 'ClientApi\VoucherController@getQrCode');
 
     Route::get('/{any}', function ($any) {
         return response(['message' => 'Endpoint not found.'], 404);

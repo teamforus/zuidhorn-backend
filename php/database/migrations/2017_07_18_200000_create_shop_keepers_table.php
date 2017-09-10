@@ -21,6 +21,7 @@ class CreateShopKeepersTable extends Migration
             $table->string('kvk_number')->nullable()->default(null);
             $table->text('kvk_data')->nullable()->default(null);
             $table->string('phone_number')->nullable()->default(null);
+            $table->string('website')->nullable()->default(null);
             $table->string('bussines_address')->nullable()->default(null);
             $table->string('state')->default('pending');
             $table->timestamps();

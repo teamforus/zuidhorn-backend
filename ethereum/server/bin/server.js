@@ -62,10 +62,13 @@ app.post('/api/voucher/batch', logEndpoint, function(req, res) {
     }
 });
 
-app.post('/api/shop-keeper', logEndpoint, function(req, res) {
+app.post('/api/account', logEndpoint, function(req, res) {
     let _private = req.body.private;
+    let _funds = parseInt(req.body.funds);
 
-    core.newAccount(_private).then(function(address) {
+    account = core.newAccount(_private, isNaN(_funds) ? false : _funds);
+    
+    account.then(function(address) {
         res.send({
             address: address
         });

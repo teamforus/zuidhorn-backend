@@ -17,6 +17,8 @@ class TestController extends Controller
 {
     public function getTest(Request $request)
     {
+        return \App\Models\ShopKeeper::whereUserId(2)->first()->makeBlockchainAccount();
+
         return BlockchainApi::requestFunds(
             '0x37e00c6a9c09390db9fc501cbbb2b4e633977732',
             '0xaf93496c88f4bcb117143f5908074b9d7a2d0a86',
@@ -30,7 +32,7 @@ class TestController extends Controller
 
         return BlockchainApi::checkShopKeeperState("0xaf93496c88f4bcb117143f5908074b9d7a2d0a86");
 
-        return BlockchainApi::createShopKeeper("private_key");
+        return BlockchainApi::createAccount("private_key");
 
         return BlockchainApi::batchVouchers(array(
             "323" => array(
@@ -58,7 +60,7 @@ class TestController extends Controller
         return;
 
         $voucher = Voucher::whereCode('VIES-2F9M-J8RR-TC5W')->first();
-        $response = $voucher->user_buget->transactions->sum('amount');
+        $response = $voucher->transactions->sum('amount');
 
         return compact('response');
     }

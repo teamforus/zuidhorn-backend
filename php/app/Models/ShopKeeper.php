@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Services\BlockchainApiService\Facades\BlockchainApi;
 
 class ShopKeeper extends Model
 {
@@ -15,7 +16,7 @@ class ShopKeeper extends Model
      */
     protected $fillable = [
     'user_id', 'name', 'kvk_number', 'bussines_address', 'phone_number', 
-    'state', 'iban','kvk_data'
+    'state', 'iban','kvk_data', "website"
     ];
 
     /**
@@ -88,5 +89,15 @@ class ShopKeeper extends Model
         $device->sendApprovalRequest();
 
         return $device;
+    }
+
+    public function makeBlockchainAccount() {
+        $account = BlockchainApi::createAccount($this->user->private_key);
+
+        $this->user->update([
+            'public_key' => $account['address']
+        ]);
+
+        return $account;
     }
 }

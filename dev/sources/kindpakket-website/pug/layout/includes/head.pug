@@ -1,0 +1,29 @@
+head
+    meta(charset="UTF-8")
+    title Zuidhorn
+
+    //- disable resize on mobiles
+    meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no')
+
+    //- fonts (roboto)
+    link(href='https://fonts.googleapis.com/css?family=Roboto:400,900italic,900,700,700italic,500italic,500,400italic,300,100italic,100,300italic&subset=latin,cyrillic,latin-ext', rel='stylesheet', type='text/css')
+
+    //- fonts (open-sans)
+    link(rel="stylesheet", type='text/css', href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&amp;subset=cyrillic,cyrillic-ext,latin-ext")
+
+    //- material design icons (by google)
+    if (qdt_c.platform.libs.mdi)
+        link(rel="stylesheet", href="assets/dist/mdi/css/materialdesignicons.min.css")
+
+    //- bootstrap 3
+    if (qdt_c.platform.libs.bootstrap_3)
+        link(rel="stylesheet", href="assets/dist/bootstrap/css/bootstrap.min.css")
+
+    //- angular csp (cloack)
+    if (qdt_c.platform.libs.angular)
+        link(rel="stylesheet", href="assets/dist/angular/angular-csp.css")
+    
+    link(rel="stylesheet", href="assets/dist/sweetalert/sweetalert.css")
+    
+    //- custom style
+    link(rel="stylesheet", href="assets/css/style.min.css")

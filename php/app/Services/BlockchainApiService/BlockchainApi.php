@@ -23,12 +23,13 @@ class BlockchainApi
             ]);
     }
 
-    public function createShopKeeper($private)
+    public function createAccount($private, $funds = false)
     {
-        $endpoint = "{$this->api_url}/api/shop-keeper";
+        $endpoint = "{$this->api_url}/api/account";
 
         return $this->makeRequest($endpoint, "post", 'json', [
-            "private" => $private
+            "private" => $private,
+            "funds" => $funds,
             ]);
     }
 

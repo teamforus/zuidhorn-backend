@@ -48,6 +48,10 @@ class RouteServiceProvider extends ServiceProvider
         Route::bind('voucher_code', function ($code) {
             return \App\Models\Voucher::whereCode($code)->first();
         });
+
+        Route::bind('voucher_public_key', function ($public_key) {
+            return \App\Models\Voucher::wherePublicKey($public_key)->first();
+        });
     }
 
     /**

@@ -1,0 +1,92 @@
+// clear Fix - for floating blocks
+@mixin cf(){
+    *zoom: 1;
+
+    &:before, &:after{
+        content: " ";
+        display: table;
+    }
+
+    &:after{
+        clear: both;
+    }
+}
+
+/* pseudo */
+
+@mixin pseudo($display: block, $pos: absolute, $content: '', $top:0, $left:0){
+    content: $content;
+    display: $display;
+    position: $pos;
+    left:$left;
+    top:$top;
+}
+
+/* font-style */
+
+@mixin font-style($size: false, $colour: false, $weight: false,  $lh: false, $text:center) {
+
+  @if $size { font-size: $size; }
+  @if $colour { color: $colour; }
+  @if $weight { font-weight: $weight; }
+  @if $lh { line-height: $lh; }
+  @if $text {text-align: $text;}
+
+}
+
+/* inline-carcas */
+
+@mixin inline-parent($display: block,$position:relative,$textal:justify){
+
+    display: $display;
+    position: $position;
+    text-align: $textal;
+
+    &:after{
+        visibility:hidden;
+        overflow: hidden;
+        display: inline-block;
+        height: 0;
+        width: 100%;
+        content:"";
+    }
+
+}
+
+
+// fill parrent block
+@mixin fill_parent($offset: 0px, $position: absolute){
+    position: $position;
+    top: $offset;
+    right: $offset;
+    bottom: $offset;
+    left: $offset;
+}
+
+// ellipsis text
+@mixin ellipsis {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+// placeholder
+
+@mixin placeholder {
+    &::-webkit-input-placeholder {
+        @content;
+    }
+
+    &:-moz-placeholder { /* Firefox 18- */
+        @content;
+    }
+
+    &::-moz-placeholder {  /* Firefox 19+ */
+        @content;
+    }
+
+    &:-ms-input-placeholder {
+        @content;
+    }
+}

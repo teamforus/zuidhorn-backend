@@ -11,6 +11,7 @@ use App\Models\ShopKeeper;
 class Voucher extends Model
 {
     use Traits\Urls\VoucherUrlsTrait;
+    use Traits\GenerateUidsTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -18,7 +19,7 @@ class Voucher extends Model
      * @var array
      */
     protected $fillable = [
-    'code', 'user_buget_id', 'shop_keeper_id', 'max_amount', 'private_key'
+    'code', 'public_key', 'private_key', 'buget_id', 'user_id', 'status', 'amount'
     ];
 
     /**
@@ -27,12 +28,15 @@ class Voucher extends Model
      * @var array
      */
     protected $hidden = [
-    'private_key'
+    'private_key', 'code'
     ];
 
-    public function user_buget()
-    {
-        return $this->belongsTo('App\Models\UserBuget');
+    public function user() {
+        return $this->belongsTo('App\Models\User');
+    }
+
+    public function buget() {
+        return $this->belongsTo('App\Models\Buget');
     }
 
     public function transactions()
@@ -40,38 +44,15 @@ class Voucher extends Model
         return $this->hasMany('App\Models\VoucherTransaction');
     }
 
-    public static function generateCode($cache = false)
-    {
-        $keys = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-        $rand_generator = function ($length, $keyspace)
-        {
-            $str = '';
-            $max = mb_strlen($keyspace, '8bit') - 1;
-            for ($i = 0; $i < $length; ++$i) {
-                $str .= $keyspace[random_int(0, $max)];
-            }
-            return $str;
-        };
-
-        do {
-            $code = collect(range(0, 3))->map(function() use (
-                $rand_generator, 
-                $keys) 
-            {
-                return $rand_generator(6, $keys);
-            })->implode('-');
-        } while (!$cache ? (self::whereCode($code)->count() > 0) : collect($cache)->search($code));
-
-        return $code;
-    }
-
     public function getAvailableFunds()
     {
-        return BlockchainApi::getBalance($this->code)['balance'];
+        if (is_null($this->user_id))
+            return $this->amount;
+        
+        return BlockchainApi::getBalance($this->public_key)['balance'];
 
         // TODO: Optimize to user blockchain 
-        $funds_available = $this->user_buget->getAvailableFunds();
+        $funds_available = $this->getAvailableFunds();
         $max_amount = $this->max_amount;
 
         if (is_null($max_amount))
@@ -89,7 +70,7 @@ class Voucher extends Model
         $transaction = $this->transactions()->save($transaction);
 
         BlockchainApi::requestFunds(
-            $this->code,
+            $this->public_key,
             $shopKeeper->user->public_key,
             $shopKeeper->user->private_key,
             $amount

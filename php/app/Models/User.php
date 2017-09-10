@@ -62,17 +62,9 @@ class User extends Authenticatable
             'user_bugets');
     }
 
-    public function user_bugets()
-    {
-        return $this->hasMany('App\Models\UserBuget');
-    }
-
     public function vouchers()
     {
-        return $this->hasManyThrough(
-            'App\Models\Voucher', 
-            'App\Models\UserBuget'
-            );
+        return $this->hasMany('App\Models\Voucher');
     }
 
     public function getFullNameAttribute()
@@ -83,52 +75,6 @@ class User extends Authenticatable
     public function hasRole($role)
     {
         return $this->roles()->where('key', $role)->count() > 0;
-    }
-
-    public static function generateCitizens($data)
-    {
-        $role = Role::where('key', 'citizen')->first();
-        $passwords = self::pluck('password')->toArray();
-        $private_keys = self::pluck('private_key')->toArray();
-
-        $users = collect($data)->map(function($val) use (&$passwords, &$private_keys) {
-            do {
-                $random_number = substr(md5(rand(1, 100000000)), 0, 10);
-            } while (in_array($random_number, $passwords) !== false);
-
-            do {
-                $private_key = substr(md5(rand(1, 100000000)), 0, 10);
-            } while (in_array($private_key, $private_keys) !== false);
-
-            array_push($passwords, $random_number);
-            array_push($private_keys, $private_key);
-
-            $user = [];
-
-            $user['private_key']    = $private_key;
-            $user['first_name']     = $random_number;
-            $user['last_name']      = $random_number;
-            $user['email']          = $random_number;
-            $user['password']       = $random_number;
-
-            return $user;
-        });
-
-        User::insert($users->toArray());
-
-        $old_users = self::get()->keyBy('password');
-
-        $users = $users->map(function($user) use (&$old_users) {
-            if (isset($old_users[$user['password']]))
-                return $old_users[$user['password']];
-        })->filter(function($user) {
-            return $user;
-        });
-
-        $role->users()->attach($users->pluck("id")->toArray());
-
-        return $users;
-
     }
 
     public function unlink()

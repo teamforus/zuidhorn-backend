@@ -15,7 +15,7 @@ class VouchersTableSeeder extends DatabaseSeeder
      */
     public function run()
     {
-        $users = Role::where('key', 'citizen')->first()->users;
+        /*$users = Role::where('key', 'citizen')->first()->users;
 
         $users->each(function($user) {
             $user->user_bugets->each(function($user_buget) use ($user) {
@@ -27,6 +27,6 @@ class VouchersTableSeeder extends DatabaseSeeder
                     'max_amount'        => null,
                     ]);
             });
-        });
+        });*/
     }
 }

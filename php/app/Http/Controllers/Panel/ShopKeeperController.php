@@ -82,8 +82,13 @@ class ShopKeeperController extends Controller
             'user_id' => $user->id
             ]);
 
-        if ($shopKeeper->update($request->all()))
+        $data = $request->all();
+
+        if ($shopKeeper->update($data))
             session()->flash('alert_default', 'Shoop Keeper created!');
+
+        if (!$shopKeeper->public_key && ($data['state'] == 'approved'))
+            $shopKeeper->makeBlockchainAccount();
 
         return redirect(action('Panel\ShopKeeperController@index'));
     }
@@ -139,6 +144,9 @@ class ShopKeeperController extends Controller
             unset($data['password_confirmation']);
         }
 
+        if (!$shopKeeper->public_key && ($data['state'] == 'approved'))
+            $shopKeeper->makeBlockchainAccount();
+
         BlockchainApi::setShopKeeperState(
             $shopKeeper->user->public_key, 
             $data['state'] == 'approved');
@@ -177,6 +185,9 @@ class ShopKeeperController extends Controller
         if ($shopKeeper->update(['state' => 'approved']))
             session()->flash('alert_default', 'Shop Keeper has been approved!');
 
+        if (!$shopKeeper->public_key)
+            $shopKeeper->makeBlockchainAccount();
+        
         BlockchainApi::setShopKeeperState($shopKeeper->user->public_key, true);
 
         return redirect()->back();

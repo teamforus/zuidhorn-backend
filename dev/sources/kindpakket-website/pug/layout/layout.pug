@@ -1,0 +1,10 @@
+doctype
+html(lang="en")
+    include includes/head
+    body(ng-app="kindpakketApp" ng-controller='BaseController' ng-csp)
+        .main-wrapper
+            // include includes/dev-pages
+            include includes/header
+            block content
+            include includes/footer
+        include includes/scripts

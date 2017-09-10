@@ -7,8 +7,6 @@
             <th>Citizen</th>
             <th>Buget</th>
             <th>Funds available</th>
-            <th>Max. amount</th>
-            <th>Status</th>
             <th class="text-right">Actions</th>
         </tr>
     </tHead>
@@ -23,18 +21,14 @@
             </td>
             <td>{{ Html::link($row->urlPanelView(), $row->code, ['class' => 'text-primary']) }}</td>
             <td>
-                {{ $row->user_buget->user->full_name }}
-            </td>
-            <td>{{ Html::link($row->user_buget->buget->urlPanelView(), $row->user_buget->buget->name, ['class' => 'text-primary']) }}</td>
-            <td>€{{ number_format($row->getAvailableFunds(), 2) }}</td>
-            <td>
-                @if(!is_null($row->max_amount))
-                €{{ number_format($row->max_amount, 2) }}
+                @if(is_null($row->user_id))
+                <span class='text-muted'>Not activated</span>
                 @else
-                <span class="text-muted">Not restricted</span>
+                #{{ $row->user->id }}
                 @endif
             </td>
-            <td><strong>{{ $row->status }}</strong></td>
+            <td>{{ Html::link($row->buget->urlPanelView(), $row->buget->name, ['class' => 'text-primary']) }}</td>
+            <td>€{{ number_format($row->getAvailableFunds(), 2) }}</td>
             <td class="text-right">
                 <div class="btn-group">
                     @can('view', $row)

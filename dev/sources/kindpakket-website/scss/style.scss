@@ -1,0 +1,110 @@
+@import 'includes/vars';
+@import 'includes/resetter';
+@import 'includes/helpers';
+@import 'includes/placeholders';
+@import 'includes/third-party';
+@import 'includes/blocks';
+@import 'includes/elements';
+
+
+// COMMON
+@import 'includes/common';
+
+// DEV PAGES
+@import 'includes/dev-pages';
+
+// PAGES
+@import 'includes/home';
+
+// MEDIAS
+@import 'includes/medias';
+
+
+html,body {
+    width: 100%;
+    margin: 0;
+    pointer-events: relative;
+    height: 100%;
+    font-family: 'Open Sans', sans-serif;
+
+}
+
+body {
+    background-color: $bg1;
+
+    &.has-modal {
+        overflow: hidden;
+    }
+}
+
+.font-1{
+    font-family: 'Open Sans', sans-serif;
+}
+
+.preload * {
+    transition: none !important;
+}
+
+h1,h2,h3,h4,h5{
+    font-weight: 400;
+}
+
+ a{    
+    &:hover{text-decoration: none;}
+    @extend .transition;
+}
+
+/* extends */
+.transition{
+    transition: all ease .5s; 
+}
+
+.img-responsive {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.fr {
+    float: right;
+}
+
+.fl {
+    float: left;
+}
+
+.cf {
+    @include cf();
+}
+
+.no-pb {
+    padding-bottom: 0 !important;
+}
+
+.no-mb {
+    margin-bottom: 0 !important;
+}
+
+.no-pt {
+    padding-top: 0 !important;
+}
+
+.no-mt {
+    margin-top: 0 !important;
+}
+
+.icon {
+    svg {
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+    }
+}
+
+
+.valid-error {
+    text-align: left !important;
+    margin-top: -15px !important;
+    margin-bottom: 25px !important;
+    font: 400 13px 'OPen Sans' !important;
+}

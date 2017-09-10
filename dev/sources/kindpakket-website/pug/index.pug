@@ -1,0 +1,82 @@
+extends layout/layout
+
+block content
+    include layout/includes/popups
+    main.content
+        .container
+            .banner
+                .banner__h.main-h1
+                    h1 Zuidhorn.
+                        span  Kindpakket
+                    .banner__desc
+                        p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        
+        .container
+            .blocks.selected
+                .blocks-wrap(ng-repeat="category in categories | filter:{selected: true}")
+                    .blocks-item(ng-click="selectCategory($event, category)" ng-class="{checked: category.selected}")
+                        .blocks-item__img.s-back-switch: img.s-img-switch(ng-src="{{ category.preview }}", alt="")
+                        label.blocks-item__label.mdi-plus: span Start aanvraag
+                        .blocks-item__h.main-h3: h3(ng-bind="category.name")
+                        .blocks-item__circle
+        div(google-map)
+        .container
+            .blocks.initial
+                .blocks-wrap(ng-show="(categories | filter:{selected: false}).length"): .blocks-show(ng-click="selectAll($event)")
+                    .blocks-show__preview: img(src="./assets/img/map-preview.jpg", alt="")
+                    .blocks-show__desc
+                        p 
+                            | Bekijk alle 
+                            br
+                            | deelnemende
+                            br
+                            | winkels
+                            em.mdi.mdi-chevron-double-right
+                .blocks-wrap(ng-repeat="category in categories | filter:{selected: false}")
+                    .blocks-item(ng-click="selectCategory($event, category)" ng-class="{checked: category.selected}")
+                        .blocks-item__img.s-back-switch: img.s-img-switch(ng-src="{{ category.preview }}", alt="")
+                        label.blocks-item__label.mdi-plus: span Bekijk locaties
+                        .blocks-item__h.main-h3: h3(ng-bind="category.name")
+                        .blocks-item__circle
+
+        if (false)
+            .container
+                .blocks.selected
+            .map
+                .map-triangle
+                .map-canvas#map-canvas-contact(data-lat="52.07880378" data-lng="4.33619589" data-marker="assets/img/marker.png" data-zoom="8" data-style="style-1")
+                .wrap
+                    a(href="").btn-3 Select All
+                    a(href="").btn-3.cancel Cancel
+            .container
+                .blocks.initial
+                    mixin item(img,title,lg,lt)
+                        .blocks-wrap(data-lg=lg)&attributes(attributes)=lt
+                            .blocks-item
+                                .blocks-item__img.s-back-switch
+                                    img.s-img-switch(src="assets/img/" + img + ".jpg", alt="")
+                                input(type="checkbox" name=img id=img)
+                                label.blocks-item__label(for=img).mdi-plus
+                                    span Start aanvraag
+                                .blocks-item__h.main-h3
+                                    h3= title
+                                .blocks-item__circle
+                    .blocks-wrap
+                        .blocks-show
+                            .blocks-show__icon.icon
+                                include ../resources/assets/icons/svg/arrow.svg
+                            .blocks-show__desc
+                                p Show all #[br] Participating shops
+                                    span »
+                    +item("personal", "Personal care", "-33.890542")(data-lt="151.274856")
+                    +item("home", "Home care", "-33.80010128657071")(data-lt="151.28747820854187")
+                    +item("support", "Support & assistance", "-33.950198")(data-lt="151.259302")
+                    +item("culture", "Culture", "-38.950198")(data-lt="151.359302")
+                    +item("therapy", "Therapy", "-34.950198" )(data-lt="153.259302")
+                    +item("education", "Education", "-36.950198")(data-lt="154.259302")
+                    +item("transportation", "Transportation", "-35.950198")(data-lt="152.259302")
+                    +item("sport", "Sport", "-33.850198")(data-lt= "151.269302")
+                    +item("health", "Health care", "-33.953198")(data-lt= "151.289302")
+                    +item("household", "Housegold expenses", "-33.850198")(data-lt= "151.359302")
+
+            p(ng-bind="categories")

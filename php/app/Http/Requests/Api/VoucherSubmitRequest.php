@@ -33,7 +33,9 @@ class VoucherSubmitRequest extends FormRequest
         $rules['full_amount'] = 'boolean';
 
         if (!$full_amount)
-            $rules['amount'] = 'required|numeric|between:0.1,' . $this->voucher_code->getAvailableFunds();
+            $rules['amount'] = 
+        'required|numeric|between:0.1,' . 
+        $this->voucher_public_key->getAvailableFunds();
 
         return $rules;
     }

@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
 use App\Services\KvkApiService\Facades\KvkApi;
-use App\Services\BlockchainApiService\Facades\BlockchainApi;
 
 use App\Models\User;
 use App\Models\Role;
@@ -159,10 +158,6 @@ class ShopKeeperController extends Controller
 
         $device_id = $request->header('Device-Id');
 
-        $last_user_id = User::orderBy('id', 'DESC')->first();
-        $last_user_id = ($last_user_id ? $last_user_id->id : 0);
-        $new_user_id = $last_user_id + 1;
-
         $kvk_data = KvkApi::kvkNumberData($request->input('kvk_number'));
 
         if (!$kvk_data)
@@ -182,22 +177,18 @@ class ShopKeeperController extends Controller
         } while(User::wherePublicKey($private_key)->count() > 0);
 
         $user = $role->users()->save(new User([
-            'id'            => $new_user_id,
-            'first_name'    => 'ShopKeeper',
-            'last_name'     => '#' . str_pad($new_user_id, 3, 0, STR_PAD_LEFT),
-            'email'         => $request->input('email'),
-            'password'      => Hash::make($password),
-            'private_key'   => $private_key
+            'email'             => $request->input('email'),
+            'password'          => Hash::make($password),
+            'private_key'       => $private_key
             ]));
         
         $shopKeeper = ShopKeeper::create([
-            'name'              => 'ShopKeeper #' . $new_user_id,
+            'name'              => $shopkeeper_name,
             'user_id'           => $user->id,
             'iban'              => strtoupper($request->input('iban')),
             'kvk_number'        => $request->input('kvk_number'),
-            'bussines_address'  => '',
-            'phone_number'      => '',
             'state'             => 'pending',
+            "website"           => $shopkeeper_websites,
             'kvk_data'          => json_encode($kvk_data),
             ]);
 
@@ -224,12 +215,6 @@ class ShopKeeperController extends Controller
         });
 
         $shopKeeper->update(compact('bussines_address'));
-
-        $account =  BlockchainApi::createShopKeeper($private_key);
-
-        $user->update([
-            'public_key' => $account['address']
-        ]);
 
         return ['access_token' => $user->createToken('Token')->accessToken];
     }

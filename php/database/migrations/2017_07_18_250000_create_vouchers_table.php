@@ -15,15 +15,20 @@ class CreateVouchersTable extends Migration
     {
         Schema::create('vouchers', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('code');
-            $table->string('private_key');
-            $table->integer('user_buget_id')->unsigned();
-            $table->float('max_amount')->unsigned()->nullable();
-            $table->string('status')->default('active');
+            $table->string('code')->nullable();
+            $table->string('public_key')->nullable();
+            $table->string('private_key')->nullable();
+            $table->integer('buget_id')->unsigned();
+            $table->integer('user_id')->unsigned()->nullable();
+            $table->float('amount')->unsigned()->nullable();
             $table->timestamps();
 
-            $table->foreign('user_buget_id')
-            ->references('id')->on('user_bugets')
+            $table->foreign('buget_id')
+            ->references('id')->on('bugets')
+            ->onDelete('cascade');
+
+            $table->foreign('user_id')
+            ->references('id')->on('users')
             ->onDelete('cascade');
         });
     }

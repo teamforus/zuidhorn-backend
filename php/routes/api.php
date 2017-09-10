@@ -26,7 +26,7 @@ Route::group(['prefix' => '', 'middleware' => 'auth:api'], function() {
     Route::resource(
         '/voucher', 
         'Api\VoucherController', 
-        ['parameters' => ['voucher' => 'voucher_code']]);
+        ['parameters' => ['voucher' => 'voucher_public_key']]);
 
     Route::resource(
         '/shop-keeper', 

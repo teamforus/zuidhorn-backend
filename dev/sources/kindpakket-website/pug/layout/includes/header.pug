@@ -1,0 +1,33 @@
+header.mob-head
+    .mob-head__logo
+        img.img-responsive(src="assets/img/mob-logo.png", alt="")
+    .mob-head__data
+        .mob-head-user
+            .mob-head-user__txt
+                h3 Alexandr
+                p #0123456789
+            .mob-head-user__elps
+                p AM
+        .mob-head__bdg
+            h3 Budget
+            p € {{ targetVoucher.funds }}
+header(style="background-image: url('./assets/img/head.jpg')" ng-click="auth.viewQrCode($event)").main-header.s-back-switch
+    .container
+        .main-header__logo
+            img.img-responsive(src="assets/img/logo.png", alt="")
+        .main-header__user
+            div(ng-show="credentials").main-header__value-available.ng-hide
+                strong € {{ targetVoucher.funds }}
+                small beschikbaar
+            div(ng-show="credentials" ng-click="auth.viewQrCode($event)").main-header__btn.main-header__auth.ng-hide
+                em.mdi.mdi-qrcode
+                | QR-Code
+            div(ng-show="credentials" ng-click="auth.signOut($event)").main-header__btn.main-header__voucher.ng-hide
+                em.mdi.mdi-logout
+                | Logout
+            div(ng-hide="credentials" ng-click="auth.signIn($event)").main-header__btn.main-header__auth.ng-hide
+                em.mdi.mdi-login
+                | Login
+            div(ng-hide="credentials" ng-click="auth.activateVoucher($event)").main-header__btn.main-header__voucher.ng-hide
+                em.mdi.mdi-ticket
+                | Activate voucher

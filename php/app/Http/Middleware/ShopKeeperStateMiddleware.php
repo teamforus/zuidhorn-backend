@@ -31,7 +31,8 @@ class ShopKeeperStateMiddleware
         $target_user = $request->user();
         $shop_keeper = ShopKeeper::whereUserId($target_user->id)->first();
 
-        if (!BlockchainApi::checkShopKeeperState($target_user->public_key)['state'])
+        if (!$target_user->public_key || 
+            !BlockchainApi::checkShopKeeperState($target_user->public_key)['state'])
             return response(collect([
                 'error'         => 'shopkeeper-pending',
                 'description'   => "Shopkeeper account is yet to be validated."

@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\ClientApi;
 
+use App\Models\User;
 use App\Models\Voucher;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
+use App\Services\BlockchainApiService\Facades\BlockchainApi;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -96,22 +100,44 @@ class VoucherController extends Controller
             'email' => "required|email"
             ]);
 
-        if ($voucher->user_buget->user->password != 
-            $voucher->user_buget->user->email)
+        if (!is_null($voucher->user_id))
             return response(['code' => ['Voucher already active!']], 422);
 
         $email = $request->input('email');
-        $password = \App\Models\User::generateUid([], 'password', 10);
+        $user = User::where(['email' => $email])->first();
 
-        $voucher->user_buget->user->update([
-            'password' => Hash::make($password),
-            'email' => $email,
+        if (!$user) {
+            $password = \App\Models\User::generateUid([], 'password', 4, 2);
+
+            $user = User::create([
+                'password' => Hash::make($password),
+                'email' => $email,
+                ]);
+        } else {
+            $password = false;
+        }
+
+        do {
+            $private_key = User::generateUid([], 'private_key', 32);
+        } while(User::wherePublicKey($private_key)->count() > 0);
+
+        $voucher->update([
+            'user_id' => $user->id,
+            'private_key' => $private_key
+            ]);
+
+        $account = BlockchainApi::createAccount(
+            $voucher->private_key,
+            $voucher->amount);
+
+        $voucher->update([
+            'public_key' => $account['address']
             ]);
 
         $scope = compact('voucher', 'email', 'password');
 
         Mail::send('emails.activate', $scope, function ($message) use ($voucher) {
-            $message->to($voucher->user_buget->user->email);
+            $message->to($voucher->user->email);
             $message->subject('Voucher activation');
         });
 
@@ -126,5 +152,14 @@ class VoucherController extends Controller
         return [
             'funds' => number_format($voucher ? $voucher->getAvailableFunds() : 0, 2, ',', '.')
             ];
+    }
+
+    public function getQrCode(Request $request) {
+        $user = $request->user();
+        $voucher = $user->vouchers->first();
+
+        return "data:image/png;base64, " . 
+        base64_encode(QrCode::format('png')
+            ->margin(1)->size(300)->generate($voucher->public_key));
     }
 }
