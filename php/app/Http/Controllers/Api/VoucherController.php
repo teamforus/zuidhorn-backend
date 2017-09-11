@@ -20,7 +20,8 @@ class VoucherController extends Controller
     {
         if (!$voucher->id)
             return response(collect([
-                'message' => 'Voucher not found!'
+                'error' => 'not-found',
+                'message' => 'Not found!'
                 ]), 404);
 
         $target_user = $request->user();
@@ -36,10 +37,10 @@ class VoucherController extends Controller
                 required by voucher."
                 ]), 401);
 
-        $code = $voucher->code;
+        $public_key = $voucher->public_key;
         $max_amount = $voucher->getAvailableFunds();
 
-        return compact('code', 'max_amount');
+        return compact('public_key', 'max_amount');
     }
 
     /**

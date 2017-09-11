@@ -1,5 +1,8 @@
 #!/bin/sh
 BASEDIR=$(dirname $0)
+
+$BASEDIR/CLEAN_CHAIN.sh
+
 DATA_DIR="${BASEDIR}/../data"
 GENESIS_PATH="${BASEDIR}/../blockchain-genesis/CustomGenesis.json"
 GETH_BIN="geth"

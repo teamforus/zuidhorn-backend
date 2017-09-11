@@ -381,7 +381,7 @@ class Media extends Model
 
         // media row
         $media = [
-        'title'         => '',
+        'name'          => '',
         'description'   => '',
         'mediable_id'   => NULL,
         'mediable_type' => $mediable_type,

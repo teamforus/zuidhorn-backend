@@ -19,6 +19,10 @@ class ShopKeeper extends Model
     'state', 'iban','kvk_data', "website"
     ];
 
+    protected $hidden = [
+    'kvk_data'
+    ];
+
     /**
      * Return list all available states
      * 
