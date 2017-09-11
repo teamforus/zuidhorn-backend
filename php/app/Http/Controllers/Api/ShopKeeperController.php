@@ -131,7 +131,10 @@ class ShopKeeperController extends Controller
 
         $user = $shop_keeper->user;
 
-        return ['access_token' => $user->createToken('Token')->accessToken];
+        $access_token = $user->createToken('Token')->accessToken;
+        $token_type = "Bearer";
+
+        return compact('access_token', 'token_type');
     }
 
     public function createDeviceToken(Request $request)
@@ -216,6 +219,9 @@ class ShopKeeperController extends Controller
 
         $shopKeeper->update(compact('bussines_address'));
 
-        return ['access_token' => $user->createToken('Token')->accessToken];
+        $access_token = $user->createToken('Token')->accessToken;
+        $token_type = "Bearer";
+
+        return compact('access_token', 'token_type');
     }
 }
