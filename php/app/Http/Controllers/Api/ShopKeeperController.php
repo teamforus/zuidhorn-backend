@@ -142,15 +142,13 @@ class ShopKeeperController extends Controller
         $target_user = $request->user();
         $shop_keeper = ShopKeeper::whereUserId($target_user->id)->first();
 
-        $device_token = ShopKeeperDeviceToken::firstOrCreate([
-            'shop_keeper_id' => $shop_keeper->id,
-            'used' => 0,
-            ]);
+        $device_token = ['shop_keeper_id' => $shop_keeper->id, 'used' => 0];
+        $device_token = ShopKeeperDeviceToken::firstOrCreate($device_token);
 
-        if (!$device_token->token)
-            $device_token->update([
-                'token' => ShopKeeperDeviceToken::generateUid(null, 'token', 64),
-                ]);
+        $token = ShopKeeperDeviceToken::generateUid(null, 'token', 32);
+
+        if (!$device_token->token) 
+            $device_token->update(compact('token'));
 
         return $device_token;
     }
@@ -168,8 +166,10 @@ class ShopKeeperController extends Controller
                 'kvk_number' => ["Kvk number is not valid."]
                 ]), 420);
 
-        $shopkeeper_name = collect($kvk_data->data->items[0]->tradeNames->currentNames)->implode(', ');
-        $shopkeeper_websites = collect($kvk_data->data->items[0]->websites)->implode(', ');
+        $kvk_item = $kvk_data->data->items[0];
+
+        $shopkeeper_name = $kvk_item->tradeNames->currentNames;
+        $shopkeeper_websites = $kvk_item->websites;
 
         do {
             $password = User::generateUid([], 'password', 16);
@@ -180,19 +180,19 @@ class ShopKeeperController extends Controller
         } while(User::wherePublicKey($private_key)->count() > 0);
 
         $user = $role->users()->save(new User([
-            'email'             => $request->input('email'),
-            'password'          => Hash::make($password),
-            'private_key'       => $private_key
+            'email'         => $request->input('email'),
+            'password'      => Hash::make($password),
+            'private_key'   => $private_key
             ]));
         
         $shopKeeper = ShopKeeper::create([
-            'name'              => $shopkeeper_name,
-            'user_id'           => $user->id,
-            'iban'              => strtoupper($request->input('iban')),
-            'kvk_number'        => $request->input('kvk_number'),
-            'state'             => 'pending',
-            "website"           => $shopkeeper_websites,
-            'kvk_data'          => json_encode($kvk_data),
+            'name'          => collect($shopkeeper_name)->implode(', '),
+            'user_id'       => $user->id,
+            'iban'          => strtoupper($request->input('iban')),
+            'kvk_number'    => $request->input('kvk_number'),
+            'state'         => 'pending',
+            "website"       => collect($shopkeeper_websites)->implode(', '),
+            'kvk_data'      => json_encode($kvk_data),
             ]);
 
         $shopKeeper->shop_keeper_devices()->save(new ShopKeeperDevice([
@@ -202,7 +202,9 @@ class ShopKeeperController extends Controller
 
         $bussines_address = '';
 
-        collect($kvk_data->data->items[0]->addresses)->each(function($office) use ($shopKeeper, &$bussines_address) {
+        $addresses = collect($kvk_data->data->items[0]->addresses);
+        
+        $addresses->each(function($office) use ($shopKeeper, &$bussines_address) {
             $office_address = collect([$office->street, $office->houseNumber, 
                 $office->houseNumberAddition, $office->postalCode, 
                 $office->city, $office->country])->filter()->implode(', ');
