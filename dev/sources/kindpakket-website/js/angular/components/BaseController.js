@@ -51,7 +51,7 @@ kindpakketApp.controller('BaseController', [
 
             var PrintElem = function PrintElem(html)
             {
-                var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+                var mywindow = window.open('', 'PRINT', 'directories=0,titlebar=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=no,resizable=no,height=700,width=1200');
 
                 mywindow.document.write(
                     '<html><head></head><body>' + html + '</body></html>');
@@ -66,8 +66,8 @@ kindpakketApp.controller('BaseController', [
             }
 
             AuthService.getQrCode().then(function(response) {
-                swal({
-                    title: '<img src="' + response.data + '" style="width: 33%;">',
+                var swalert = swal({
+                    title: '<img src="' + response.data + '" style="width: 350px;">',
                     html: true,
                     showCancelButton: true,
                     closeOnConfirm: false,
@@ -76,7 +76,7 @@ kindpakketApp.controller('BaseController', [
                     confirmLoadingButtonColor: '#DD6B55'
                 }, function(inputValue) {
                     if (inputValue == true) {
-                        PrintElem('<img src="' + response.data + '" style="width: 33%;">');
+                        PrintElem('<img src="' + response.data + '" style="width: 50%; maring-left: 25%; display: block;">');
                     }
                 });
             });

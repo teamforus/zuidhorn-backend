@@ -49,7 +49,7 @@ h1,h2,h3,h4,h5{
     font-weight: 400;
 }
 
- a{    
+a{    
     &:hover{text-decoration: none;}
     @extend .transition;
 }
@@ -106,5 +106,9 @@ h1,h2,h3,h4,h5{
     text-align: left !important;
     margin-top: -15px !important;
     margin-bottom: 25px !important;
-    font: 400 13px 'OPen Sans' !important;
+    font: 400 13px 'Open Sans' !important;
+}
+
+.sweet-alert {
+    margin-top: -300px !important;
 }

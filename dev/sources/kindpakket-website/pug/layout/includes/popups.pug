@@ -3,17 +3,20 @@
     .popup-close(ng-click="auth.closeModals($event);"): em.mdi.mdi-close
     .popup-block.voucher
         .popup-block__h
-            h2 Voucher
+            h2 Activate voucher
         form(action="")
-            .row.col-xs-12
-                label(for="code") Voucher
-                input(name="code" type="text" placeholder="Voucher" ng-model="forms.voucher.values.code")#code
-                p(ng-repeat="error in forms.voucher.errors.code track by $index" ng-bind="error").valid-error.text-danger
-            .row.col-xs-12
-                label(for="email") Email
-                input(name="email" type="text" placeholder="Email" ng-model="forms.voucher.values.email")#email
-                p(ng-repeat="error in forms.voucher.errors.email track by $index" ng-bind="error").valid-error.text-danger
-        .cf
+            div(ng-show="forms.voucher.submit").row: .col-xs-12
+                img(src="./assets/img/progress.gif" style="width: 100%; margin-top: -20px", alt="")
+            div(ng-hide="forms.voucher.submit")
+                .row.col-xs-12
+                    label(for="code") Voucher
+                    input(name="code" type="text" placeholder="Voucher" ng-model="forms.voucher.values.code")#code
+                    p(ng-repeat="error in forms.voucher.errors.code track by $index" ng-bind="error").valid-error.text-danger
+                .row.col-xs-12
+                    label(for="email") Email
+                    input(name="email" type="text" placeholder="Email" ng-model="forms.voucher.values.email")#email
+                    p(ng-repeat="error in forms.voucher.errors.email track by $index" ng-bind="error").valid-error.text-danger
+        .cf(ng-hide="forms.voucher.submit")
             a.btn-3(href="#" ng-click="auth.activateVoucherSubmit($event, forms.voucher)") Submit
             a.btn-3.cancel(href="#" ng-click="auth.closeModals($event)") Cancel
         //- .popup-block__desc
