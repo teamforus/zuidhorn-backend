@@ -1,10 +1,16 @@
 # Generated in development files #
 /dev/package-lock.json
 /dev/qdt-env.json
+
+# compiled by qdt
 /html
 /panel-html
 /oauth-testing-html
+
 /kindpakket-website
+/kindpakket-desktop-app
+/shopkeeper-panel
+
 /phonegap-html
 /phonegap/www
 /php/public/assets/*

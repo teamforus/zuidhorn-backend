@@ -1,0 +1,54 @@
+extends layout/layout-panel
+block content
+    .section.section-container: .wrapper 
+        .section.section-title 
+            | Offices (3)
+            a(href="#").button.button-success.pull-right 
+                em.mdi.mdi-plus-circle
+                | Add new office
+
+        -var count = 0;
+        while ++count <= 3
+            .section.section-panel
+                .office-li
+                    img(src="./assets/img/office-photo-sample.jpg", alt="").office-li-thumb
+                    .office-li-name Ulgersmaweg, Groningen
+                    .office-li-description
+                        strong Adress: 
+                        | Ulgersmaweg 35
+                        br
+                        strong Phone: 
+                        | 065433312, 0(80)455654 
+                        br
+                        strong Email: 
+                        span.text-primary ulgersmaweg@rminds.nl
+                        br
+                        strong IBAN: 
+                        | NL45RABO3243256342
+                        br
+                        br
+                        strong.text-primary Opening times:
+                        br
+                        span.br
+                            strong MO: 
+                            | 10:00-18:00, 
+                        span.br
+                            strong TU: 
+                            | 09:00-18:00, 
+                        span.br
+                            strong WE: 
+                            | 09:00-18:00, 
+                        span.br
+                            strong TH: 
+                            | 09:00-20:00, 
+                        span.br
+                            strong FR: 
+                            | 09:00-18:00
+                    a(href="./panel-offices-edit.html").button.button-success.button-xs.hide-mobile
+                        em.mdi.mdi-settings
+                        | Edit
+
+                    div.text-center.hide-desktop.office-li-button
+                        a(href="./panel-offices-edit.html").button.button-success
+                            em.mdi.mdi-settings
+                            | Edit

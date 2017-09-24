@@ -1,0 +1,144 @@
+extends layout/layout
+block content
+    .section.section-header: .wrapper
+        .section-header-inner
+            a(href="./").logo: img(src="./assets/img/logo.png", alt="")
+                
+            .section-header-actions
+                a(href="./").button.button-primary
+                    em.mdi.mdi-logout
+                    | Logout
+    mixin bussiness_list_item(type)
+        .business-li
+            .business-li-logo: img(src="./assets/img/company-logo-sample.jpg")
+            .business-title
+                .business-title-name Rocket Minds
+                .business-title-actions
+                    mixin menu()
+                        .button-menu
+                            .button-menu-item
+                                em.mdi.mdi-close-circle.text-primary
+                                | Pending
+                            .button-menu-item
+                                em.mdi.mdi-close-circle.text-success
+                                | Approved
+                            .button-menu-item
+                                em.mdi.mdi-close-circle.text-danger
+                                | Declined
+                    if (type == 0)
+                        .button.button-primary
+                            em.mdi.mdi-close-circle
+                            | Pending
+                    if (type == 1)
+                        .button.button-danger
+                            em.mdi.mdi-close-circle
+                            | Declined
+                    if (type == 2)
+                        .button.button-success
+                            em.mdi.mdi-close-circle
+                            | Approved
+                        
+                    span.business-title-actions-help Change status
+            .business-details
+                span
+                    strong Kvk: 
+                    | 45667773 
+                    span &nbsp;|&nbsp; 
+                span
+                    strong BTW: 
+                    | NL3213214556B01 
+                    span &nbsp;|&nbsp; 
+                span
+                    strong IBAN:  
+                    | NL10INGB3455664430
+                br
+                span
+                    strong Categories: 
+                    | Bikes, Sport
+                br
+                span
+                    strong Email: 
+                    span.text-primary ulgersmaweg@rminds.nl 
+                    span |    
+                    strong Business address: 
+                    | Ulgersmaweg 35
+    .section.section-container: .wrapper 
+        .section.section-panel
+            .form
+                .row: .col.col-12: .form-heading Filter by
+                .row
+                    .col.col-3: .form-group
+                        label.label Status
+                        select.form-control
+                            option Pending
+                            option Accepted
+                    .col.col-3: .form-group
+                        label.label Name
+                        input(type="text" placeholder="Name").form-control
+                    .col.col-3: .form-group
+                        label.label Category
+                        select.form-control
+                            option Cars
+                    .col.col-3: .form-group
+                        label.label Kvk Number
+                        input(type="text" placeholder="Kvk Number").form-control
+                .row: .col.col-12
+                    a(href="#").button.button-success Filter
+
+        .section.section-title Stores
+
+        .section.section-panel
+            +bussiness_list_item(0)
+
+            .form: .row: .col.col-12: .form-heading Shop offices
+            br
+            br
+            .office-ul
+                -var count = 0;
+                while ++count <= 3
+                    .office-li: .office-li-inner
+                        img(src="./assets/img/office-photo-sample.jpg", alt="").office-li-thumb
+                        .office-li-name Ulgersmaweg, Groningen
+                        .office-li-description
+                            .row
+                                .col.col-6
+                                    strong Adress: 
+                                    | Ulgersmaweg 35
+                                    br
+                                    strong Phone: 
+                                    | 065433312, 0(80)455654 
+                                    span.text-primary | 
+                                    strong Email: 
+                                    span.text-primary ulgersmaweg@rminds.nl
+                                    br
+                                    strong IBAN: 
+                                    | NL45RABO3243256342
+                                    br
+                                .col.col-6
+                                    strong.text-primary Opening times:
+                                    br
+                                    span.br
+                                        strong MO: 
+                                        | 10:00-18:00, 
+                                    span.br
+                                        strong TU: 
+                                        | 09:00-18:00, 
+                                    span.br
+                                        strong WE: 
+                                        | 09:00-18:00, 
+                                    br
+                                    span.br
+                                        strong TH: 
+                                        | 09:00-20:00, 
+                                    span.br
+                                        strong FR: 
+                                        | 09:00-18:00
+                        .office-li-map-link
+                            em.mdi.mdi-map-marker
+                            | View on map
+
+        .section.section-panel
+            +bussiness_list_item(1)
+
+        .section.section-panel
+            +bussiness_list_item(2)

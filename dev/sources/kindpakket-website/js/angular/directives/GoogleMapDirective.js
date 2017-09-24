@@ -24,73 +24,77 @@ kindpakketApp.directive('googleMap', [
                 $scope.markers = [];
 
                 var initialize = function(obj) {
-                    var office = $scope.locations.length ? $scope.locations[0] : false;
-                    var $element = $(iElm).find('.map-canvas');
-                    var contentString = $element.attr("data-string");
-                    var map, marker, infowindow;
-                    var image = $element.attr("data-marker");
-                    var zoomLevel = parseInt($element.attr("data-zoom"), 6);
-                    var styledMap = new google.maps.StyledMapType($scope.style, {
-                        name: "Styled Map"
-                    });
-
-                    var mapOptions = {
-                        zoom: zoomLevel,
-                        disableDefaultUI: true,
-                        center: office ? new google.maps.LatLng(office.lat, office.lon) : new google.maps.LatLng(-33.92, 151.25),
-                        scrollwheel: true,
-                        mapTypeControlOptions: {
-                            mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
-                        }
-                    }
-
-                    map = new google.maps.Map(document.getElementById(obj), mapOptions);
-
-                    map.mapTypes.set('map_style', styledMap);
-                    map.setMapTypeId('map_style');
-
-                    infowindow = new google.maps.InfoWindow();
-
-
-                    $scope.locations.forEach(function(office) {
-                        marker = new google.maps.Marker({
-                            position: new google.maps.LatLng(office.lat, office.lon),
-                            map: map,
-                            icon: image
+                        var office = $scope.locations.length ? $scope.locations[0] : false;
+                        var $element = $(iElm).find('.map-canvas');
+                        var contentString = $element.attr("data-string");
+                        var map, marker, infowindow;
+                        var image = $element.attr("data-marker");
+                        var zoomLevel = parseInt($element.attr("data-zoom"), 8);
+                        var styledMap = new google.maps.StyledMapType($scope.style, {
+                            name: "Styled Map"
                         });
 
-                        $scope.markers.push(marker);
-
-                        google.maps.event.addListener(marker, 'click', (function(marker, office) {
-                            return function() {
-                                infowindow.setContent('<div class="map-info">' +
-                                    '<div class="map-info__img">' +
-                                    '<img class="img-responsive" src="' + office.preview + '" alt="" />' +
-                                    '</div>' +
-                                    '<div class="map-info__text">' +
-                                    '<div class="map-info__h">' +
-                                    '<h3>' + office.shopkeeper.name + '</h3>' +
-                                    '</div>' +
-                                    '<div class="map-info__desc">' +
-                                    '<p> Address: ' + office.address + '</p>' +
-                                    '<p> Telephone: ' + office.shopkeeper.phone + ' </p>' +
-                                    '<p> Categories: ' + office.shopkeeper.categories + ' </p>' +
-                                    '</div>' +
-                                    '</div>' +
-                                    '</div>');
-                                infowindow.open(map, marker);
+                        var mapOptions = {
+                            zoom: zoomLevel,
+                            disableDefaultUI: true,
+                            center: office ? new google.maps.LatLng(office.lat, office.lon) : new google.maps.LatLng(-33.92, 151.25),
+                            scrollwheel: true,
+                            mapTypeControlOptions: {
+                                mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
                             }
-                        })(marker, office));
-                    });
-                }
+                        }
+
+                        map = new google.maps.Map(document.getElementById(obj), mapOptions);
+
+                        map.mapTypes.set('map_style', styledMap);
+                        map.setMapTypeId('map_style');
+
+                        infowindow = new google.maps.InfoWindow();
+
+
+                        $scope.locations.forEach(function(office) {
+                            marker = new google.maps.Marker({
+                                position: new google.maps.LatLng(office.lat, office.lon),
+                                map: map,
+                                icon: image
+                            });
+
+                            $scope.markers.push(marker);
+
+                            google.maps.event.addListener(marker, 'click', (function(marker, office) {
+                                var description = [
+                                'Address: ' + office.address, 
+                                'Telephone: ' + office.shopkeeper.phone, 
+                                'Categories: ' + office.shopkeeper.categories, 
+                                ];
+
+                                return function() {
+                                    infowindow.setContent(
+                                        '<div class="map-card">\
+                                    <img class="map-card-img" src="' + (office.preview || 'assets/img/office-photo-sample.jpg') + '" alt=""/>\
+                                    <div class="map-card-title">' + office.shopkeeper.name + '</div>\
+                                    <div class="map-card-description">' + description.join('<br />') + '</div>\
+                                    <div class="map-card-actions">\
+                                    <!--<a class="button button-success" href="#">Apply</a>-->\
+                                    </div>\
+                                    </div>');
+                                    infowindow.open(map, marker);
+                                }
+                            })(marker, office));
+                        });
+                    }
 
                 $scope.updatePoints = function() {
                     $scope.locations = {};
 
-                    $scope.categories.forEach(function(category) {
-                        if (!category.selected || !category.shopkeepers.length)
-                            return;
+                    var categories = $scope.categories.filter(function(category) {
+                        return category.selected && category.shopkeepers.length;
+                    });
 
+                    if (categories.length == 0)
+                        categories = $scope.categories;
+
+                    categories.forEach(function(category) {
                         category.shopkeepers.forEach(function(shopkeeper) {
                             shopkeeper.offices.forEach(function(office) {
                                 if ($scope.locations[office.id])

@@ -1,82 +1,179 @@
 extends layout/layout
-
 block content
-    include layout/includes/popups
-    main.content
-        .container
-            .banner
-                .banner__h.main-h1
-                    h1 Zuidhorn.
-                        span  Kindpakket
-                    .banner__desc
-                        p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        
-        .container
-            .blocks.selected
-                .blocks-wrap(ng-repeat="category in categories | filter:{selected: true}")
-                    .blocks-item(ng-click="selectCategory($event, category)" ng-class="{checked: category.selected}")
-                        .blocks-item__img.s-back-switch: img.s-img-switch(ng-src="{{ category.preview }}", alt="")
-                        label.blocks-item__label.mdi-plus: span Start aanvraag
-                        .blocks-item__h.main-h3: h3(ng-bind="category.name")
-                        .blocks-item__circle
-        div(google-map)
-        .container
-            .blocks.initial
-                .blocks-wrap(ng-show="(categories | filter:{selected: false}).length"): .blocks-show(ng-click="selectAll($event)")
-                    .blocks-show__preview: img(src="./assets/img/map-preview.jpg", alt="")
-                    .blocks-show__desc
-                        p 
-                            | Bekijk alle 
-                            br
-                            | deelnemende
-                            br
-                            | winkels
-                            em.mdi.mdi-chevron-double-right
-                .blocks-wrap(ng-repeat="category in categories | filter:{selected: false}")
-                    .blocks-item(ng-click="selectCategory($event, category)" ng-class="{checked: category.selected}")
-                        .blocks-item__img.s-back-switch: img.s-img-switch(ng-src="{{ category.preview }}", alt="")
-                        label.blocks-item__label.mdi-plus: span Bekijk locaties
-                        .blocks-item__h.main-h3: h3(ng-bind="category.name")
-                        .blocks-item__circle
+    .section.section-header: .wrapper
+        .section-header-inner
+            a(href="./").logo: img(src="./assets/img/logo.png", alt="")
+            .section-header-actions
+                a(href="#" toggle-popup="voucher").button.button-success
+                    em.mdi.mdi-ticket-confirmation
+                    | Activate voucher
+                a(href="#" toggle-popup="auth").button.button-white
+                    em.mdi.mdi-account
+                    | Login
+        .section-header-inner
+            .section-header-text
+                .section-header-text-title
+                    strong Zuidhorn. 
+                    | Kindpakket
+                .section-header-text-description
+                    | Welkom om de website van het kindpakket Zuidhorn. Op deze website vindt u een overzicht van de deelnemende winkeliers. Begin gelijk door rechtsboven in te loggen of uw voucher te activeren.
+                a(href="#").button.button-success 
+                    span Leer meer over hoe het
+                    span systeem werkt
+    
+    .section.section-categories
+        .wrapper
+            h1.section-header Door te klikken op de blokken zoekt u de winkels die meedoen aan het systee
 
-        if (false)
-            .container
-                .blocks.selected
-            .map
-                .map-triangle
-                .map-canvas#map-canvas-contact(data-lat="52.07880378" data-lng="4.33619589" data-marker="assets/img/marker.png" data-zoom="8" data-style="style-1")
-                .wrap
-                    a(href="").btn-3 Select All
-                    a(href="").btn-3.cancel Cancel
-            .container
-                .blocks.initial
-                    mixin item(img,title,lg,lt)
-                        .blocks-wrap(data-lg=lg)&attributes(attributes)=lt
-                            .blocks-item
-                                .blocks-item__img.s-back-switch
-                                    img.s-img-switch(src="assets/img/" + img + ".jpg", alt="")
-                                input(type="checkbox" name=img id=img)
-                                label.blocks-item__label(for=img).mdi-plus
-                                    span Start aanvraag
-                                .blocks-item__h.main-h3
-                                    h3= title
-                                .blocks-item__circle
-                    .blocks-wrap
-                        .blocks-show
-                            .blocks-show__icon.icon
-                                include ../resources/assets/icons/svg/arrow.svg
-                            .blocks-show__desc
-                                p Show all #[br] Participating shops
-                                    span »
-                    +item("personal", "Personal care", "-33.890542")(data-lt="151.274856")
-                    +item("home", "Home care", "-33.80010128657071")(data-lt="151.28747820854187")
-                    +item("support", "Support & assistance", "-33.950198")(data-lt="151.259302")
-                    +item("culture", "Culture", "-38.950198")(data-lt="151.359302")
-                    +item("therapy", "Therapy", "-34.950198" )(data-lt="153.259302")
-                    +item("education", "Education", "-36.950198")(data-lt="154.259302")
-                    +item("transportation", "Transportation", "-35.950198")(data-lt="152.259302")
-                    +item("sport", "Sport", "-33.850198")(data-lt= "151.269302")
-                    +item("health", "Health care", "-33.953198")(data-lt= "151.289302")
-                    +item("household", "Housegold expenses", "-33.850198")(data-lt= "151.359302")
+            .categories-list
+                .categories-list-inner
+                    mixin category_item(key, value)
+                        .categories-item: .categories-item-inner
+                            img(src="./assets/img/categories/" + key + ".jpg", alt="").categories-item-img
+                            .categories-item-radio
+                            .categories-item-title=value
 
-            p(ng-bind="categories")
+                    +category_item('culture', 'Culture')
+                    +category_item('education', 'Education')
+                    +category_item('health', 'Health')
+                    +category_item('home', 'Home')
+                    +category_item('household', 'Household')
+                    +category_item('personal', 'Personal')
+                    +category_item('sport', 'Sport')
+                    +category_item('support', 'Support')
+                    +category_item('therapy', 'Therapy')
+                    +category_item('transportation', 'Transportation')
+                
+                .categories-list-actions
+                    a(href="#").button.button-primary
+                        em.mdi.mdi-chevron-double-right
+                        | Selecteer alles
+                    a(href="#").button.button-success
+                        em.mdi.mdi-magnify
+                        | Filter
+
+    .section.section-offices
+        .section-offices-list
+            .section-offices-list-header
+                h4 We found for you 5 shops.
+                small Please select one to see the details
+            .section-offices-list-inner.nano: .nano-content
+                -var count = 0;
+                while ++count <= 5
+                    .section.section-panel
+                        .office-li
+                            img(src="./assets/img/office-photo-sample.jpg", alt="").office-li-thumb
+                            .office-li-name Ulgersmaweg, Groningen
+                            .office-li-description
+                                strong Adress: 
+                                | Ulgersmaweg 35
+                                br
+                                strong Phone: 
+                                | 065433312, 0(80)455654 
+                                br
+                                br
+                                strong.text-primary Opening times:
+                                br
+                                div
+                                    span.br
+                                        strong MO: 
+                                        | 10:00-18:00, 
+                                    span.br
+                                        strong TU: 
+                                        | 09:00-18:00, 
+                                    span.br
+                                        strong WE: 
+                                        | 09:00-18:00, 
+                                div
+                                    span.br
+                                        strong TH: 
+                                        | 09:00-20:00, 
+                                    span.br
+                                        strong FR: 
+                                        | 09:00-18:00
+
+        .section-offices-map(google-map)
+
+    .section.section-how-it-works
+        .bg-image
+        .how-it-works-inner
+            h1.how-it-works-title Hoe het systeem werkt
+            .how-it-works-list
+                .how-it-works-item 
+                    em.how-it-works-item-number 1
+                    | U heeft een brief ontvangen van de gemeente
+                .how-it-works-item 
+                    em.how-it-works-item-number 2
+                    | In deze brief staat een activatie code
+                .how-it-works-item 
+                    em.how-it-works-item-number 3
+                    | U activeert uw voucher op deze webiste door te drukken op de knop activeer voucher
+                .how-it-works-item 
+                    em.how-it-works-item-number 4
+                    | Hierna zal u uw budget te zien krijgen
+                .how-it-works-item 
+                    em.how-it-works-item-number 5
+                    | U print uw voucher code uit of mailt deze naar u zelf toe
+                .how-it-works-item 
+                    em.how-it-works-item-number 6
+                    | U bekijkt het aanbod van de deelnemende winkels
+                .how-it-works-item 
+                    em.how-it-works-item-number 7
+                    | De winkelier scant uw voucher
+                .how-it-works-item 
+                    em.how-it-works-item-number 8
+                    | De kosten worden afgeschreben van uw budget
+
+    .section.section-faq
+        .faq-inner
+            .faq-tabs: .faq-tabs-inner
+                h4.faq-tabs-title Veel gestelde vragen
+                a(href="#").faq-tab.active Lorem ipsum dolor sit amet
+                a(href="#").faq-tab Excepteur sint occaecat cupidatat non proident, sunt in culpa
+                a(href="#").faq-tab Numquam eius modi tempora incidunt
+                a(href="#").faq-tab Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit
+            .faq-panes: .faq-panes-inner
+                -var i = 0;
+
+                while i++ < 5
+                    .faq-pane(class=((i==1)?'active':''))
+                        h4 Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit
+                        p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+                        p Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo
+
+                        p Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+
+    .section.section-contact-form
+        .wrapper
+            .bg-image
+            .contact-inner
+                .contact-title Contact Feedback
+                .contact-subtitle Lees hier de meest gestelde vragen
+                form(action="#").contact-form.form
+                    .contact-form-inner
+                        .row
+                            .col.col-6: .form-group
+                                label.label First name
+                                input(type="text" placeholder="Text here").form-control
+                                p.text-danger This field is require
+                            .col.col-6
+                                label.label Last name
+                                input(type="text" placeholder="Text here").form-control
+                        .row
+                            .col.col-12: .form-group
+                                label.label Subject
+                                input(type="text" placeholder="Text here").form-control
+                        .row
+                            .col.col-6: .form-group
+                                label.label Email
+                                input(type="email" placeholder="Text here").form-control
+                            .col.col-6: .form-group
+                                label.label Telephone
+                                input(type="phone" placeholder="Text here").form-control
+                        .row
+                            .col.col-12: .form-group
+                                label.label Message
+                                textarea(name="message" placeholder="Message" cols="30" rows="3").form-control
+                        
+                        button(type="submit").button.button-success.submit-button Send message

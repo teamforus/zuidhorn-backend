@@ -1,73 +1,41 @@
-.popup
-    .popup-backdrop(ng-click="auth.closeModals($event);")
-    .popup-close(ng-click="auth.closeModals($event);"): em.mdi.mdi-close
-    .popup-block.voucher
-        .popup-block__h
-            h2 Activate voucher
-        form(action="")
-            div(ng-show="forms.voucher.submit").row: .col-xs-12
-                img(src="./assets/img/progress.gif" style="width: 100%; margin-top: -20px", alt="")
-            div(ng-hide="forms.voucher.submit")
-                .row.col-xs-12
-                    label(for="code") Voucher
-                    input(name="code" type="text" placeholder="Voucher" ng-model="forms.voucher.values.code")#code
-                    p(ng-repeat="error in forms.voucher.errors.code track by $index" ng-bind="error").valid-error.text-danger
-                .row.col-xs-12
-                    label(for="email") Email
-                    input(name="email" type="text" placeholder="Email" ng-model="forms.voucher.values.email")#email
-                    p(ng-repeat="error in forms.voucher.errors.email track by $index" ng-bind="error").valid-error.text-danger
-        .cf(ng-hide="forms.voucher.submit")
-            a.btn-3(href="#" ng-click="auth.activateVoucherSubmit($event, forms.voucher)") Submit
-            a.btn-3.cancel(href="#" ng-click="auth.closeModals($event)") Cancel
-        //- .popup-block__desc
-        //-     p Have questions? Read our
-        //- .popup-block__terms
-        //-     a(href="") Terms and Conditions
-    .popup-block.vcr-act
-        .popup-block__h
-            h1 Voucher Activated
-            .popup-block__img
-                img.img-responsive(src="assets/img/activated.png", alt="")
-        .popup-block__p
-            p We have sent the password to your email
-        //- a.btn-3(href="") Submit
-        //- .popup-block__desc
-        //-     p Have questions? Read our
-        //- .popup-block__terms
-        //-     a(href="") Terms and Conditions
-    //- .popup-block.password
-    //-     .popup-block__h
-    //-         h2 Password recovery
-    //-     form(action="")
-    //-         label(for="") Email
-    //-         input(type="text" placeholder="Email")
-    //-     .cf
-    //-         a.btn-3(href="") Submit
-    //-         a.btn-3.cancel(href="") Submit
-    //-     .popup-block__desc
-    //-         p Have questions? Read our
-    //-     .popup-block__terms
-    //-         a(href="") Terms and Conditions
-    .popup-block.login
-        .popup-block__h
-            h2 Login
-        form(action="")
-            .row.col-xs-12
-                label(for="email") Email
-                input(name="email" type="text" placeholder="Email" ng-model="forms.login.values.email")#email
-                p(ng-repeat="error in forms.login.errors.email track by $index" ng-bind="error").valid-error.text-danger
-            .row.col-xs-12
-                label(for="password") Password
-                input(name="password" type="password" placeholder="Password" ng-model="forms.login.values.password")#email
-                p(ng-repeat="error in forms.login.errors.password track by $index" ng-bind="error").valid-error.text-danger
-            .cf
-                .popup-block-logged
-                    input(type="checkbox" name="logged" id="logged")
-                    label.popup-block-logged__lab(for="logged") Keep me logged in
-                //- .popup-block-pass
-                //-     a(href="").popup-block-pass__desc.mdi-help-circle-outline Forgot password
-            a.btn-3(href="#" ng-click="auth.signInSubmit($event, forms.login)") Submit
-        //- .popup-block__desc
-        //-     p Have questions? Read our
-        //- .popup-block__terms
-        //-     a(href="") Terms and Conditions
+.popups
+    .popup.popup-auth
+        .popup-backdrop(modal-close)
+        .popup-inner
+            a(href="#" modal-close).popup-close.mdi.mdi-close
+            .popup-heading Login
+            .form
+                .row
+                    .col.col-12: .form-group
+                        label.label Email
+                        input(type="email" placeholder="Email").form-control
+                    .col.col-12: .form-group
+                        label.label Password
+                        input(type="password" placeholder="Password").form-control
+                .row
+                    br
+                    .col.col-12: .form-group.text-center
+                        a(href="#").button.button-success Submit
+    .popup.popup-voucher
+        .popup-backdrop(modal-close)
+        .popup-inner
+            a(href="#" modal-close).popup-close.mdi.mdi-close
+            .popup-heading Activate voucher
+            .form
+                .row
+                    .col.col-12: .form-group
+                        label.label Voucher
+                        input(type="text" placeholder="Voucher").form-control
+                    .col.col-12: .form-group
+                        label.label Email
+                        input(type="email" placeholder="Email").form-control
+                .row
+                    br
+                    .col.col-12: .form-group.text-center
+                        a(href="#").button.button-success Submit
+            .voucher-activation-loading: img(src="./assets/img/progress.gif", alt="")
+            .voucher-activated
+                .voucher-activated-title
+                    em.mdi.mdi-checkbox-multiple-marked-circle-outline 
+                    | Voucher Activated
+                .voucher-activated-desc We have sent the password to your email

@@ -13,7 +13,6 @@ kindpakketApp.controller('BaseController', [
     ) {
         $scope.categories = [];
         $scope.forms = {};
-
         $scope.forms.login = FormBuilderService.build();
         $scope.forms.voucher = FormBuilderService.build();
 

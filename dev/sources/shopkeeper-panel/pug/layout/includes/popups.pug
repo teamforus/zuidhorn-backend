@@ -1,0 +1,15 @@
+.popups
+    .popup.popup-auth
+        .popup-backdrop
+        .popup-inner
+            a(href="#").popup-close.mdi.mdi-close
+            .popup-heading Login
+            .popup-qr-code
+                img(src="./assets/img/qr-code-sample.jpg").popup-qr-code-img
+                div.popup-qr-code-description 
+                    | Please scan this qr-code using your device,
+                    br
+                    | then click button below.
+                p.text-center: a.button.button-success(href="#")
+                    em.mdi.mdi-send
+                    | Check
