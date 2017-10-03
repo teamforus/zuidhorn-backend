@@ -24,7 +24,7 @@ class ShopKeepersTableSeeder extends DatabaseSeeder
                 'iban'              => 'MD87MO2259ASV72028867100',
                 'kvk_number'        => 'RAND-43598327523',
                 'bussines_address'  => 'Netherlands, Rand Dist, str. Rand 32/64',
-                'phone_number'      => '843537264578324',
+                'phone'             => '843537264578324',
                 'state'             => 'pending',
                 ]);
         });

@@ -1,0 +1,29 @@
+.section.section-container: .wrapper 
+    .section.section-title
+        | Transaction ({{ $root.count_transactions }})
+        
+    div(ng-show="$ctrl.transactions.length > 0") 
+        .section.section-panel
+            .table-responsive: table.table.table-stripped
+                thead: tr
+                    th Datum
+                    th Bedrag
+                    th Status
+                -var count = 0;
+                
+                tbody
+                    tr(ng-repeat="transaction in $ctrl.transactions")
+                        td(ng-bind="transaction.created_at | pretty_date")
+                        td
+                            strong € 
+                            strong {{ transaction.amount | number_format:2 }}
+                        td(ng-bind="transaction.status | uc_first")
+            //- .pagination
+            //-     a(href="#").pagination-it.disabled: em.mdi.mdi-chevron-left
+            //-     -var count = 0;
+            //-     while ++count <= 5
+            //-         a(href="#" class=(count==1?'active':'')).pagination-it=count
+            //-     a(href="#").pagination-it: em.mdi.mdi-chevron-right
+
+    .section.section-panel(ng-show="$ctrl.transactions.length == 0")
+        h4.text-center No transactions

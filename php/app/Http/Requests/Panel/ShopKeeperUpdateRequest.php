@@ -28,16 +28,15 @@ class ShopKeeperUpdateRequest extends FormRequest
         $states = ShopKeeper::availableStates();
 
         return [
-        'first_name'        => 'required|string|max:255',
-        'last_name'         => 'required|string|max:255',
-        'email'             => 'required|string|email|max:255|unique:users,id,' . $id,
+        'name'              => 'required', 
+        'phone'             => 'required', 
+        'kvk_number'        => 'required|kvk_number', 
+        'btw_number'        => 'required', 
+        'iban'              => 'required|iban',
+        'email'             => "required|string|email|max:255|unique:users,id,$id",
         'password'          => 'nullable|string|min:6|confirmed',
-        'name'              => 'required',
-        'iban'              => 'required',
         'state'             => 'required|in:' . $states->keys()->implode(','),
-        'kvk_number'        => 'required',
-        'phone_number'      => 'required',
-        'bussines_address'  => 'required',
+        'bussines_address'  => 'nullable',
         ];
     }
 }

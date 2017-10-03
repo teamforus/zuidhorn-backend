@@ -15,7 +15,7 @@ let AccountsService = function(web3) {
 
     self.checkTransaction = function(hash, callback) {
         web3.eth.getTransaction(hash, function(err, block) {
-            if (block.blockNumber == null)
+            if (!block || block.blockNumber == null)
                 return setTimeout(function() {
                     self.checkTransaction(hash, callback);
                 }, 500);

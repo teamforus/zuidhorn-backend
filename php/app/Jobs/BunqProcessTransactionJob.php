@@ -8,7 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-use \App\Models\VoucherTransaction;
+use \App\Models\Transaction;
 
 class BunqProcessTransactionJob implements ShouldQueue
 {
@@ -23,7 +23,7 @@ class BunqProcessTransactionJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(VoucherTransaction $transaction)
+    public function __construct(Transaction $transaction)
     {
         $this->transaction = $transaction;
     }

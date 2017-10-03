@@ -6,11 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
+    use Traits\HasMediaTrait;
     use Traits\Urls\CategoryUrlsTrait;
     use Traits\SelectInputTrait;
     use Traits\SelectInputHierarchicalTrait;
 
     protected $fillable = ['name', 'parent_id'];
+
+    protected $media_size = [
+        'preview' => [200, 130],
+        'original' => [1920, 1080],
+    ];
 
     public function parent()
     {

@@ -33,7 +33,7 @@
             <br>
             <strong>KVK number:</strong> {{ $view->kvk_number }}
             <br>
-            <strong>Phone number:</strong> {{ $view->phone_number }}
+            <strong>Phone number:</strong> {{ $view->phone }}
             <br>
             <strong>Bussines address:</strong> {{ $view->bussines_address }}
             <br>
@@ -123,7 +123,7 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        @include('layouts.panel.blocks.list-shop_keeper_offices', ['rows' => $view->shop_keeper_offices])
+        @include('layouts.panel.blocks.list-offices', ['rows' => $view->offices])
     </div>
 </div>
 @endsection

@@ -1,41 +1,60 @@
 .popups
     .popup.popup-auth
-        .popup-backdrop(modal-close)
+        .popup-backdrop(ng-click="auth.closeModals($event)")
         .popup-inner
-            a(href="#" modal-close).popup-close.mdi.mdi-close
+            a(href="#" ng-click="auth.closeModals($event)").popup-close.mdi.mdi-close
             .popup-heading Login
             .form
                 .row
                     .col.col-12: .form-group
                         label.label Email
-                        input(type="email" placeholder="Email").form-control
+                        input(type="email" placeholder="Email" ng-model="forms.login.values.email").form-control
+                        p(class="text-danger" ng-repeat="error in forms.login.errors.email track by $index" ng-bind="error")
                     .col.col-12: .form-group
                         label.label Password
-                        input(type="password" placeholder="Password").form-control
+                        input(type="password" placeholder="Password" ng-model="forms.login.values.password").form-control
+                        p(class="text-danger" ng-repeat="error in forms.login.errors.password track by $index" ng-bind="error")
                 .row
                     br
                     .col.col-12: .form-group.text-center
-                        a(href="#").button.button-success Submit
+                        a(href="#" ng-click="auth.signInSubmit($event, forms.login)").button.button-success Submit
+
     .popup.popup-voucher
-        .popup-backdrop(modal-close)
+        .popup-backdrop(ng-click="auth.closeModals($event)")
         .popup-inner
-            a(href="#" modal-close).popup-close.mdi.mdi-close
+            a(href="#" ng-click="auth.closeModals($event)").popup-close.mdi.mdi-close
             .popup-heading Activate voucher
-            .form
+            div(ng-hide="forms.voucher.submit").form
                 .row
                     .col.col-12: .form-group
                         label.label Voucher
-                        input(type="text" placeholder="Voucher").form-control
+                        input(type="text" placeholder="Voucher" ng-model="forms.voucher.values.code").form-control
+                        p(class="text-danger" ng-repeat="error in forms.voucher.errors.code track by $index" ng-bind="error")
                     .col.col-12: .form-group
                         label.label Email
-                        input(type="email" placeholder="Email").form-control
+                        input(type="email" placeholder="Email" ng-model="forms.voucher.values.email").form-control
+                        p(class="text-danger" ng-repeat="error in forms.voucher.errors.email track by $index" ng-bind="error")
                 .row
                     br
                     .col.col-12: .form-group.text-center
-                        a(href="#").button.button-success Submit
-            .voucher-activation-loading: img(src="./assets/img/progress.gif", alt="")
-            .voucher-activated
-                .voucher-activated-title
+                        a(href="#" ng-click="auth.activateVoucherSubmit($event, forms.voucher)").button.button-success Submit
+            div(ng-show="forms.voucher.submit").voucher-activation-loading: img(src="./assets/img/progress.gif", alt="")
+
+    .popup.popup-voucher-success
+        .popup-backdrop(ng-click="auth.closeModals($event)")
+        .popup-inner
+            a(href="#" ng-click="auth.closeModals($event)").popup-close.mdi.mdi-close
+            div.modal-success
+                .modal-success-title
                     em.mdi.mdi-checkbox-multiple-marked-circle-outline 
                     | Voucher Activated
-                .voucher-activated-desc We have sent the password to your email
+                .modal-success-desc We have sent the password to your email
+
+    .popup.popup-qr-code-email-success
+        .popup-backdrop(ng-click="auth.closeModals($event)")
+        .popup-inner
+            a(href="#" ng-click="auth.closeModals($event)").popup-close.mdi.mdi-close
+            div.modal-success
+                .modal-success-title
+                    em.mdi.mdi-checkbox-multiple-marked-circle-outline 
+                    | QR-Code sent

@@ -36,7 +36,7 @@ Route::group(['prefix' => 'panel', 'middleware' => 'auth'], function() {
     Route::get('/vouchers', 'Panel\VoucherController@getList');
     Route::get('/vouchers/view/{voucher}', 'Panel\VoucherController@getView');
 
-    Route::get('/voucher-transactions/view/{voucher_transaction}', 'Panel\VoucherTransactionController@getView');
+    Route::get('/voucher-transactions/view/{voucher_transaction}', 'Panel\TransactionController@getView');
 
     Route::get('/citizens', 'Panel\UserController@getIndexCitizens');
     Route::get('/citizens/view/{user}', 'Panel\UserController@getViewCitizen');
@@ -51,8 +51,8 @@ Route::group(['prefix' => 'panel', 'middleware' => 'auth'], function() {
     Route::resource('/shop-keeper-categories', 'Panel\ShopKeeperCategoryController');
     Route::get('/shop-keeper-categories/{shopKeeperCategory}/destroy', 'Panel\ShopKeeperCategoryController@destroy');
 
-    Route::resource('shop-keepers.offices', 'Panel\ShopKeeperOfficeController');
-    Route::get('/shop-keepers/{shopKeeper}/offices/{office}/destroy', 'Panel\ShopKeeperOfficeController@destroy');
+    Route::resource('shop-keepers.offices', 'Panel\OfficeController');
+    Route::get('/shop-keepers/{shopKeeper}/offices/{office}/destroy', 'Panel\OfficeController@destroy');
 
     Route::resource('/bugets', 'Panel\BugetController');
     Route::get('/bugets/{buget}/destroy', 'Panel\BugetController@destroy');

@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 
 use App\Jobs\BunqProcessTransactionJob;
-use App\Models\VoucherTransaction;
+use App\Models\Transaction;
 
 class BunqProcessTransactionsCommand extends Command
 {
@@ -44,13 +44,13 @@ class BunqProcessTransactionsCommand extends Command
         $date = new \DateTime;
         $date = $date->modify('-10 minutes')->format('Y-m-d H:i:s');
 
-        VoucherTransaction::orderBy('id')
+        Transaction::orderBy('id')
         ->where('status', 'processing')
         ->where('updated_at', '<', $date)
         ->update(['status' => 'fail']);
 
         // get all pending/fail transactions and send to job dispatcher
-        $transactions = VoucherTransaction::whereIn(
+        $transactions = Transaction::whereIn(
             'status', ['pending', 'fail']);
 
         $transactions->each(function($transaction) {

@@ -18,16 +18,6 @@
 <div class="row">
     <div class="col-md-4 col-xs-12">
         <div class="form-group">
-            {{ Form::label('first_name', 'First name') }}
-            {{ Form::text('first_name', $edit ? $edit->user->first_name : '', ['class' => 'form-control', 'placeholder' => 'First name']) }}
-            {!! $errors->first('first_name', '<p class="text-danger">:message</p>') !!}
-        </div>
-        <div class="form-group">
-            {{ Form::label('last_name', 'Last name') }}
-            {{ Form::text('last_name', $edit ? $edit->user->last_name : '', ['class' => 'form-control', 'placeholder' => 'Last name']) }}
-            {!! $errors->first('last_name', '<p class="text-danger">:message</p>') !!}
-        </div>
-        <div class="form-group">
             {{ Form::label('email', 'E-mail') }}
             {{ Form::email('email', $edit ? $edit->user->email : '', ['class' => 'form-control', 'placeholder' => 'E-mail']) }}
             {!! $errors->first('email', '<p class="text-danger">:message</p>') !!}
@@ -57,9 +47,14 @@
             {!! $errors->first('kvk_number', '<p class="text-danger">:message</p>') !!}
         </div>
         <div class="form-group">
-            {{ Form::label('phone_number', 'Phone number') }}
-            {{ Form::text('phone_number', $edit ? $edit->phone_number : '', ['class' => 'form-control', 'placeholder' => 'Phone number']) }}
-            {!! $errors->first('phone_number', '<p class="text-danger">:message</p>') !!}
+            {{ Form::label('btw_number', 'BTW number') }}
+            {{ Form::text('btw_number', $edit ? $edit->btw_number : '', ['class' => 'form-control', 'placeholder' => 'KVK number']) }}
+            {!! $errors->first('btw_number', '<p class="text-danger">:message</p>') !!}
+        </div>
+        <div class="form-group">
+            {{ Form::label('phone', 'Phone number') }}
+            {{ Form::text('phone', $edit ? $edit->phone : '', ['class' => 'form-control', 'placeholder' => 'Phone number']) }}
+            {!! $errors->first('phone', '<p class="text-danger">:message</p>') !!}
         </div>
         <div class="form-group">
             {{ Form::label('bussines_address', 'Bussines address') }}

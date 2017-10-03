@@ -393,17 +393,9 @@ class Media extends Model
         // media row create
         if ($media = Media::create($media)) {
             // size
-            $size = [];
-
-            // types
-            switch ($type) {
-                case 'original': {
-                    $size = ['x' => 1920, 'y' => 1080];
-                }; break;
-                case 'preview': {
-                    $size = ['x' => 200, 'y' => 130];
-                }; break;
-            }
+            $size = new $mediable_type();
+            $size = $size->getMediaSize($type); 
+            $size = ['x' => $size[0], 'y' => $size[1]];
 
             // resize and save image
             $image = Image::make($upload_path);

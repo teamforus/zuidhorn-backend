@@ -1,0 +1,38 @@
+.section.section-container: .wrapper 
+    .section.section-title 
+        | Offices ({{ $root.count_offices }})
+        a(ui-sref="panel-offices-create").button.button-success.pull-right 
+            em.mdi.mdi-plus-circle
+            | Add new office
+
+    div(ng-show="$ctrl.offices.length > 0") 
+        .section.section-panel(ng-repeat="office in $ctrl.offices track by $index")
+            .office-li
+                img(ng-src="{{ office.preview }}", alt="").office-li-thumb
+                .office-li-name(ng-bind="office.address")
+                .office-li-description
+                    strong Phone: 
+                    span(ng-class="{'text-primary' : office.phone, 'text-muted' : !office.phone}") 
+                        | {{ office.phone || 'Geen data' }}
+                    br
+                    strong Email: 
+                    span(ng-class="{'text-primary' : office.email, 'text-muted' : !office.email}") 
+                        | {{ office.email || 'Geen data' }}
+                    br
+                    br
+                    strong.text-primary Opening times:
+                    br
+                    span.br(ng-repeat="schedule in office.schedules track by $index")
+                        strong {{ ['MO', 'TU', 'WE', 'TH', 'FR'][$index] }}: 
+                        | {{ schedule.start_time }}-{{ schedule.end_time }}{{ $index < office.schedules.length - 1 ? ',' : '' }} 
+                a(ui-sref="panel-offices-edit({id: office.id})").button.button-success.button-xs.hide-mobile
+                    em.mdi.mdi-settings
+                    | Edit
+
+                div.text-center.hide-desktop.office-li-button
+                    a(ui-sref="panel-offices-edit({id: office.id})").button.button-success
+                        em.mdi.mdi-settings
+                        | Edit
+
+    .section.section-panel(ng-show="$ctrl.offices.length == 0")
+        h4.text-center No offices

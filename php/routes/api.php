@@ -13,24 +13,38 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::post('/shop-keeper/sign-up', 'Api\ShopKeeperController@signUp');
-Route::post('/shop-keeper/device', 'Api\ShopKeeperController@registerDevice');
+Route::post('/shop-keepers/sign-up', 'Api\ShopKeeperController@signUp');
+Route::get('/shop-keepers/devices/token', 'Api\ShopKeeperController@createDeviceToken');
+Route::get('/shop-keepers/devices/token/{device_token}/state', 'Api\ShopKeeperController@getDeviceTokenState');
 
 Route::group(['prefix' => '', 'middleware' => 'auth:api'], function() {
-    Route::post('/shop-keeper/device/token', 'Api\ShopKeeperController@createDeviceToken');
+    Route::post('/shop-keepers/devices/token/{device_token}', 'Api\ShopKeeperController@authorizeDeviceToken');
 
-    Route::get(
-        '/user', 
-        'Api\UserController@curentUser');
+    Route::get('/user', 'Api\UserController@curentUser');
 
-    Route::resource(
-        '/voucher', 
-        'Api\VoucherController', 
-        ['parameters' => ['voucher' => 'voucher_public_key']]);
+    Route::post('/vouchers/{voucher_public_key}/transactions/{transaction}/refund', 'Api\Voucher\TransactionController@refund');
+    Route::resource('vouchers.transactions', 'Api\Voucher\TransactionController', [
+        'parameters' => ['vouchers' => 'voucher_public_key']
+    ]);
+    Route::resource('vouchers', 'Api\VoucherController', [
+        'parameters' => ['vouchers' => 'voucher_public_key']
+    ]);
 
-    Route::resource(
-        '/shop-keeper', 
-        'Api\ShopKeeperController');
+    Route::get('/shop-keepers/{shop_keeper}/categories', 'Api\ShopKeeperController@categories');
+    Route::put('/shop-keepers/{shop_keeper}/image', 'Api\ShopKeeperController@updateImage');
+    Route::resource('/shop-keepers', 'Api\ShopKeeperController');
+
+    Route::put('/offices/{office}/image', 'Api\OfficeController@updateImage');
+    Route::get('/offices/count', 'Api\OfficeController@count');
+    Route::resource('/offices', 'Api\OfficeController');
+
+    Route::get('/transactions/count', 'Api\TransactionController@count');
+    Route::resource('/transactions', 'Api\TransactionController');
+
+    Route::resource('/categories', 'Api\CategoryController');
+
+    Route::get('/refund/amount', 'Api\RefundController@amount');
+    Route::get('/refund/link', 'Api\RefundController@link');
 
     Route::get('/status', function() {
         return response(["status" => "operational"]);

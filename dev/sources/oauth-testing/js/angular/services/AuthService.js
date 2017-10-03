@@ -9,15 +9,23 @@ oauth2App.service('AuthService', [
             apiRequest = ApiRequest;
 
             this.signIn = function(values) {
-                return ApiRequest.post('/api/shop-keeper/device', values);
+                return ApiRequest.post('/api/shop-keepers/devices', values);
             };
 
-            this.createDeviceToken = function(values) {
-                return ApiRequest.post('/api/shop-keeper/device/token', values);
+            this.generateToken = function() {
+                return ApiRequest.get('/api/shop-keepers/devices/token');
+            };
+
+            this.checkTokenState = function(token) {
+                return ApiRequest.get('/api/shop-keepers/devices/token/' + token + '/state');
+            };
+
+            this.authorizeToken = function(token) {
+                return ApiRequest.post('/api/shop-keepers/devices/token/' + token);
             };
 
             this.signUp = function(values) {
-                return ApiRequest.post('/api/shop-keeper/sign-up', values);
+                return ApiRequest.post('/api/shop-keepers/sign-up', values);
             };
 
             this.signOut = function(values) {

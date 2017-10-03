@@ -1,9 +1,7 @@
 oauth2App.service('CredentialsService', ['ApiRequest', function(ApiRequest) {
     return new(function() {
         this.set = function(credentails) {
-            return localStorage.setItem(
-                'credentails', 
-                JSON.stringify(credentails));
+            return localStorage.setItem('credentails', JSON.stringify(credentails));
         };
 
         this.get = function() {

@@ -15,12 +15,12 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        \App\Models\VoucherTransaction::class => \App\Policies\VoucherTransactionPolicy::class,
+        \App\Models\Transaction::class => \App\Policies\TransactionPolicy::class,
         \App\Models\Category::class => \App\Policies\CategoryPolicy::class,
         \App\Models\Voucher::class => \App\Policies\VoucherPolicy::class,
         \App\Models\ShopKeeper::class => \App\Policies\ShopKeeperPolicy::class,
         \App\Models\ShopKeeperCategory::class => \App\Policies\ShopKeeperCategoryPolicy::class,
-        \App\Models\ShopKeeperOffice::class => \App\Policies\ShopKeeperOfficePolicy::class,
+        \App\Models\Office::class => \App\Policies\OfficePolicy::class,
         \App\Models\User::class => \App\Policies\UserPolicy::class,
         \App\Models\Buget::class => \App\Policies\BugetPolicy::class,
         \App\Models\BugetCategory::class => \App\Policies\BugetCategoryPolicy::class,

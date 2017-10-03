@@ -9,12 +9,16 @@ use Illuminate\Support\Facades\Mail;
 
 use App\Services\KvkApiService\Facades\KvkApi;
 
+use App\Http\Requests\Api\ShopKeeperUpdateRequest;
+use App\Http\Requests\Api\ShopKeeperUpdateImageRequest;
+
+use App\Models\Media;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\ShopKeeper;
-use App\Models\ShopKeeperOffice;
-use App\Models\ShopKeeperDevice;
-use App\Models\ShopKeeperDeviceToken;
+use App\Models\Office;
+use App\Models\Device;
+use App\Models\DeviceToken;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -48,7 +52,7 @@ class ShopKeeperController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -62,7 +66,7 @@ class ShopKeeperController extends Controller
         if (!$shopKeeper->id)
             return response(collect([
                 'message' => 'Shopkeeper not found!'
-                ]), 404);
+            ]), 404);
 
         return $shopKeeper->load('user');
     }
@@ -75,7 +79,7 @@ class ShopKeeperController extends Controller
      */
     public function edit(ShopKeeper $shopKeeper)
     {
-        //
+
     }
 
     /**
@@ -85,9 +89,47 @@ class ShopKeeperController extends Controller
      * @param  \App\Models\ShopKeeper  $shopKeeper
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ShopKeeper $shopKeeper)
+    public function update(ShopKeeperUpdateRequest $request, ShopKeeper $shopKeeper)
     {
-        //
+        $shopKeeper->update($request->only(
+            ['name', 'phone', 'kvk_number', 'btw_number', 'iban']));
+
+        $shopKeeper->user->update($request->only(['email']));
+        $shopKeeper->categories()->sync($request->input('categories'));
+
+        return $this->show($shopKeeper);
+    }
+
+    public function updateImage(ShopKeeperUpdateImageRequest $request, ShopKeeper $shopKeeper)
+    {
+        // media details
+        $original_type  = 'original';
+        $preview_type   = 'preview';
+        $mediable_type  = ShopKeeper::class;
+        $mediable_id    = $shopKeeper->id;
+
+        // upload photo
+        $media_info = Media::uploadSingle(
+            $original_type, $mediable_type, 'image');
+
+        // confirm uploaded photo
+        $media = Media::confirmSingle(
+            $original_type, $mediable_type, 
+            $mediable_id, $media_info['mediaId']);
+
+        $media_info = Media::uploadSingle(
+            $preview_type, $mediable_type, 'image');
+
+        // confirm uploaded photo
+        $media = Media::confirmSingle(
+            $preview_type, $mediable_type, 
+            $mediable_id, $media_info['mediaId']);
+
+        $image = \Intervention\Image\Facades\Image::make(
+            $request->file('image')
+        )->encode('data-url')->encoded;
+
+        return compact('image');
     }
 
     /**
@@ -101,129 +143,90 @@ class ShopKeeperController extends Controller
         //
     }
 
-    public function registerDevice(Request $request)
+    /**
+     * Creates and store new device authorisation token
+     * @param  Request $request Request details
+     * @return Array            Response array
+     */
+    public function createDeviceToken(Request $request)
     {
-        $device_id = $request->header('Device-Id');
-        $device_token = ShopKeeperDeviceToken::where([
-            'token' => $request->input('token')
-            ])->first();
 
-        $shop_keeper = $device_token->shop_keeper;
+        $token = DeviceToken::generateUid(null, 'token', 32);
+        $ip = $request->ip();
+
+        DeviceToken::cleanupExpired();
+        DeviceToken::whereIp($ip)->delete($ip);
+        DeviceToken::create(compact('token', 'ip'));
+
+        return collect(compact('token'));
+    }
+
+    /**
+     * Check device token state (authorized or not)
+     * @param  Request $request Request details
+     * @return Array            Response array
+     */
+    public function getDeviceTokenState(Request $request, $token)
+    {
+        $device_token = DeviceToken::where([
+            'authorized' => 1,
+            'token' => $token,
+        ])->first();
+
+        $authorized = !!$device_token;
 
         if (!$device_token)
-            return response(collect([
-                'error' => 'token-not-found',
-                'message' => "Registration token was not found."
-                ]), 401);
+            return compact('authorized');
 
-        if ($device_token->used == 1)
-            return response(collect([
-                'error' => 'token-used',
-                'message' => "Registration token was already used."
-                ]), 401);
-
-        $device_token->update(['used' => 1]);
-
-        $shop_keeper->shop_keeper_devices()->save(new ShopKeeperDevice([
-            'device_id' => $device_id,
-            'status'    => 'approved'
-            ]));
-
-        $user = $shop_keeper->user;
-
+        $user = $device_token->shop_keeper->user;
         $access_token = $user->createToken('Token')->accessToken;
         $token_type = "Bearer";
 
-        return compact('access_token', 'token_type');
+        $device_id = $request->header('Device-Id');
+
+        $device_token->shop_keeper->devices()->save(
+            new Device([
+                'device_id' => $device_id,
+                'status'    => 'approved'
+            ]));
+
+        return compact('access_token', 'token_type', 'authorized');
     }
 
-    public function createDeviceToken(Request $request)
+    public function authorizeDeviceToken(Request $request, $token)
     {
         $target_user = $request->user();
         $shop_keeper = ShopKeeper::whereUserId($target_user->id)->first();
 
-        $device_token = ['shop_keeper_id' => $shop_keeper->id, 'used' => 0];
-        $device_token = ShopKeeperDeviceToken::firstOrCreate($device_token);
+        $device_token = DeviceToken::where([
+            'token' => $token,
+        ])->first();
 
-        $token = ShopKeeperDeviceToken::generateUid(null, 'token', 32);
+        if (!$device_token)
+            return response([
+                'error' => 'token-not-found',
+                'message' => 'Token not found.'
+            ], $status = 404);
 
-        if (!$device_token->token) 
-            $device_token->update(compact('token'));
+        $device_token->update([
+            'authorized' => 1,
+            'shop_keeper_id' => $shop_keeper->id
+        ]);
 
-        return $device_token;
+        return [];
     }
 
     public function signUp(AuthSignUpRequest $request)
     {
-        $role = Role::where('key', 'shop-keeper')->first();
+        $shopKeeper = ShopKeeper::registerNewShopkeeper($request);
 
-        $device_id = $request->header('Device-Id');
-
-        $kvk_data = KvkApi::kvkNumberData($request->input('kvk_number'));
-
-        if (!$kvk_data)
-            return response(collect([
-                'kvk_number' => ["Kvk number is not valid."]
-                ]), 420);
-
-        $kvk_item = $kvk_data->data->items[0];
-
-        $shopkeeper_name = $kvk_item->tradeNames->currentNames;
-        $shopkeeper_websites = $kvk_item->websites;
-
-        do {
-            $password = User::generateUid([], 'password', 16);
-        } while(User::wherePassword(bcrypt($password))->count() > 0);
-
-        do {
-            $private_key = User::generateUid([], 'private_key', 32);
-        } while(User::wherePublicKey($private_key)->count() > 0);
-
-        $user = $role->users()->save(new User([
-            'email'         => $request->input('email'),
-            'password'      => Hash::make($password),
-            'private_key'   => $private_key
-            ]));
-        
-        $shopKeeper = ShopKeeper::create([
-            'name'          => collect($shopkeeper_name)->implode(', '),
-            'user_id'       => $user->id,
-            'iban'          => strtoupper($request->input('iban')),
-            'kvk_number'    => $request->input('kvk_number'),
-            'state'         => 'pending',
-            "website"       => collect($shopkeeper_websites)->implode(', '),
-            'kvk_data'      => json_encode($kvk_data),
-            ]);
-
-        $shopKeeper->shop_keeper_devices()->save(new ShopKeeperDevice([
-            'device_id' => $device_id,
-            'status'    => 'approved'
-            ]));
-
-        $bussines_address = '';
-
-        $addresses = collect($kvk_data->data->items[0]->addresses);
-        
-        $addresses->each(function($office) use ($shopKeeper, &$bussines_address) {
-            $office_address = collect([$office->street, $office->houseNumber, 
-                $office->houseNumberAddition, $office->postalCode, 
-                $office->city, $office->country])->filter()->implode(', ');
-
-            if ($bussines_address == '')
-                $bussines_address = $office_address;
-
-            $shopKeeper->shop_keeper_offices()->save(new ShopKeeperOffice([
-                'address' => $office_address,
-                'lon' => $office->gpsLongitude,
-                'lat' => $office->gpsLatitude,
-                ]));
-        });
-
-        $shopKeeper->update(compact('bussines_address'));
-
-        $access_token = $user->createToken('Token')->accessToken;
+        $access_token = $shopKeeper->user->createToken('Token')->accessToken;
         $token_type = "Bearer";
 
         return compact('access_token', 'token_type');
+    }
+
+    public function categories(ShopKeeper $shopKeeper) {
+        return $shopKeeper->categories;
     }
 }

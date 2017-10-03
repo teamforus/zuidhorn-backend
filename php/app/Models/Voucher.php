@@ -19,7 +19,7 @@ class Voucher extends Model
      * @var array
      */
     protected $fillable = [
-    'code', 'public_key', 'private_key', 'buget_id', 'user_id', 'status', 'amount'
+        'code', 'public_key', 'private_key', 'buget_id', 'user_id', 'status', 'amount'
     ];
 
     /**
@@ -28,7 +28,7 @@ class Voucher extends Model
      * @var array
      */
     protected $hidden = [
-    'private_key', 'code'
+        'private_key', 'code'
     ];
 
     public function user() {
@@ -41,7 +41,7 @@ class Voucher extends Model
 
     public function transactions()
     {
-        return $this->hasMany('App\Models\VoucherTransaction');
+        return $this->hasMany('App\Models\Transaction');
     }
 
     public function getAvailableFunds()
@@ -61,12 +61,12 @@ class Voucher extends Model
         return floatval(min($max_amount, $funds_available));
     }
 
-    public function logTransaction($shop_keeper_id, $amount)
+    public function logTransaction($shop_keeper_id, $amount, $extra_amount)
     {
         $shopKeeper = ShopKeeper::find($shop_keeper_id);
 
-        $transaction = new VoucherTransaction(compact(
-            'shop_keeper_id', 'amount'));
+        $transaction = new Transaction(compact(
+            'shop_keeper_id', 'amount', 'extra_amount'));
         $transaction = $this->transactions()->save($transaction);
 
         BlockchainApi::requestFunds(
@@ -74,7 +74,7 @@ class Voucher extends Model
             $shopKeeper->user->public_key,
             $shopKeeper->user->private_key,
             $amount
-            );
+        );
 
         dispatch(new BunqProcessTransactionJob($transaction));
 

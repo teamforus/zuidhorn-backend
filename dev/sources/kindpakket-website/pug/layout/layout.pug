@@ -1,8 +1,8 @@
 doctype
 html(lang="en")
     include includes/head
-    body(ng-app="kindpakketApp" ng-controller="BaseController")
-        include includes/dev-pages
+    body(ng-csp ng-app="kindpakketApp" ng-controller="BaseController")
+        // include includes/dev-pages
         include includes/header
         block content
         include includes/popups

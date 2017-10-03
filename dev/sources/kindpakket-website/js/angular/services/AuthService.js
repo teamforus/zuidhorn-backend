@@ -38,6 +38,14 @@ kindpakketApp.service('AuthService', [
             this.getQrCode = function() {
                 return ApiRequest.get('/api/user/voucher/qr-code');
             };
+
+            this.sendQrCodeEmail = function() {
+                return ApiRequest.post('/api/user/voucher/email');
+            };
+
+            this.getTransactions = function() {
+                return ApiRequest.get('/api/user/voucher/transactions');
+            };
         });
     }
 ]);

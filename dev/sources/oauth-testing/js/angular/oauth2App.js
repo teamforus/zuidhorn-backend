@@ -1,8 +1,8 @@
-var oauth2App = angular.module('oauth2App', ['ui.router']);
+var oauth2App = angular.module('oauth2App', ['ui.router', 'ngSanitize']);
 
 oauth2App.config(['ApiRequestProvider', function(ApiRequestProvider) {
-    // ApiRequestProvider.setHost('http://192.168.0.108:8000');
-    ApiRequestProvider.setHost('http://mvp.forus.io');
+    ApiRequestProvider.setHost('http://192.168.0.108:8000');
+    // ApiRequestProvider.setHost('http://mvp.forus.io');
 }]);
 
 oauth2App.config(['$stateProvider', function($stateProvider) {
@@ -21,6 +21,9 @@ oauth2App.config(['$stateProvider', function($stateProvider) {
             component: 'signInComponent',
             data: {
                 title: "Sign In"
+            },
+            onExit: function() {
+                console.log('arguments', arguments);
             }
         })
         .state({
@@ -122,13 +125,7 @@ oauth2App.config(['$stateProvider', function($stateProvider) {
         });
 }]);
 
-/*$scope.titles = {
-    'welcome': 'Welcome',
-    'sign_up': 'Sign Up',
-    'sign_in': 'Sign In',
-    'panel': 'Panel',
-    'voucher_scan_screen': 'Scan QR-Code',
-    'voucher_form_screen': 'Voucher found',
-    'settings': 'Settings',
-    'device_pending_screen': 'Device confirmation',
-};*/
+oauth2App.run(['$rootScope', '$state', '$trace', function($rootScope, $state, $trace) {
+    // $trace.enable('TRANSITION');
+
+}]);

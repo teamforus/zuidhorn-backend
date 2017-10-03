@@ -1,5 +1,22 @@
 .row
     .col-xs-12
         .form-group.text-center
-            pre(ng-bind="$ctrl.token" style="white-space: normal;")
-            p: a(ui-sref="panel").btn.btn-default Go back
+            .form(ng-show="!$ctrl.device_authorized")
+                .row
+                    .col-xs-12: .form-group
+                        label.form-label Please enter access token
+                        input(type="text" ng-model="$ctrl.forms.authorize_token.values.token").form-control
+                        p(ng-repeat="error in $ctrl.forms.authorize_token.errors.token track by $index" ng-bind="error").text-danger
+                .row
+                    .col-xs-12: .form-group.text-center
+                        p
+                            a(ng-click="$ctrl.submitForm($event, $ctrl.forms.authorize_token)").btn.btn-primary Submit
+                            | &nbsp;&nbsp;&nbsp;
+                            a(ui-sref="panel").btn.btn-default Go back
+            div(ng-show="$ctrl.device_authorized")
+                p.text-primary 
+                    h1.mdi.mdi-check-circle.text-primary 
+                    | Device authorized!
+                br
+                p.text-center
+                    a(ui-sref="panel").btn.btn-default Go back

@@ -97,7 +97,8 @@ class VoucherController extends Controller
             return abort(404);
 
         $this->validate($request, [
-            'email' => "required|email"
+            'email' => "required|email",
+            'code' => "required|exists:vouchers,code"
             ]);
 
         if (!is_null($voucher->user_id))
@@ -161,5 +162,21 @@ class VoucherController extends Controller
         return "data:image/png;base64, " . 
         base64_encode(QrCode::format('png')
             ->margin(1)->size(300)->generate($voucher->public_key));
+    }
+
+    public function sendQrCodeEmail(Request $request) {
+        $user = $request->user();
+        $voucher = $user->vouchers->first();
+        $email = $user->email;
+        $password = false;
+
+        $scope = compact('voucher', 'email', 'password');
+
+        Mail::send('emails.activate', $scope, function ($message) use ($voucher) {
+            $message->to($voucher->user->email);
+            $message->subject('Voucher activation');
+        });
+
+        return [];
     }
 }

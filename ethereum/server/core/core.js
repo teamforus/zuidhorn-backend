@@ -14,7 +14,7 @@ let logger = require('./logger.js');
 let checkShopStatus = function(targetShoper) {
     return new Promise(function(resolve, reject) {
         shopKeeperService.getShopKeeperState(targetShoper).then(function(state) {
-            logger.log("\tShopKeeper state: ", state ? colors.green('approved') : colors.red('not approved'));
+            logger.log("\tShopKeeper state: " + targetShoper + ' ', state ? colors.green('approved') : colors.red('not approved'));
             resolve(state);
         }, reject);
     });

@@ -1,0 +1,25 @@
+.section.section-auth(ng-class="{'show-qr-code' : qr_code}") 
+    .section-auth-header
+        .header-row: .wrapper.wrapper-lg
+            .header-col
+                h1 
+                    strong Zuidhorn. 
+                    | Kindpakket Leverancier
+                p 
+                    | Welkom om de website van het kindpakket Zuidhorn. Op deze website vindt u een overzicht van de deelnemende winkeliers. Meer weten over het kindpakket?
+                    br
+                    | Klik hier
+            .header-col
+                div(ng-if="$root.credentials").qr-code-login.text-center
+                    div: a(ui-sref="panel-offices" href="#").button.button-white Go to pannel
+                    br
+                    div: a(ui-sref="sign-out" href="#").button.button-white Sign Out
+
+                div(ng-if="!$root.credentials").qr-code-login
+                    div.qr-code-icon: em.mdi.mdi-qrcode
+                    a(href="#" ng-click="showQrCode($event)").button.button-white
+                        em.mdi.mdi-qrcode
+                        | Login with QR-Code
+                div(ng-if="!$root.credentials").qr-code-scan
+                    img.qr-code-scan-img(src="./assets/img/qr-code-sample.jpg", alt="")
+                    p.qr-code-scan-desc Please scan this qr code using your device.

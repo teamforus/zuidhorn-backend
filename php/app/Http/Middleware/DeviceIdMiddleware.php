@@ -13,8 +13,9 @@ class DeviceIdMiddleware
      * @var array
      */
     protected $except = [
-        '/api/shop-keeper/sign-up',
-        '/api/shop-keeper/device'
+        '/api/shop-keepers/sign-up',
+        '/api/shop-keepers/devices/token',
+        '/api/shop-keepers/devices/token/*/state',
     ];
 
     /**

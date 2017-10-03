@@ -1,10 +1,11 @@
 .row
-    .col-xs-12
+    .col-xs-12.text-center
         .form-group
-            label(for='token') Token
-            input#token.form-control(name='token', type='token', ng-model="$ctrl.form.values.token")
-            p(ng-show="$ctrl.form.errors.token", ng-repeat="err in $ctrl.form.errors.token track by $index", ng-bind="err").text-danger
+            h4: strong Token Raw
+            p(ng-bind="$ctrl.token")
+            br
+        .form-group
+            h4: strong Token QR Code
+            div.text-center: img(ng-src="{{ $ctrl.qr_code }}")
         .form-group.text-center
-            a(href="#", ng-click="$ctrl.submit($event)").btn.btn-primary Submit
-            | &nbsp;&nbsp;&nbsp;
             a(ui-sref="welcome").btn.btn-default Cancel

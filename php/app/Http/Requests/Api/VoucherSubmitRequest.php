@@ -28,14 +28,16 @@ class VoucherSubmitRequest extends FormRequest
     public function rules(Request $request)
     {
         $full_amount = Input::input('full_amount');
-        $rules = [];
+        $max_amount = $this->voucher_public_key->getAvailableFunds();
 
-        $rules['full_amount'] = 'boolean';
+        $rules = [
+            'full_amount'   => 'boolean',
+            'extra_amount'  => 'nullable|numeric',
+        ];
 
-        if (!$full_amount)
-            $rules['amount'] = 
-        'required|numeric|between:0.1,' . 
-        $this->voucher_public_key->getAvailableFunds();
+        if (!$full_amount) 
+            $rules['amount'] = "required|numeric|between:0.1,$max_amount";
+        
 
         return $rules;
     }

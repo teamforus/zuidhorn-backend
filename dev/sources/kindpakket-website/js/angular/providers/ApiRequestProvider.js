@@ -51,7 +51,7 @@ kindpakketApp.provider('ApiRequest', function() {
                         $http(params).then(function(response) {
                             done(response);
                         }, function(response) {
-                            if (CredentialsService.get() && response.status != -1) {
+                            if (CredentialsService.get() && response.status == 401) {
                                 CredentialsService.set(null);
                                 document.location.reload();
                             }

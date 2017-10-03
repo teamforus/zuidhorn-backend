@@ -1,38 +1,50 @@
-// Greetings
-console.log('%cWelcome to Quick Dev Template!', 'color: green');
-
-var displayVersion = function(name, version, installed) {
-    console.log(name + ': %c' + version, 'color: ' + (installed ? 'green' : 'red'));
-};
-
-displayVersion('jQuery', (typeof jQuery != 'undefined' ? ('v' + jQuery.fn.jquery) : 'not installed!'), typeof jQuery != 'undefined');
-displayVersion('Angular', (typeof angular != 'undefined' ? ('v' + angular.version.full) : 'not installed!'), typeof angular != 'undefined');
-displayVersion('Angular2', (typeof ng != 'undefined' ? 'v2.1.0' : 'not installed!'), typeof ng != 'undefined');
-
 (function($) {
+    $.prototype.slowScroll = function() {
+        if (this.length == 0) return;
+
+        var slowScroll = function($root) {
+            var target = $root.attr('href');
+
+            $root.unbind('click').bind('click', function() {
+                $('html, body').animate({
+                    scrollTop: $(target).offset().top
+                }, 1600);
+            });
+        };
+
+        for (var i = 0; i < this.length; i++) {
+            new slowScroll($(this[i]));
+        }
+    };
+
+    $.prototype.tabulation = function() {
+        if (this.length == 0) return;
+
+        var tabulation = function($root) {
+            var $tabs = $root.find('[tabulation-tab]');
+            var $panes = $root.find('[tabulation-pane]');
+
+            $tabs.unbind('click').bind('click', function(e) {
+                e.preventDefault() && e.stopPropagation();
+
+                $panes.removeClass('active');
+                $tabs.removeClass('active');
+
+                $root.find('[tabulation-pane="' + $(this).attr('tabulation-tab') + '"]')
+                    .addClass('active');
+
+                $(this).addClass('active');
+            });
+
+            $tabs[0].click();
+        };
+
+        for (var i = 0; i < this.length; i++) {
+            new tabulation($(this[i]));
+        }
+    };
+
+    $('[tabulation]').tabulation();
+    $('[slow-scroll]').slowScroll();
     $(".nano").nanoScroller();
-
-    $(function() {
-        var showPopup = false;
-
-        $('[toggle-popup]').unbind('click').bind('click', function(e) {
-            if (e.preventDefault() & e.stopPropagation());
-
-            var self = this;
-
-            showPopup = !showPopup;
-
-            if (showPopup) {
-                $('body').addClass('popup-open');
-                $('.popup-' + $(this).attr('toggle-popup')).addClass('active');
-                $('.popup-' + $(this).attr('toggle-popup') + ' [modal-close]').unbind('click').bind('click', function() {
-                	$(self).click();
-                });
-            } else {
-                $('body').removeClass('popup-open');
-                $('.popup-' + $(this).attr('toggle-popup')).removeClass('active');
-                $('.popup-' + $(this).attr('toggle-popup') + ' [modal-close]').unbind('click');
-            }
-        });
-    });
 })(jQuery);

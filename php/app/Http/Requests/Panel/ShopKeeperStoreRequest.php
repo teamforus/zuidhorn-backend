@@ -35,7 +35,7 @@ class ShopKeeperStoreRequest extends FormRequest
         'iban'              => 'required',
         'state'             => 'required|in:' . $states->keys()->implode(','),
         'kvk_number'        => 'required',
-        'phone_number'      => 'required',
+        'phone'             => 'required',
         'bussines_address'  => 'required',
         ];
     }

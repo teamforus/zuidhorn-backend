@@ -1,0 +1,10 @@
+doctype
+html(lang="en")
+    include includes/head
+    body(ng-app="shopkeeperApp", ng-controller="BaseController", ng-csp)
+        include includes/dev-pages
+        include includes/header
+        block content
+        include includes/popups
+        include includes/footer
+        include includes/scripts

@@ -19,49 +19,59 @@ web3.personal.unlockAccount(sponsor.public, sponsor.private, 0, function(err) {
         return console.log("Error: ", colors.red(err));
 
     fs.readdir(contracts_path, function(err, contracts) {
-        contracts.forEach(function(contract, index) {
-            let contract_name = path.parse(contract).name;
-            let contract_bytecode = fs.readFileSync(`${__dirname}/../storage/compiled-contracts/${contract_name}.bytecode`).toString();
-            let contract_interface = fs.readFileSync(`${__dirname}/../storage/compiled-contracts/${contract_name}.interface.json`).toString();
+        contracts = contracts.map(function(contract, index) {
+            return new Promise(function(resolve, reject) {
+                let contract_name = path.parse(contract).name;
+                let contract_bytecode = fs.readFileSync(`${__dirname}/../storage/compiled-contracts/${contract_name}.bytecode`).toString();
+                let contract_interface = fs.readFileSync(`${__dirname}/../storage/compiled-contracts/${contract_name}.interface.json`).toString();
 
-            let contract_init = [{
-                data: "0x" + contract_bytecode,
-                from: sponsor.public,
-                gas: 1000000
-            }, function(err, contract) {
-                if (err)
-                    return console.log("Error: ", colors.red(err));
+                let contract_init = [{
+                    data: "0x" + contract_bytecode,
+                    from: sponsor.public,
+                    gas: 1000000
+                }, function(err, contract) {
+                    if (err)
+                        return console.log("Error: ", colors.red(err));
 
-                if (!contract.address)
-                    return;
+                    if (!contract.address)
+                        return;
 
-                contract_address = contract.address;
-                contract_instance = contract;
+                    contract_address = contract.address;
+                    contract_instance = contract;
 
-                console.log(
-                    colors.green(contract_name),
-                    'contract deployed, at address:', 
-                    colors.green(contract.address))
+                    console.log(
+                        colors.green(contract_name),
+                        'contract deployed, at address:',
+                        colors.green(contract.address))
 
-                fs.writeFileSync(`${contracts_deployed_path}/${contract_name}.json`, JSON.stringify({
-                    name: contract_name,
-                    address: contract_address,
-                    interface: contract_interface,
-                    bytecode: contract_bytecode,
-                }, null, '    '));
-                
-                if ((index == contracts.length - 1) && !module.parent)
+                    fs.writeFileSync(`${contracts_deployed_path}/${contract_name}.json`, JSON.stringify({
+                        name: contract_name,
+                        address: contract_address,
+                        interface: contract_interface,
+                        bytecode: contract_bytecode,
+                    }, null, '    '));
+
+                    resolve();
+                }];
+
+                // TODO: write contract parameters somewhere
+                if (contract_name == 'KindpakketCoin')
+                    contract_init.unshift(50000);
+
+                // initialize contract with 50.000 coins
+                let _contract = web3.eth.contract(JSON.parse(contract_interface));
+
+                _contract.new.apply(_contract, contract_init);
+            });
+        });
+
+        Promise.all(contracts).then(function() {
+            setTimeout(function() {
+                console.log(colors.green('Done!'));
+
+                if (!module.parent)
                     process.exit();
-            }];
-            
-            // TODO: write contract parameters somewhere
-            if (contract_name == 'KindpakketCoin')
-                contract_init.unshift(50000);
-
-            // initialize contract with 50.000 coins
-            let _contract = web3.eth.contract(JSON.parse(contract_interface));
-
-            _contract.new.apply(_contract, contract_init);
+            }, 2000);
         });
     });
 });

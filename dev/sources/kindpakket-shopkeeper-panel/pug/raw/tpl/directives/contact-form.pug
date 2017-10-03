@@ -1,0 +1,42 @@
+.section.section-contact-form
+    .wrapper
+        .bg-image
+        .contact-inner
+            .contact-title Contact Feedback
+            .contact-subtitle Lees hier de meest gestelde vragen
+            form(action="#").contact-form.form
+                .contact-form-inner
+                    div(ng-show="!forms.contact_form.success")
+                        .row
+                            .col.col-6: .form-group
+                                label.label First name
+                                input(type="text" placeholder="First name" ng-model="forms.contact_form.values.first_name").form-control
+                                p(ng-repeat="error in forms.contact_form.errors.first_name track by $index" ng-bind="error").text-danger
+                            .col.col-6
+                                label.label Last name
+                                input(type="text" placeholder="Last name" ng-model="forms.contact_form.values.last_name").form-control
+                                p(ng-repeat="error in forms.contact_form.errors.last_name track by $index" ng-bind="error").text-danger
+                        .row
+                            .col.col-12: .form-group
+                                label.label Select Subject
+                                select(ng-options="subject.name for subject in subjects track by subject.key" ng-model="forms.contact_form.values.subject").form-control
+                                p(ng-repeat="error in forms.contact_form.errors.subject track by $index" ng-bind="error").text-danger
+                        .row
+                            .col.col-6: .form-group
+                                label.label Email
+                                input(type="email" placeholder="Email" ng-model="forms.contact_form.values.email").form-control
+                                p(ng-repeat="error in forms.contact_form.errors.email track by $index" ng-bind="error").text-danger
+                            .col.col-6: .form-group
+                                label.label Telephone
+                                input(type="phone" placeholder="Telephone" ng-model="forms.contact_form.values.phone").form-control
+                                p(ng-repeat="error in forms.contact_form.errors.phone track by $index" ng-bind="error").text-danger
+                        .row
+                            .col.col-12: .form-group
+                                label.label Message
+                                textarea(name="message" placeholder="Message" cols="30" rows="3" ng-model="forms.contact_form.values.message").form-control
+                                p(ng-repeat="error in forms.contact_form.errors.message track by $index" ng-bind="error").text-danger
+                    
+                        button(type="submit" ng-click="submitContactForm($event, forms.contact_form)").button.button-success.submit-button Send message
+
+                    div(ng-show="forms.contact_form.success")
+                        .row: .col.col-12: h2.text-primary.text-center Success!

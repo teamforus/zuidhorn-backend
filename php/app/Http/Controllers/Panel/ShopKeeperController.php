@@ -72,8 +72,8 @@ class ShopKeeperController extends Controller
         $this->authorize('create', ShopKeeper::class);
 
         $user = Role::where('key', 'shop-keeper')->first()->users()->create([
-            'first_name' => $request->input('first_name'),
-            'last_name' => $request->input('last_name'),
+            // 'first_name' => $request->input('first_name'),
+            // 'last_name' => $request->input('last_name'),
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
             ]);

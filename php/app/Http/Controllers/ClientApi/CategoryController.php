@@ -17,15 +17,9 @@ class CategoryController extends Controller
     {
         $categories = Category::all()->map(function($category) {
             $shopkeepers = $category->shop_keepers->map(function($shop_keeper) {
-                $offices = $shop_keeper->shop_keeper_offices->map(function($office) {
-                    return [
-                    'id' => $office->id,
-                    'address' => $office->address,
-                    'lon' => $office->lon,
-                    'lat' => $office->lat,
-                    'preview' => $office->urlPreview(),
-                    'original' => $office->urlOriginal(),
-                    ];
+                $shop_keeper->offices->map(function($office) {
+                    $office->preview = $office->urlPreview();
+                    $office->original = $office->urlOriginal();
                 });
 
                 return [
@@ -33,7 +27,7 @@ class CategoryController extends Controller
                 'name' => $shop_keeper->name,
                 'phone' => $shop_keeper->phone,
                 'categories' => $shop_keeper->categories->pluck('name')->implode(', '),
-                'offices' => $offices,
+                'offices' => $shop_keeper->offices,
                 ];
             });
 

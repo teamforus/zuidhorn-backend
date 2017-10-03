@@ -33,7 +33,7 @@
             </td>
             <td>{{ $row->kvk_number }}</td>
             <td>{{ $row->iban }}</td>
-            <td>{{ $row->user->email }}<br>{{ $row->phone_number }}</td>
+            <td>{{ $row->user->email }}<br>{{ $row->phone }}</td>
             <td>
                 @if($row->categories->count())
                 {{ str_limit($row->categories->pluck('name')->implode(','), 32) }}

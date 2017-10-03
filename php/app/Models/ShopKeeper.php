@@ -2,11 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Hash;
+
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
+
 use App\Services\BlockchainApiService\Facades\BlockchainApi;
+use App\Services\KvkApiService\Facades\KvkApi;
+
+use App\Models\OfficeSchedule;
 
 class ShopKeeper extends Model
 {
+    use Traits\HasMediaTrait;
     use Traits\Urls\ShopKeeperUrlsTrait;
 
     /**
@@ -15,12 +23,17 @@ class ShopKeeper extends Model
      * @var array
      */
     protected $fillable = [
-    'user_id', 'name', 'kvk_number', 'bussines_address', 'phone_number', 
-    'state', 'iban','kvk_data', "website"
+        'user_id', 'name', 'kvk_number', 'btw_number', 'bussines_address', 
+        'phone', 'state', 'iban','kvk_data', "website"
     ];
 
     protected $hidden = [
-    'kvk_data'
+        'kvk_data', '_original', '_preview'
+    ];
+
+    protected $media_size = [
+        'preview' => [200, 200],
+        'original' => [1000, 1000],
     ];
 
     /**
@@ -34,7 +47,7 @@ class ShopKeeper extends Model
             'pending'   => 'Pending',
             'declined'  => 'Declined',
             'approved'  => 'Approved',
-            ]);
+        ]);
     }
 
     public function user()
@@ -47,19 +60,19 @@ class ShopKeeper extends Model
         return $this->hasMany('App\Models\ShopKeeperCategory');
     }
 
-    public function shop_keeper_devices()
+    public function devices()
     {
-        return $this->hasMany('App\Models\ShopKeeperDevice');
+        return $this->hasMany('App\Models\Device');
     }
 
-    public function shop_keeper_device_tokens()
+    public function device_tokens()
     {
-        return $this->hasMany('App\Models\ShopKeeperDeviceToken');
+        return $this->hasMany('App\Models\DeviceToken');
     }
 
-    public function shop_keeper_offices()
+    public function offices()
     {
-        return $this->hasMany('App\Models\ShopKeeperOffice');
+        return $this->hasMany('App\Models\Office');
     }
 
     public function categories()
@@ -67,6 +80,16 @@ class ShopKeeper extends Model
         return $this->belongsToMany(
             'App\Models\Category', 
             'shop_keeper_categories');
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany('App\Models\Transaction');
+    }
+
+    public function refunds()
+    {
+        return $this->hasMany('App\Models\Refund');
     }
 
     public function unlink()
@@ -78,17 +101,17 @@ class ShopKeeper extends Model
 
     public function checkDevice($device_id)
     {
-        return $this->shop_keeper_devices()->where([
+        return $this->devices()->where([
             'device_id' => $device_id,
-            ])->first();
+        ])->first();
     }
 
     public function requestDeviceApprovement($device_id)
     {
-        $device = $this->shop_keeper_devices()->save(new ShopKeeperDevice([
+        $device = $this->devices()->save(new Device([
             'device_id'     => $device_id,
-            'approve_token' => ShopKeeperDevice::generateUid(null, 'approve_token', 32),
-            ]));
+            'approve_token' => Device::generateUid(null, 'approve_token', 32),
+        ]));
 
         $device->sendApprovalRequest();
 
@@ -103,5 +126,107 @@ class ShopKeeper extends Model
         ]);
 
         return $account;
+    }
+
+    public static function registerNewShopkeeper(Request $request) {
+        $role = Role::where('key', 'shop-keeper')->first();
+        $device_id = $request->header('Device-Id');
+
+        $email = $request->input('email');
+        $iban = $request->input('iban');
+        $kvk_number = $request->input('kvk_number');
+
+        $kvk_data = KvkApi::kvkNumberData($kvk_number);
+        $kvk_item = collect($kvk_data->data->items)->first();
+
+        $shopkeeper_name = $kvk_item->tradeNames->currentNames;
+        $shopkeeper_websites = $kvk_item->websites;
+
+        do {
+            $password = User::generateUid([], 'password', 16);
+        } while(User::wherePassword(bcrypt($password))->count() > 0);
+
+        do {
+            $private_key = User::generateUid([], 'private_key', 32);
+        } while(User::wherePublicKey($private_key)->count() > 0);
+
+        $user = $role->users()->save(new User([
+            'email'         => $email,
+            'password'      => Hash::make($password),
+            'private_key'   => $private_key
+        ]));
+        
+        $shopKeeper = ShopKeeper::create([
+            'name'          => collect($shopkeeper_name)->implode(', '),
+            'user_id'       => $user->id,
+            'iban'          => strtoupper($iban),
+            'kvk_number'    => $kvk_number,
+            'state'         => 'pending',
+            "website"       => collect($shopkeeper_websites)->implode(', '),
+            'kvk_data'      => json_encode($kvk_data),
+        ]);
+
+        $shopKeeper->devices()->save(new Device([
+            'device_id' => $device_id,
+            'status'    => 'approved'
+        ]));
+
+        $addresses = collect($kvk_data->data->items[0]->addresses);
+
+        $addresses->each(function($office) use ($shopKeeper) {
+            $office_address = collect([$office->street, $office->houseNumber, 
+                $office->houseNumberAddition, $office->postalCode, 
+                $office->city, $office->country])->filter()->implode(', ');
+
+            $office = $shopKeeper->offices()->save(new Office([
+                'address'   => $office_address,
+                'lon'       => $office->gpsLongitude,
+                'lat'       => $office->gpsLatitude,
+                'phone'     => '',
+                'email'     => '',
+            ]));
+
+            for ($week_day = 1; $week_day <= 5; $week_day++) {
+                $office->schedules()->save(
+                    new OfficeSchedule(compact('week_day')));
+            }
+        });
+
+        $bussines_address = '';
+
+        if ($shopKeeper->offices()->count() > 0)
+            $bussines_address = $shopKeeper->offices()->first()->address;
+
+        $shopKeeper->update(compact('bussines_address'));
+
+        return $shopKeeper;
+    }
+
+    public function _preview() {
+        return $this->morphOne('App\Models\Media', 'mediable')->whereType('preview');
+    }
+
+    public function _original() {
+        return $this->morphOne('App\Models\Media', 'mediable')->whereType('original');
+    }
+
+    public function urlOriginal()
+    {
+        // return uploaded avatar
+        if ($this->_original)
+            return $this->_original->_original->urlPublic('original');
+
+        // return default avatar
+        return false;
+    }
+
+    public function urlPreview()
+    {
+        // return uploaded avatar
+        if ($this->_preview)
+            return $this->_preview->_preview->urlPublic('preview');
+
+        // return default avatar
+        return false;
     }
 }
