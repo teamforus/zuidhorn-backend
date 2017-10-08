@@ -48,10 +48,10 @@ class Voucher extends Model
     {
         if (is_null($this->user_id))
             return $this->amount;
-        
+
         return BlockchainApi::getBalance($this->public_key)['balance'];
 
-        // TODO: Optimize to user blockchain 
+        // TODO: Optimize to user blockchain
         $funds_available = $this->getAvailableFunds();
         $max_amount = $this->max_amount;
 
@@ -68,13 +68,6 @@ class Voucher extends Model
         $transaction = new Transaction(compact(
             'shop_keeper_id', 'amount', 'extra_amount'));
         $transaction = $this->transactions()->save($transaction);
-
-        BlockchainApi::requestFunds(
-            $this->public_key,
-            $shopKeeper->user->public_key,
-            $shopKeeper->user->private_key,
-            $amount
-        );
 
         dispatch(new BunqProcessTransactionJob($transaction));
 

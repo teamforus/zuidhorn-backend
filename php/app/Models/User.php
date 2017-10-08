@@ -21,7 +21,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-    'first_name', 'last_name', 'email', 'password', 'public_key', 'private_key'
+    'name', 'email', 'password', 'public_key', 'private_key'
     ];
 
     /**
@@ -69,7 +69,7 @@ class User extends Authenticatable
 
     public function getFullNameAttribute()
     {
-        return $this->first_name . ' ' . $this->last_name;
+        return $this->name;
     }
 
     public function hasRole($role)

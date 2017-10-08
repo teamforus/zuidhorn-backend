@@ -1,8 +1,8 @@
 doctype
 html(lang="en")
     include includes/head
-    body
-        include includes/dev-pages
+    body(ng-app="municipalityApp", ng-controller="BaseController", ng-csp)
+        // include includes/dev-pages
         include includes/header
         block content
         include includes/popups

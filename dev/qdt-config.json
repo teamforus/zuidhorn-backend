@@ -102,66 +102,6 @@
                 "port": 3000
             }
         },
-        "kindpakket-shopkeeper-panel": {
-            "libs": {
-                "jquery": true,
-                "bootstrap_3": false,
-                "angular": true,
-                "angular_2": false,
-                "underscore": false,
-                "underscore.string": false,
-                "mdi": true
-            },
-            "assets": [{
-                "from": "resources/assets/**/*",
-                "to": "assets"
-            }, {
-                "from": "../../node_modules/angular-sanitize/angular-sanitize.min.js",
-                "to": "assets/dist/angular-sanitize"
-            }, {
-                "from": "../../node_modules/@uirouter/angularjs/release/angular-ui-router.min.js",
-                "to": "assets/dist/@uirouter/angularjs"
-            }, {
-                "from": "../../node_modules/nanoscroller/bin/javascripts/jquery.nanoscroller.js",
-                "to": "assets/dist/nanoscroller"
-            }, {
-                "from": "../../node_modules/qrcodejs/qrcode.js",
-                "to": "assets/dist/qrcodejs"
-            }, {
-                "from": "../../node_modules/moment/min/moment-with-locales.min.js",
-                "to": "assets/dist/moment/"
-            }],
-            "source": "kindpakket-shopkeeper-panel",
-            "paths": {
-                "root": "../kindpakket-shopkeeper-panel",
-                "assets_root": "../kindpakket-shopkeeper-panel/assets",
-                "clean_paths": [
-                    "../kindpakket-shopkeeper-panel"
-                ]
-            },
-            "server": {
-                "path": "/",
-                "port": 3000
-            },
-            "tasks": {
-                "settings": {
-                    "js": [{
-                        "src": [
-                            "app.js",
-                            "angular/angular.app.js",
-                            "angular/controllers/**/**.js",
-                            "angular/components/**/**.js",
-                            "angular/directives/**/**.js",
-                            "angular/providers/**/**.js",
-                            "angular/services/**/**.js",
-                            "angular/filters/**/**.js"
-                        ],
-                        "dest": "/",
-                        "name": "app.js"
-                    }]
-                }
-            }
-        },
         "panel": {
             "source": "panel",
             "paths": {
@@ -446,10 +386,6 @@
                 "from": "../../node_modules/nanoscroller/bin/javascripts/jquery.nanoscroller.js",
                 "to": "assets/dist/nanoscroller"
             }],
-            "server": {
-                "path": "/",
-                "port": 3000
-            },
             "tasks": {
                 "settings": {
                     "js": [{
@@ -467,10 +403,13 @@
                         "name": "app.js"
                     }]
                 }
+            },
+            "server": {
+                "path": "/",
+                "port": 3500
             }
         },
-        "kindpakket-desktop-app": {
-            "source": "kindpakket-desktop-app",
+        "kindpakket-shopkeeper-panel": {
             "libs": {
                 "jquery": true,
                 "bootstrap_3": false,
@@ -479,13 +418,6 @@
                 "underscore": false,
                 "underscore.string": false,
                 "mdi": true
-            },
-            "paths": {
-                "root": "../kindpakket-desktop-app",
-                "assets_root": "../kindpakket-desktop-app/assets",
-                "clean_paths": [
-                    "../kindpakket-desktop-app"
-                ]
             },
             "assets": [{
                 "from": "resources/assets/**/*",
@@ -500,12 +432,19 @@
                 "from": "../../node_modules/nanoscroller/bin/javascripts/jquery.nanoscroller.js",
                 "to": "assets/dist/nanoscroller"
             }, {
-                "from": "../../node_modules/progressbar.js/dist/progressbar.min.js",
-                "to": "assets/dist/progressbar"
+                "from": "../../node_modules/qrcodejs/qrcode.js",
+                "to": "assets/dist/qrcodejs"
+            }, {
+                "from": "../../node_modules/moment/min/moment-with-locales.min.js",
+                "to": "assets/dist/moment/"
             }],
-            "server": {
-                "path": "/",
-                "port": 3000
+            "source": "kindpakket-shopkeeper-panel",
+            "paths": {
+                "root": "../kindpakket-shopkeeper-panel",
+                "assets_root": "../kindpakket-shopkeeper-panel/assets",
+                "clean_paths": [
+                    "../kindpakket-shopkeeper-panel"
+                ]
             },
             "tasks": {
                 "settings": {
@@ -524,6 +463,82 @@
                         "name": "app.js"
                     }]
                 }
+            },
+            "server": {
+                "path": "/",
+                "port": 4000
+            }
+        },
+        "kindpakket-desktop-app": {
+            "source": "kindpakket-desktop-app",
+            "libs": {
+                "jquery": true,
+                "bootstrap_3": false,
+                "angular": true,
+                "angular_2": false,
+                "underscore": false,
+                "underscore.string": false,
+                "mdi": true
+            },
+            "paths": {
+                "root": "../kindpakket-desktop-app/www",
+                "assets_root": "../kindpakket-desktop-app/www/assets",
+                "clean_paths": [
+                    "../kindpakket-desktop-app/www"
+                ]
+            },
+            "assets": [{
+                "from": "resources/assets/**/*",
+                "to": "assets"
+            }, {
+                "from": "../../node_modules/angular-sanitize/angular-sanitize.min.js",
+                "to": "assets/dist/angular-sanitize"
+            }, {
+                "from": "../../node_modules/@uirouter/angularjs/release/angular-ui-router.min.js",
+                "to": "assets/dist/@uirouter/angularjs"
+            }, {
+                "from": "../../node_modules/nanoscroller/bin/javascripts/jquery.nanoscroller.js",
+                "to": "assets/dist/nanoscroller"
+            }, {
+                "from": "../../node_modules/progressbar.js/dist/progressbar.min.js",
+                "to": "assets/dist/progressbar"
+            }, {
+                "from": "../../node_modules/papaparse/papaparse.min.js",
+                "to": "assets/dist/papaparse/"
+            }, {
+                "from": "../../node_modules/sweetalert/dist/sweetalert.min.js",
+                "to": "assets/dist/sweetalert/"
+            }, {
+                "from": "../../node_modules/sweetalert/dist/sweetalert.css",
+                "to": "assets/dist/sweetalert/"
+            }, {
+                "from": "../../node_modules/file-saver/FileSaver.min.js",
+                "to": "assets/dist/file-saver"
+            }, {
+                "from": "../../node_modules/moment/min/moment-with-locales.min.js",
+                "to": "assets/dist/moment/"
+            }],
+            "tasks": {
+                "settings": {
+                    "js": [{
+                        "src": [
+                            "app.js",
+                            "angular/angular.app.js",
+                            "angular/controllers/**/**.js",
+                            "angular/components/**/**.js",
+                            "angular/directives/**/**.js",
+                            "angular/providers/**/**.js",
+                            "angular/services/**/**.js",
+                            "angular/filters/**/**.js"
+                        ],
+                        "dest": "/",
+                        "name": "app.js"
+                    }]
+                }
+            },
+            "server": {
+                "path": "/",
+                "port": 4500
             }
         }
     }

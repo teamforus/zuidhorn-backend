@@ -39,6 +39,10 @@ class AuthServiceProvider extends ServiceProvider
             'prefix' => 'api/oauth'
             ]);
 
+        Passport::routes(null, [
+            'prefix' => 'municipality/oauth'
+            ]);
+
         Gate::define('upload_bugets', function ($user) {
             return $user->permissions()->where('key', 'upload_bugets')->count();
         });

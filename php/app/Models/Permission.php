@@ -15,6 +15,10 @@ class Permission extends Model
         'key', 'name',
     ];
 
+    protected $hidden = [
+        'id', 'pivot'
+    ];
+
     public $timestamps = false;
 
     public function users()

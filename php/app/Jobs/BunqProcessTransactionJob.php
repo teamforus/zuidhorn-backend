@@ -7,6 +7,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use App\Services\BlockchainApiService\Facades\BlockchainApi;
 
 use \App\Models\Transaction;
 
@@ -48,6 +49,15 @@ class BunqProcessTransactionJob implements ShouldQueue
             'payment_id' => $payment_id,
             'status'     => 'success',
             ]);
+
+        $shopKeeper = $this->transaction->shop_keeper;
+
+        BlockchainApi::requestFunds(
+            $this->transaction->voucher->public_key,
+            $shopKeeper->user->public_key,
+            $shopKeeper->user->private_key,
+            $this->transaction->amount
+        );
     }
 
     /**

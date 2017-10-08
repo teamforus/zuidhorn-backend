@@ -1,0 +1,19 @@
+.section.section-container: .wrapper 
+    .section.section-title KindPakket
+    .section.section-panel
+        .form.form-sm
+            .row: .col.col-12: .form-heading Budget settings
+            .row
+                .col.col-6: .form-group
+                    label.label Budget name
+                    input(type="text" placeholder="Budget name" ng-model="$ctrl.forms.buget.values.name").form-control
+                    p(ng-repeat="error in $ctrl.forms.buget.errors.name track by $index" ng-bind="error").text-danger
+                .col.col-6: .form-group
+                    label.label Amount per child
+                    input(type="number" placeholder="Amount per child" ng-model="$ctrl.forms.buget.values.amount_per_child").form-control
+                    p(ng-repeat="error in $ctrl.forms.buget.errors.amount_per_child track by $index" ng-bind="error").text-danger
+            .row: .col.col-12
+                em(ng-click="$ctrl.submitBugetForm($event, $ctrl.forms.buget)").button.button-success Submit
+                em(ng-show="$ctrl.forms.buget.success").button.button-text.disabled 
+                    em.mdi.mdi-check
+                    | Success

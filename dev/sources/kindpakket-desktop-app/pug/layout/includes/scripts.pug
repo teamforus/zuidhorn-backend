@@ -21,6 +21,7 @@ if (qdt_c.platform.libs.bootstrap_3)
 //- angular
 if (qdt_c.platform.libs.angular)
     script(src="assets/dist/angular/angular.min.js")
+    script(src="assets/dist/@uirouter/angularjs/angular-ui-router.min.js")
     
 //- angular 2
 if (qdt_c.platform.libs.angular_2)
@@ -49,8 +50,13 @@ if (qdt_c.platform.libs.angular_2)
 script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOB-z-WzmDqwM4OvOMLv0L47UsHcj7dYc")
     
 //- custom script
-script(src="assets/dist/nanoscroller/jquery.nanoscroller.js")
+//- script(src="assets/dist/nanoscroller/jquery.nanoscroller.js")
 script(src="assets/dist/progressbar/progressbar.min.js")
+script(src="assets/dist/moment/moment-with-locales.min.js")
+script(src="assets/dist/angular-sanitize/angular-sanitize.min.js")
+script(src="assets/dist/sweetalert/sweetalert.min.js")
+script(src="assets/dist/file-saver/FileSaver.min.js")
+script(src="assets/dist/papaparse/papaparse.min.js")
 script(src="assets/js/app.js")
 
 if (!qdt_c.platform.tasks.disabled.ts)

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Voucher;
 use App\Models\ShopKeeper;
-use App\Http\Requests\App\VoucherSubmitRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -50,7 +49,7 @@ class VoucherController extends Controller
      * @param  \App\Voucher  $voucher
      * @return \Illuminate\Http\Response
      */
-    public function update(VoucherSubmitRequest $request, Voucher $voucher)
+    public function update(Voucher $voucher)
     {
         
     }

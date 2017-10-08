@@ -15,7 +15,7 @@ class Refund extends Model
     public function transactions()
     {
         return $this->belongsToMany(
-            'App\Models\Transaction', 
+            'App\Models\Transaction',
             'refund_transactions');
     }
 
@@ -23,7 +23,7 @@ class Refund extends Model
     {
         return $this->belongsTo('App\Models\ShopKeeper');
     }
-    
+
     public function applyOrRevokeBunqRequest() {
         if($this->bunqRequestFulfilled()) {
             $this->transactions()->update(['status' => 'refunded']);
@@ -32,7 +32,7 @@ class Refund extends Model
             $this->bunqRequestRevoke();
             $this->transactions()->detach();
             $this->update(['status' => 'revoked']);
-        }      
+        }
 
         return $this;
     }
@@ -53,8 +53,6 @@ class Refund extends Model
             $this->update([
                 'status' => 'rejected'
             ]);
-
-            $this->deta
         }
 
         return false;

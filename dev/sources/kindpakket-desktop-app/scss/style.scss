@@ -19,6 +19,24 @@ body {
     }
 }
 
+* { 
+    user-select: none;
+    -webkit-user-drag: none;
+    cursor: default;
+}
+
+.allow-select {
+    * { 
+        user-select: initial;
+    }
+}
+
+.allow-drag {
+    * { 
+        -webkit-user-drag: initial;
+    }
+}
+
 .wrapper {
     width: 100%;
     max-width: 1360px;
@@ -64,6 +82,11 @@ body {
     transition: .4s;
     box-shadow: 0 0 0 rgba(0,0,0,.1);
     margin-right: 15px;
+    cursor: pointer;
+
+    * {
+        cursor: pointer;
+    }
 
     .mdi {
         line-height: 10px;
@@ -340,6 +363,10 @@ body {
 
     &.disabled, &[disabled] {
         cursor: default;
+
+        * {
+            cursor: default;
+        }
     }
 
     &:last-child, &:last-of-type {
@@ -405,6 +432,10 @@ body {
         font: 600 16px/38px $bf;
         cursor: pointer;
 
+        * {
+            cursor: inherit;
+        }
+
         &.active {
             cursor: default;
             background-color: #70c567;
@@ -427,6 +458,11 @@ body {
     .table {
         th, td {
             white-space: nowrap;
+            user-select: initial;
+
+            * {
+                user-select: initial; 
+            }
         }
     }
 }
@@ -575,10 +611,29 @@ table.table {
                 display: inline-block;
                 margin-right: 5px;
                 text-align: left;
+                transition: .4s;
+                opacity: 1;
+
+                &.checked {
+                    opacity: 0;
+                    margin-left: -29px;
+                }
             }
 
             &:hover {
                 color: #017f96;
+            }
+
+            &.checked, &[checked] {
+                .mdi {
+                    color: #444;
+                    transition: color .4s;
+                    opacity: 0;
+
+                    &.checked {
+                        opacity: 1;
+                    }
+                }
             }
         }
     }
@@ -616,6 +671,10 @@ table.table {
         .office-li-inner {
             position: relative;
             padding-left: 130px;
+
+            &.no-photo {
+                padding-left: 0;
+            }
         }
 
         .office-li-thumb {
@@ -688,10 +747,18 @@ table.table {
     }
 }
 
+.business-li-wrapper {
+    padding: 20px;
+    margin: -20px;
+    cursor: pointer;
+
+    * {
+        cursor: pointer;
+    }
+}
 
 .business-li {
     width: 100%;
-    margin-bottom: 40px;
     @include cf();
 
     .business-li-logo {
@@ -726,8 +793,11 @@ table.table {
             position: absolute;
             top: 0;
             right: 0;
+            min-width: 180px;
 
             .button {
+                min-width: 100%;
+                text-align: center;
                 margin-bottom: 0;
                 position: relative;
 
@@ -749,6 +819,12 @@ table.table {
                 margin-top: 6px;
                 display: none;
 
+                .button-menu-backdrop {
+                    @include fill_parent();
+                    position: fixed;
+                    z-index: 0;
+                }
+
                 .button-menu-item {
                     padding: 0 20px 0 40px;
                     color: #083f49;
@@ -756,6 +832,8 @@ table.table {
                     font: 400 14px/35px $bf;
                     cursor: pointer;
                     transition: .4s;
+                    position: relative;
+                    z-index: 1;
 
                     .mdi {
                         margin-left: -20px;
@@ -774,6 +852,25 @@ table.table {
             text-align: center;
             width: 100%;
             font: 400 12px/26px $bf;
+            cursor: pointer;
+            position: relative;
+            transition: .4s;
+
+            &:hover {
+                color: #017f96;
+            }
+
+            &.active {
+                .button-menu {
+                    top: 0;
+                    text-align: left;
+                    display: block;
+
+                    .mdi {
+                        margin-right: 7px;
+                    }
+                }
+            }
         }
     }   
 
@@ -904,11 +1001,21 @@ table.table {
 }
 
 .section {
+
     &.section.section-header {
         background-color: #f7f9fc;
 
         .section-header-inner {
             padding: 25px 0;
+
+            .logo {
+                @include cf();
+                display: inline-block;
+
+                img {
+                    float: left;
+                }
+            }
         }
 
         .section-header-actions {

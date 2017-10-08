@@ -7,6 +7,8 @@ use App\Models\Voucher;
 use App\Models\ShopKeeper;
 use App\Models\Transaction;
 
+use App\Http\Requests\App\VoucherSubmitRequest;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,9 +21,14 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Voucher $voucher)
+    public function index(Request $request, Voucher $voucher)
     {
-        return $voucher->transactions()->get();
+        $user = $request->user();
+        $shop_keeper = ShopKeeper::whereUserId($user->id)->first();
+
+        return $voucher->transactions()->where([
+            'shop_keeper_id' => $shop_keeper->id,
+        ])->get();
     }
 
     /**
@@ -56,10 +63,9 @@ class TransactionController extends Controller
         if ($available_categs->count() < 1)
             return response(collect([
                 'error' => 'no-available-categories',
-                'message' => "Shopkeeper don't have categories 
-                required by voucher."
+                'message' => "Shopkeeper don't have categories required by voucher."
             ]), 401);
-        
+
         $max_amount = $voucher->getAvailableFunds();
 
         $amount = $request->input('full_amount') ? $max_amount : $request->input('amount');
@@ -79,7 +85,7 @@ class TransactionController extends Controller
      */
     public function show(Voucher $voucher, Transaction $transaction)
     {
-        return [$voucher, $transaction];
+        return $transaction;
     }
 
     /**
@@ -140,7 +146,7 @@ class TransactionController extends Controller
             'status'            => 'pending',
         ])->first();
 
-        // check bunq request status, 
+        // check bunq request status,
         // update refund and transactions status
         if($refund) {
             $refund->applyOrRevokeBunqRequest();

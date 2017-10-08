@@ -3,7 +3,7 @@
 
     .section.section-panel.section-panel-profile: .section-panel-inner
         .profile-details
-            .profile-photo(ng-show="$ctrl.office.id && $ctrl.office.preview != false")
+            .profile-photo(ng-if="$ctrl.office.id && $ctrl.office.preview != false")
                 img(ng-src="{{ $ctrl.office.preview }}", alt="")
                 .profile-photo-placeholder(ng-if="$ctrl.office.preview == false")
                     em.mdi.mdi-image

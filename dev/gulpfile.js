@@ -29,16 +29,19 @@ if (fs.existsSync('./qdt-env.json')) {
     var streamCombiner = require('stream-combiner');
 
     // browser syncronization
-    var browserSync = require('browser-sync').create();
-    var browserSyncReload = browserSync.reload;
+    var browserSync = {};
+    var browserSyncReload = {};
+
+    Object.keys(qdt_c.platforms).forEach(function(platform) {
+        browserSync[platform] = require('browser-sync').create();
+        browserSyncReload[platform] = browserSync[platform].reload;
+    });
 
     // typescript required libs
     var browserify = require("browserify");
     var vinyl_source = require('vinyl-source-stream');
     var vinyl_buffer = require('vinyl-buffer');
     var tsify = require("tsify");
-
-    var params = qdt_core.getParams();
 
     var pluginSettings = {
         autoPrefixer: {
@@ -54,6 +57,8 @@ if (fs.existsSync('./qdt-env.json')) {
     };
 }
 
+var params = qdt_core.getParams() || {};
+
 // test required
 if (typeof process.argv[2] == 'undefined' || process.argv[2] != 'init') {
     if (!qdt_core.isReady(true))
@@ -62,27 +67,33 @@ if (typeof process.argv[2] == 'undefined' || process.argv[2] != 'init') {
 
 // serve processing
 gulp.task('server', function() {
-
-    if (typeof qdt_c.platforms[qdt_e.server.platform] == 'undefined')
-        return console.log(colors.red(qdt_verbose.serv_plat_unknown));
-
-    if (!qdt_c.platforms[qdt_e.server.platform].server)
-        return console.log(colors.red(qdt_verbose.serv_path_unknown));
-
-    var platform = qdt_c.platforms[qdt_e.server.platform];
-    var path = platform.paths.root + platform.server.path;
-    var port = platform.paths.port || false;
-
-    var server = {
-        server: path,
-        notify: true,
-        open: false
-    };
-
-    if (port)
-        server.port = port;
-
-    browserSync.init(server);
+    if (typeof qdt_e.server.platform.pop == 'undefined')
+        var platforms = [qdt_e.server.platform];
+    else
+        var platforms = qdt_e.server.platform;
+    
+    platforms.forEach(function(platform) {
+        if (typeof qdt_c.platforms[platform] == 'undefined')
+            return console.log(colors.red(qdt_verbose.serv_plat_unknown));
+    
+        if (!qdt_c.platforms[platform].server)
+            return console.log(colors.red(qdt_verbose.serv_path_unknown));
+    
+        var _platform = qdt_c.platforms[platform];
+        var path = _platform.paths.root + _platform.server.path;
+    
+        var server = {
+            server: path,
+            notify: true,
+            open: false,
+            port: _platform.server.port || 3000,
+            ui: {
+                port: (_platform.server.port || 3000) + 1,
+            }
+        };
+    
+        browserSync[platform].init(server);
+    });
 });
 
 // cleaner
@@ -101,20 +112,24 @@ gulp.task('clean', [], function() {
     }
 });
 
-gulp.task('source:add', function() {
-    if (params.length === 0 || typeof params.name == 'undefined')
+var sourceAddTask = function(nameParam) {
+    if (params.length === 0 || typeof params[nameParam] == 'undefined')
         return console.log(colors.red(qdt_verbose.source_add_unk_name));
 
-    fs.exists("./sources/" + params.name, function(exists) {
+    fs.exists("./sources/" + params[nameParam], function(exists) {
         if (exists)
             return console.log(colors.red(qdt_verbose.source_add_exists_name));
 
         gulp.src('./sources/sample/**/**').pipe(
-            gulp.dest('./sources/' + params.name));
+            gulp.dest('./sources/' + params[nameParam]));
 
         console.log(colors.green(
-            qdt_verbose.source_add_done.replace('[name]', params.name)));
+            qdt_verbose.source_add_done.replace('[name]', params[nameParam])));
     });
+};
+
+gulp.task('source:add', function() {
+    sourceAddTask('name');
 });
 
 gulp.task('source:remove', function() {
@@ -125,8 +140,10 @@ gulp.task('source:remove', function() {
         return console.log(colors.red(qdt_verbose.source_remove_sample_name));
 
     fs.exists("./sources/" + params.name, function(exists) {
-        if (!exists)
-            return console.log(colors.red(qdt_verbose.source_remove_not_found_name.replace('[name]', params.name)));
+        if (!exists) {
+            var message = qdt_verbose.source_remove_not_found_name.replace('[name]', params.name)
+            return console.log(colors.red(message));
+        }
 
         gulp.src("./sources/" + params.name, {
             read: false
@@ -159,32 +176,7 @@ var scss_compiler = function(platform, src, dest, name) {
 
     if (qdt_e.server.enabled && (qdt_e.server.watch_platforms == "all" ||
             qdt_e.server.watch_platforms.indexOf(platform.name) !== -1))
-        streams.push(browserSyncReload(pluginSettings.browserSyncReload));
-
-    streamCombiner.apply(streamCombiner, streams).on('error', _doNotify);
-};
-
-var less_compiler = function(platform, src, dest, name) {
-    if (!qdt_core.isPlatformTaskEnabled(platform, 'less'))
-        return;
-
-    // notifiers
-    var _doNotify = function(val) {
-        qdt_core.doNotify('LESS - Error', val);
-    };
-
-    var streams = [];
-
-    streams.push(gulp.src(src));
-    streams.push(plugins.less());
-    streams.push(plugins.autoprefixer(pluginSettings.autoPrefixer));
-    streams.push(plugins.cleanCss());
-    streams.push(plugins.rename(name));
-    streams.push(gulp.dest(platform.paths.assets_root + '/css/' + dest));
-
-    if (qdt_e.server.enabled && (qdt_e.server.watch_platforms == "all" ||
-            qdt_e.server.watch_platforms.indexOf(platform.name) !== -1))
-        streams.push(browserSyncReload(pluginSettings.browserSyncReload));
+            streams.push(browserSync[platform.name].reload(pluginSettings.browserSyncReload));
 
     streamCombiner.apply(streamCombiner, streams).on('error', _doNotify);
 };
@@ -210,7 +202,7 @@ var js_compiler = function(platform, src, dest, name) {
 
         if (qdt_e.server.enabled && (qdt_e.server.watch_platforms == "all" ||
                 qdt_e.server.watch_platforms.indexOf(platform.name) !== -1))
-            streams.push(browserSyncReload(pluginSettings.browserSyncReload));
+                streams.push(browserSync[platform.name].reload(pluginSettings.browserSyncReload));
 
         streamCombiner.apply(streamCombiner, streams).on('error', _doNotify);
     }
@@ -257,7 +249,7 @@ var ts_compiler = function(source) {
 
     if (qdt_e.server.enabled && (qdt_e.server.watch_platforms == "all" ||
             qdt_e.server.watch_platforms.indexOf(item.name) !== -1))
-        streams.push(browserSyncReload(pluginSettings.browserSyncReload));
+            streams.push(browserSync[platform.name].reload(pluginSettings.browserSyncReload));
 
     streamCombiner.apply(streamCombiner, streams).on('error', _doNotify);
 };
@@ -318,7 +310,7 @@ var pug_compiler = function(source, platform, src, dest) {
 
     if (qdt_e.server.enabled && (qdt_e.server.watch_platforms == "all" ||
             qdt_e.server.watch_platforms.indexOf(platform.name) !== -1))
-        streams.push(browserSyncReload(pluginSettings.browserSyncReload));
+                streams.push(browserSync[platform.name].reload(pluginSettings.browserSyncReload));
 
     streamCombiner(streams).on('error', _doNotify);
 };
@@ -339,27 +331,6 @@ gulp.task('scss', [], function() {
             for (var _aa = _scss_s.length - 1; _aa >= 0; _aa--) {
                 (_iif_scss)(k_scss, grouped_platforms[k_scss][_a],
                     grouped_platforms[k_scss][_a].tasks.settings.scss[_aa]);
-            }
-        }
-    }
-});
-
-// less task
-gulp.task('less', [], function() {
-    var _iif_scss = function(_k_scss, platform, group) {
-        var _path = 'sources/' + _k_scss + '/less/';
-
-        less_compiler(platform, _path + group.src, group.dest, group.name);
-    };
-
-    // less
-    for (var k_less in grouped_platforms) {
-        for (var _a = grouped_platforms[k_less].length - 1; _a >= 0; _a--) {
-            var _less_s = grouped_platforms[k_less][_a].tasks.settings.less;
-
-            for (var _aa = _less_s.length - 1; _aa >= 0; _aa--) {
-                (_iif_scss)(k_less, grouped_platforms[k_less][_a],
-                    grouped_platforms[k_less][_a].tasks.settings.less[_aa]);
             }
         }
     }
@@ -459,27 +430,6 @@ gulp.task('watch', ['server'], function() {
         });
     };
 
-    var _iif_less = function(_k_scss, platform, group) {
-        var _watch_src = [];
-        var _path = 'sources/' + _k_scss + '/less/';
-
-        group.src = _path + group.src;
-
-        if (typeof group.watch == "string")
-            group.watch = [group.watch];
-
-        for (var j = group.watch.length - 1; j >= 0; j--)
-            _watch_src.push(_path + group.watch[j]);
-
-        gulp.watch(group.src, function() {
-            less_compiler(platform, group.src, group.dest, group.name);
-        });
-
-        gulp.watch(_watch_src, function() {
-            less_compiler(platform, group.src, group.dest, group.name);
-        });
-    };
-
     var _iif_ts = function(_k_ts) {
         gulp.watch('./sources/' + _k_ts + '/ts/*.ts', function(src) {
             ts_compiler(_k_ts);
@@ -554,18 +504,6 @@ gulp.task('watch', ['server'], function() {
         }
     }
 
-    // less
-    for (var k_less in grouped_platforms) {
-        for (var _a = grouped_platforms[k_less].length - 1; _a >= 0; _a--) {
-            var _less_s = grouped_platforms[k_less][_a].tasks.settings.less;
-
-            for (var _aa = _less_s.length - 1; _aa >= 0; _aa--) {
-                (_iif_less)(k_less, grouped_platforms[k_less][_a],
-                    grouped_platforms[k_less][_a].tasks.settings.less[_aa]);
-            }
-        }
-    }
-
     // js
     for (var k_js in grouped_platforms) {
         for (var _b = grouped_platforms[k_js].length - 1; _b >= 0; _b--) {
@@ -608,8 +546,9 @@ gulp.task('init', function(done) {
             if (!exists) return resolve(null);
 
             // ask to override
-            qdt_core.ask(
-                qdt_verbose.task_init_env_exists, true).then(resolve);
+            qdt_core
+                .ask(qdt_verbose.task_init_env_exists, true)
+                .then(resolve);
         });
     }).then(function(resp) {
         if (resp === false)
@@ -625,13 +564,16 @@ gulp.task('init', function(done) {
         fs.FileReadStream('./qdt-env.sample.json')
             .pipe(fs.FileWriteStream('./qdt-env.json'));
 
+        if (params != 'undefined' && typeof params['source'] != 'undefined')
+            sourceAddTask('source');
+
         done();
     });
 
 });
 
 // warch processing
-gulp.task('compile', ['scss', 'less', 'pug', 'js', 'ts', 'assets']);
+gulp.task('compile', ['scss', 'pug', 'js', 'ts', 'assets']);
 
 // default task
 gulp.task('default', ['compile', 'watch', 'server']);

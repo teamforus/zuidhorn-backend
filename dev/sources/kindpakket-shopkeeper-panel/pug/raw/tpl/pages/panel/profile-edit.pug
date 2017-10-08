@@ -4,7 +4,7 @@
     .section.section-panel.section-panel-profile: .section-panel-inner
         .profile-details
             .profile-photo
-                img(ng-src="{{ $root.user.shop_keeper.preview }}", alt="")
+                img(ng-if="$root.user.shop_keeper.preview != false" ng-src="{{ $root.user.shop_keeper.preview }}", alt="")
                 img(ng-show="$root.user.shop_keeper.preview == false" src="./assets/img/square.png")
                 div(ng-show="$root.user.shop_keeper.preview == false").profile-photo-placeholder
                     em.mdi.mdi-image

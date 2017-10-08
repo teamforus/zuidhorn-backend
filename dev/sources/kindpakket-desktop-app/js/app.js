@@ -1,17 +1,8 @@
-// Greetings
-console.log('%cWelcome to Quick Dev Template!', 'color: green');
+if (typeof require != 'undefined') {
+    $ = jQuery = require('jquery');
+}
 
-var displayVersion = function(name, version, installed) {
-    console.log(name + ': %c' + version, 'color: ' + (installed ? 'green' : 'red'));
-};
-
-displayVersion('jQuery', (typeof jQuery != 'undefined' ? ('v' + jQuery.fn.jquery) : 'not installed!'), typeof jQuery != 'undefined');
-displayVersion('Angular', (typeof angular != 'undefined' ? ('v' + angular.version.full) : 'not installed!'), typeof angular != 'undefined');
-displayVersion('Angular2', (typeof ng != 'undefined' ? 'v2.1.0' : 'not installed!'), typeof ng != 'undefined');
-
-(function($) {
-    $(".nano").nanoScroller();
-
+$(function() { 
     $(function() {
         var showPopup = false;
 
@@ -26,7 +17,7 @@ displayVersion('Angular2', (typeof ng != 'undefined' ? 'v2.1.0' : 'not installed
                 $('body').addClass('popup-open');
                 $('.popup-' + $(this).attr('toggle-popup')).addClass('active');
                 $('.popup-' + $(this).attr('toggle-popup') + ' [modal-close]').unbind('click').bind('click', function() {
-                	$(self).click();
+                    $(self).click();
                 });
             } else {
                 $('body').removeClass('popup-open');
@@ -35,23 +26,4 @@ displayVersion('Angular2', (typeof ng != 'undefined' ? 'v2.1.0' : 'not installed
             }
         });
     });
-
-    if ($('#progress').length > 0) {
-        var circle = new ProgressBar.Circle('#progress', {
-            color: '#FFEA82',
-            trailColor: '#eee',
-            trailWidth: 1,
-            duration: 1400,
-            easing: 'bounce',
-            strokeWidth: 5,
-            from: {color: '#70c567', a:0},
-            to: {color: '#70c567', a:1},
-            // Set default step function for all animate calls
-            step: function(state, circle) {
-                circle.path.setAttribute('stroke', state.color);
-            }
-        });
-
-        circle.animate(.25);
-    }
-})(jQuery);
+});

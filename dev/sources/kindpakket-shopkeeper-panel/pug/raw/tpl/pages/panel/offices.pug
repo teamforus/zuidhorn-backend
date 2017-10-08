@@ -8,7 +8,7 @@
     div(ng-show="$ctrl.offices.length > 0") 
         .section.section-panel(ng-repeat="office in $ctrl.offices track by $index")
             .office-li
-                img(ng-src="{{ office.preview }}", alt="").office-li-thumb
+                img(ng-src="{{ office.preview || './assets/img/no-image.jpg' }}").office-li-thumb
                 .office-li-name(ng-bind="office.address")
                 .office-li-description
                     strong Phone: 

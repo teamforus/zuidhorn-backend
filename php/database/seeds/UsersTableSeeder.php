@@ -16,28 +16,30 @@ class UsersTableSeeder extends DatabaseSeeder
     {
         User::create([
             'id'            => 1,
-            'first_name'    => 'Admin',
-            'last_name'     => '001',
+            'name'          => 'Administrator',
             'email'         => 'forus-admin@dev-weget.nl',
             'password'      => Hash::make('mvp-admin-pass'),
-            'public_key'    => "0x5210c29f6f8e3cf841dfa22d35b2db88f1d353dc",
-            'private_key'   => "qX2EZAQzdWEg45qvtxQrCYLmDHXFJU32",
             ]);
 
-        /*User::create([
+        User::create([
             'id'            => 2,
-            'first_name'    => 'ShopKeeper',
-            'last_name'     => '001',
-            'email'         => 'forus-shop-keeper@weget.nl',
-            'password'      => Hash::make('mvp-shop-keeper-pass'),
+            'name'          => 'Buget uploader',
+            'email'         => 'buget-uploader@rminds.nl',
+            'password'      => Hash::make('buget-uploader'),
             ]);
 
         User::create([
             'id'            => 3,
-            'first_name'    => 'Citizen',
-            'last_name'     => '001',
-            'email'         => 'forus-citizen@weget.nl',
-            'password'      => Hash::make('mvp-citizen-pass'),
-            ]);*/
+            'name'          => 'Buget manager',
+            'email'         => 'buget-manager@rminds.nl',
+            'password'      => Hash::make('buget-manager'),
+            ]);
+
+        User::create([
+            'id'            => 4,
+            'name'          => 'Shokepers manager',
+            'email'         => 'shokepers-manager@rminds.nl',
+            'password'      => Hash::make('shokepers-manager'),
+            ]);
     }
 }

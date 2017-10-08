@@ -1,32 +1,12 @@
 extends layout/layout
 block content
-    .section.section-auth-layout
-        .logo: img(src="./assets/img/logo.png", alt="")
-        .popups
-            .popup.popup-auth.active
-                .popup-backdrop.popup-backdrop-pasive
-                .popup-inner
-                    .popup-heading Login
-                    .form
-                        .row
-                            .col.col-12: .form-group
-                                label.label Email
-                                input(type="email" placeholder="Email").form-control
-                            .col.col-12: .form-group
-                                label.label Password
-                                input(type="password" placeholder="Password").form-control
-                        .row
-                            .col.col-6.text-left
-                                label.label.label-checkbox
-                                    em.mdi.mdi-checkbox-blank-outline
-                                    | Keep me logged in
+    .section(ng-show="$root.$state.current.data.layout != 'auth'").section-header: .wrapper
+        .section-header-inner
+            a.logo: img(src="./assets/img/logo.png", alt="")
+                
+            .section-header-actions
+                a(ui-sref="sign-out").button.button-primary
+                    em.mdi.mdi-logout
+                    | Logout
 
-                            .col.col-6: .form-group.text-right
-                                a(href="#").forget-password
-                                    em.mdi.mdi-help-circle-outline
-                                    | Forgot password
-
-                        .row
-                            br
-                            .col.col-12: .form-group.text-center
-                                a(href="./csv-import.html").button.button-success Submit
+    div(ui-view)

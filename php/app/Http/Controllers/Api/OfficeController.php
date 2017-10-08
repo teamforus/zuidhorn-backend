@@ -21,9 +21,12 @@ class OfficeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $offices = Office::select([
+        $target_user = $request->user();
+        $shop_keeper = ShopKeeper::whereUserId($target_user->id)->first();
+
+        $offices = $shop_keeper->offices()->select([
             'id', 'address', 'phone', 'email', 'created_at', 'updated_at'
         ])->get();
 

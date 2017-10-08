@@ -303,6 +303,10 @@ body {
         font: 600 16px/38px $bf;
         cursor: pointer;
 
+        * {
+            cursor: inherit;
+        }
+
         &.active {
             cursor: default;
             background-color: #70c567;

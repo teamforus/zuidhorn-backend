@@ -5,7 +5,7 @@ header.section.section-landing-header(ng-if="$state.current.name == 'welcome'")
 header.section.section-panel-header(ng-if="$state.current.name != 'welcome'")
     .wrapper
         .business-info
-            .business-info-logo(ng-show="$root.user.shop_keeper.preview != false"): img(ng-src="{{ $root.user.shop_keeper.preview }}")
+            .business-info-logo: img(ng-src="{{ $root.user.shop_keeper.preview || './assets/img/no-image-square.png' }}")
             .business-title
                 .business-title-name(ng-bind="$root.user.shop_keeper.name")
                 .business-title-actions
