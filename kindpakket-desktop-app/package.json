@@ -9,8 +9,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "electron": "^1.7.8",
     "jquery": "^3.2.1",
     "open": "0.0.5"
+  },
+  "devDependencies": {
+    "electron": "1.7.8",
+    "electron-prebuilt-compile": "1.7.8"
   }
 }

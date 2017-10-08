@@ -1,8 +1,8 @@
 var municipalityApp = angular.module('municipalityApp', ['ui.router']);
 
 municipalityApp.config(['ApiRequestProvider', function(ApiRequestProvider) {
-    ApiRequestProvider.setHost('http://forus-mvp.dev.net/municipality');
-    /// ApiRequestProvider.setHost('http://mvp.forus.io/client');
+    // ApiRequestProvider.setHost('http://forus-mvp.dev.net/municipality');
+    ApiRequestProvider.setHost('http://test-mvp.forus.io/client');
 }]);
 
 municipalityApp.config(['$qProvider', function($qProvider) {
