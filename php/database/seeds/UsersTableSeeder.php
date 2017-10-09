@@ -37,8 +37,8 @@ class UsersTableSeeder extends DatabaseSeeder
 
         User::create([
             'id'            => 4,
-            'name'          => 'Shokepers manager',
-            'email'         => 'shokepers-manager@rminds.nl',
+            'name'          => 'Shokeepers manager',
+            'email'         => 'shokeepers-manager@rminds.nl',
             'password'      => Hash::make('shokepers-manager'),
             ]);
     }
