@@ -34,7 +34,7 @@
                           <option value="">Manage Citizens</option>
                           <option value="">Manage Categories</option>
                           <option value="">Manage ShopKeepers</option>
-                          <option value="">Manage Bugets</option>
+                          <option value="">Manage Budgets</option>
                       </select>
                   </div>
               </div>

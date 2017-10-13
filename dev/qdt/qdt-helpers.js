@@ -300,6 +300,9 @@ var compileConfig = function(configs, env) {
         if (k == '*' || env.platforms.enabled.indexOf(k) == -1)
             continue;
 
+        if (typeof env.platforms_data != 'undefined')
+            configs.platforms[k].env_data = env.platforms_data[k] || false;
+        
         if (configs.platforms[k].source == "sample") {
             console.log(colors.red('Error platform "' +
                 configs.platforms[k].name + '" is using "sample" as ' +

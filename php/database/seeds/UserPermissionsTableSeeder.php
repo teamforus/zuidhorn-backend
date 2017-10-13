@@ -17,10 +17,10 @@ class UserPermissionsTableSeeder extends DatabaseSeeder
             Permission::whereIn('id', range(4, 11))->pluck('id'));
 
         User::whereId(2)->first()->permissions()->attach(
-            Permission::whereIn('key', ['buget_upload'])->pluck('id'));
+            Permission::whereIn('key', ['budget_upload'])->pluck('id'));
 
         User::whereId(3)->first()->permissions()->attach(
-            Permission::whereIn('key', ['buget_manage'])->pluck('id'));
+            Permission::whereIn('key', ['budget_manage'])->pluck('id'));
 
         User::whereId(4)->first()->permissions()->attach(
             Permission::whereIn('key', ['shopkeeper_manage'])->pluck('id'));

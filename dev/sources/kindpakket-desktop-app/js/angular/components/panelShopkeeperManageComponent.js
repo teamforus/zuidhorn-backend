@@ -4,6 +4,7 @@ municipalityApp.component('panelShopkeeperManageComponent', {
         '$rootScope',
         '$state',
         '$scope',
+        '$timeout',
         'CategoryService',
         'ShopKeeperService',
         'CredentialsService',
@@ -12,6 +13,7 @@ municipalityApp.component('panelShopkeeperManageComponent', {
             $rootScope,
             $state,
             $scope,
+            $timeout,
             CategoryService,
             ShopKeeperService,
             CredentialsService,
@@ -49,6 +51,12 @@ municipalityApp.component('panelShopkeeperManageComponent', {
 
                     ctrl.submitFilters = function(e, form) {
                         e && (e.preventDefault() & e.stopPropagation());
+
+                        ctrl.forms.filters.success = true;
+
+                        $timeout(function() {
+                            ctrl.forms.filters.success = false;
+                        }, 1000);
 
                         ctrl.active_filters = {
                             name: form.values.name,

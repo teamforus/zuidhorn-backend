@@ -23,23 +23,23 @@ class UsersTableSeeder extends DatabaseSeeder
 
         User::create([
             'id'            => 2,
-            'name'          => 'Buget uploader',
-            'email'         => 'buget-uploader@rminds.nl',
-            'password'      => Hash::make('buget-uploader'),
+            'name'          => 'Budget uploader',
+            'email'         => 'budget-uploader@rminds.nl',
+            'password'      => Hash::make('budget-uploader'),
             ]);
 
         User::create([
             'id'            => 3,
-            'name'          => 'Buget manager',
-            'email'         => 'buget-manager@rminds.nl',
-            'password'      => Hash::make('buget-manager'),
+            'name'          => 'Budget manager',
+            'email'         => 'budget-manager@rminds.nl',
+            'password'      => Hash::make('budget-manager'),
             ]);
 
         User::create([
             'id'            => 4,
-            'name'          => 'Shokepers manager',
-            'email'         => 'shokepers-manager@rminds.nl',
-            'password'      => Hash::make('shokepers-manager'),
+            'name'          => 'Shopkeepers manager',
+            'email'         => 'shopkeepers-manager@rminds.nl',
+            'password'      => Hash::make('shopkeepers-manager'),
             ]);
     }
 }

@@ -32,11 +32,11 @@ class Category extends Model
             'parent_id');
     }
 
-    public function bugets()
+    public function budgets()
     {
         return $this->belongsToMany(
-            'App\Models\Buget', 
-            'buget_categories');
+            'App\Models\Budget', 
+            'budget_categories');
     }
 
     public function shop_keepers()

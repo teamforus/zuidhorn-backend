@@ -27,18 +27,16 @@ municipalityApp.directive('uploadedVouchers', [
 
                 var init = function() {
 
-                    if (!DataStorageService.hasItem('uploaded_buget'))
+                    if (!DataStorageService.hasItem('uploaded_budget'))
                         return;
 
-                    var data = JSON.parse(DataStorageService.readItem('uploaded_buget'));
+                    var data = JSON.parse(DataStorageService.readItem('uploaded_budget'));
                     var rows = JSON.parse(JSON.stringify(data.rows.map(function(item, key) {
                         var out = {};
 
                         for (var prop in item) {
                             out[prop] = item[prop];
                         }
-
-                        out[3] = key;
 
                         return out;
                     })));
@@ -69,7 +67,7 @@ municipalityApp.directive('uploadedVouchers', [
                     $scope.csv_content.show = true;
                 }
 
-                $scope.$on('buget:uploaded', init);
+                $scope.$on('budget:uploaded', init);
                 init();
             }
         };

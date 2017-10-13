@@ -3,7 +3,7 @@ municipalityApp.directive('pagination', [
     '$timeout',
     function(
         $state,
-        $timeout,
+        $timeout
     ) {
         return {
             restrict: 'A',

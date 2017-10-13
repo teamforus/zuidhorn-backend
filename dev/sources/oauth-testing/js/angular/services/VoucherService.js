@@ -9,11 +9,11 @@ oauth2App.service('VoucherService', [
     ) {
         return new(function() {
             this.checkCode = function(code) {
-                return ApiRequest.get('/api/vouchers/' + code);
+                return ApiRequest.get('/vouchers/' + code);
             };
 
             this.makeTransaction = function(code, values) {
-                return ApiRequest.post('/api/vouchers/' + code + '/transactions', values);
+                return ApiRequest.post('/vouchers/' + code + '/transactions', values);
             };
 
             this.markTransactionForRefund = function(code, transaction, values) {
@@ -21,11 +21,11 @@ oauth2App.service('VoucherService', [
 
                 values._method = 'PUT';
                 
-                return ApiRequest.post('/api/vouchers/' + code + '/transactions/' + transaction + '/refund');
+                return ApiRequest.post('/vouchers/' + code + '/transactions/' + transaction + '/refund');
             };
 
             this.getTransactions = function(code) {
-                return ApiRequest.get('/api/vouchers/' + code + '/transactions');
+                return ApiRequest.get('/vouchers/' + code + '/transactions');
             }
         });
     }

@@ -14,7 +14,7 @@ municipalityApp.service('AuthService', [
                 values.client_id = 2;
                 values.client_secret = 'DKbwNT3Afz8bovp0BXvJX5jWudIRRW9VZPbzieVJ';
 
-                return ApiRequest.post('/oauth/token', values);
+                return ApiRequest.post('/../oauth/token', values);
             };
 
             this.signOut = function(values) {
@@ -22,7 +22,7 @@ municipalityApp.service('AuthService', [
             };
 
             this.getUser = function(credentails) {
-                return ApiRequest.get('/api/user');
+                return ApiRequest.get('/user');
             };
         });
     }

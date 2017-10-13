@@ -9,23 +9,23 @@ oauth2App.service('AuthService', [
             apiRequest = ApiRequest;
 
             this.signIn = function(values) {
-                return ApiRequest.post('/api/shop-keepers/devices', values);
+                return ApiRequest.post('/shop-keepers/devices', values);
             };
 
             this.generateToken = function() {
-                return ApiRequest.get('/api/shop-keepers/devices/token');
+                return ApiRequest.get('/shop-keepers/devices/token');
             };
 
             this.checkTokenState = function(token) {
-                return ApiRequest.get('/api/shop-keepers/devices/token/' + token + '/state');
+                return ApiRequest.get('/shop-keepers/devices/token/' + token + '/state');
             };
 
             this.authorizeToken = function(token) {
-                return ApiRequest.post('/api/shop-keepers/devices/token/' + token);
+                return ApiRequest.post('/shop-keepers/devices/token/' + token);
             };
 
             this.signUp = function(values) {
-                return ApiRequest.post('/api/shop-keepers/sign-up', values);
+                return ApiRequest.post('/shop-keepers/sign-up', values);
             };
 
             this.signOut = function(values) {
@@ -33,7 +33,7 @@ oauth2App.service('AuthService', [
             };
 
             this.getUser = function(credentails) {
-                return ApiRequest.get('/api/user');
+                return ApiRequest.get('/user');
             };
         });
     }

@@ -4,7 +4,7 @@
         .contact-inner
             .contact-title Contact Feedback
             .contact-subtitle Lees hier de meest gestelde vragen
-            form(action="#").contact-form.form
+            form(ng-submit="submitContactForm($event, forms.contact_form)").contact-form.form
                 .contact-form-inner
                     div(ng-show="!forms.contact_form.success")
                         .row
@@ -36,7 +36,7 @@
                                 textarea(name="message" placeholder="Message" cols="30" rows="3" ng-model="forms.contact_form.values.message").form-control
                                 p(ng-repeat="error in forms.contact_form.errors.message track by $index" ng-bind="error").text-danger
                     
-                        button(type="submit" ng-click="submitContactForm($event, forms.contact_form)").button.button-success.submit-button Send message
+                        button(type="submit").button.button-success.submit-button Send message
 
                     div(ng-show="forms.contact_form.success")
                         .row: .col.col-12: h2.text-primary.text-center Success!

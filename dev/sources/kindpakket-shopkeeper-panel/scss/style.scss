@@ -357,6 +357,29 @@ body {
             font-weight: 700;
         }
     }
+
+    .office-li-map-link {
+        font: 600 12px/20px $bf;
+        color: #083f49;
+        position: absolute;
+        top: 0;
+        right: 0;
+        cursor: pointer;
+        transition: color .4s;
+
+        .mdi {
+            color: #e6352c;
+            font-size: 15px;
+            vertical-align: middle;
+            line-height: 20px;
+            float: left;
+            margin-right: 2px;
+        }
+
+        &:hover {
+            color: #e6352c;
+        }
+    }
 }
 
 .table-responsive {
@@ -558,6 +581,8 @@ table.table {
                         display: block;
                         height: 160px;
                         margin: 0 auto 10px;
+                        padding: 5px;
+                        background-color: #fff;
                     }
                     
                     .qr-code-scan-desc {
@@ -1498,6 +1523,10 @@ table.table {
 
         .office-li-button {
             width: 100%;
+        }
+
+        .office-li-map-link {
+            display: none;
         }
     }
 

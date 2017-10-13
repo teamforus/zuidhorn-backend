@@ -5,7 +5,7 @@
             <th>Id</th>
             <th>Code</th>
             <th>Citizen</th>
-            <th>Buget</th>
+            <th>Budget</th>
             <th>Funds available</th>
             <th class="text-right">Actions</th>
         </tr>
@@ -27,7 +27,7 @@
                 #{{ $row->user->id }}
                 @endif
             </td>
-            <td>{{ Html::link($row->buget->urlPanelView(), $row->buget->name, ['class' => 'text-primary']) }}</td>
+            <td>{{ Html::link($row->budget->urlPanelView(), $row->budget->name, ['class' => 'text-primary']) }}</td>
             <td>€{{ number_format($row->getAvailableFunds(), 2) }}</td>
             <td class="text-right">
                 <div class="btn-group">

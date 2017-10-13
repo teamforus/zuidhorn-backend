@@ -49,8 +49,8 @@
                         </label>
                     </p>
                     <p>
-                        <label for="bugets">
-                            <input type="checkbox" id="bugets"> Manage Bugets
+                        <label for="budgets">
+                            <input type="checkbox" id="budgets"> Manage Budgets
                         </label>
                     </p>
                 </div>

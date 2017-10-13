@@ -22,6 +22,7 @@ shopkeeperApp.controller('BaseController', [
         OfficeService
     ) {
         $rootScope.$state = $state; 
+        $rootScope.html5Mode = env_data.html5Mode; 
         
         $scope.$on('auth:sign-in', function() {
             $rootScope.credentials = CredentialsService.get();

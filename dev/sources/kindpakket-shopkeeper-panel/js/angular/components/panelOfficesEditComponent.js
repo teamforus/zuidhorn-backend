@@ -89,8 +89,6 @@ shopkeeperApp.component('panelOfficesEditComponent', {
 
                         var input = $('<input type="file" />');
 
-                        input.click();
-
                         input.unbind('change').bind('change', function(e) {
                             OfficeService.updatePhoto(
                                 office.id,
@@ -101,6 +99,8 @@ shopkeeperApp.component('panelOfficesEditComponent', {
                                 });
                             });
                         });
+
+                        input.click();
                     }
                 });
             };

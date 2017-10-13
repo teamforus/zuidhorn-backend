@@ -15,7 +15,7 @@ oauth2App.controller('BaseController', [
         VoucherService,
         DeviceIdService,
         CredentialsService,
-        FormBuilderService,
+        FormBuilderService
     ) {
         $scope.$state = $state;
 

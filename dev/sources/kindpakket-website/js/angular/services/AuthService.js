@@ -20,7 +20,9 @@ kindpakketApp.service('AuthService', [
             };
 
             this.activateVoucher = function(voucher, values) {
-                return ApiRequest.post('/api/voucher/' + voucher + '/activate', values);
+                return ApiRequest.post('/voucher/' + voucher + '/activate', values || {
+                    here: 'here'
+                });
             };
 
             this.signOut = function(values) {
@@ -28,23 +30,23 @@ kindpakketApp.service('AuthService', [
             };
 
             this.getUser = function() {
-                return ApiRequest.get('/api/user');
+                return ApiRequest.get('/user');
             };
 
             this.getVoucher = function() {
-                return ApiRequest.get('/api/user/voucher');
+                return ApiRequest.get('/user/voucher');
             };
 
             this.getQrCode = function() {
-                return ApiRequest.get('/api/user/voucher/qr-code');
+                return ApiRequest.get('/user/voucher/qr-code');
             };
 
             this.sendQrCodeEmail = function() {
-                return ApiRequest.post('/api/user/voucher/email');
+                return ApiRequest.post('/user/voucher/email');
             };
 
             this.getTransactions = function() {
-                return ApiRequest.get('/api/user/voucher/transactions');
+                return ApiRequest.get('/user/voucher/transactions');
             };
         });
     }

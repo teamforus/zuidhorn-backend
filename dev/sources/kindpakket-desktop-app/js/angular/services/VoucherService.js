@@ -9,7 +9,7 @@ municipalityApp.service('VoucherService', [
     ) {
         return new(function() {
             this.checkCode = function(code) {
-                return ApiRequest.get('/api/vouchers/' + code);
+                return ApiRequest.get('/vouchers/' + code);
             };
 
             this.makeTransaction = function(code, values) {
@@ -17,7 +17,7 @@ municipalityApp.service('VoucherService', [
 
                 values._method = 'PUT';
                 
-                return ApiRequest.post('/api/vouchers/' + code, values);
+                return ApiRequest.post('/vouchers/' + code, values);
             };
         });
     }

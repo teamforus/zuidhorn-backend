@@ -21,5 +21,5 @@
                         em.mdi.mdi-qrcode
                         | Login with QR-Code
                 div(ng-if="!$root.credentials").qr-code-scan
-                    img.qr-code-scan-img(src="./assets/img/qr-code-sample.jpg", alt="")
+                    img.qr-code-scan-img(ng-src="{{ qr_code }}" alt="")
                     p.qr-code-scan-desc Please scan this qr code using your device.

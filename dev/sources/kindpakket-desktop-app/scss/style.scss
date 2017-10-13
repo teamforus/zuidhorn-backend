@@ -19,23 +19,20 @@ body {
     }
 }
 
-* { 
+.no-select, 
+.no-select * {
     user-select: none;
+}
+
+* { 
     -webkit-user-drag: none;
     cursor: default;
 }
 
-.allow-select {
-    * { 
-        user-select: initial;
-    }
-}
-
-.allow-drag {
-    * { 
-        -webkit-user-drag: initial;
-    }
-}
+textarea,
+input:not([type="checkbox"]):not([type="radio"]) {
+    cursor: initial;
+} 
 
 .wrapper {
     width: 100%;
@@ -264,7 +261,6 @@ body {
         .mdi {
             line-height: 24px;
             font-size: 15px;
-            vertical-align: middle;
             display: block;
             float: left;
             margin-left: -5px;
@@ -299,7 +295,7 @@ body {
             cursor: pointer;
 
             &:hover {
-                color-color: #ccc;
+                color: #ccc;
             }
         }
     }
@@ -312,7 +308,6 @@ body {
         .mdi {
             line-height: 40px;
             font-size: 15px;
-            vertical-align: middle;
             display: block;
             float: left;
             margin-left: -5px;
@@ -412,10 +407,6 @@ body {
         color: #017f96;
         font: 600 14px/28px $bf;
     }
-    
-    .map-card-description {
-
-    }
 }
 
 .pagination {
@@ -458,11 +449,6 @@ body {
     .table {
         th, td {
             white-space: nowrap;
-            user-select: initial;
-
-            * {
-                user-select: initial; 
-            }
         }
     }
 }
@@ -574,10 +560,9 @@ table.table {
         float: left;
         color: #017f96;
         font-size: 24px;
-        vertical-align: middle;
         margin-right: 5px;
         width: 24px;
-        display: inline-block;
+        display: block;
         text-align: left;
     }
 
@@ -592,7 +577,7 @@ table.table {
 
     .label {
         display: block;
-        font: 500 12px/20px $bf;
+        font: 600 12px/20px $bf;
         color: #017f96;
         transition: .4s;
 
@@ -605,10 +590,9 @@ table.table {
                 float: left;
                 color: #d7dee6;
                 font-size: 24px;
-                vertical-align: middle;
                 margin-left: -3px;
                 width: 24px;
-                display: inline-block;
+                display: block;
                 margin-right: 5px;
                 text-align: left;
                 transition: .4s;
@@ -656,7 +640,7 @@ table.table {
         }
 
         &.col-5th {
-            width: 100/5 + %;
+            width: 100/5 + "%";
         }
     }
 }
@@ -893,7 +877,7 @@ table.table {
     margin: 0 -10px;
 
     .categories-item {
-        width: 100/7+%;
+        width: 100/7+"%";
         float: left;
         overflow: hidden;
         padding: 0 10px 20px;
@@ -1060,7 +1044,7 @@ table.table {
 
     &.section-title {
         margin: 0 0 20px;
-        font: 500 24px $bf;
+        font: 600 24px $bf;
         color: #083f49;
 
         .button {
@@ -1106,7 +1090,6 @@ table.table {
                         color: #017f96;
                         font-size: 60px;
                         line-height: 1.4em;
-                        vertical-align: middle;
                         display: block;
                     }
                 }
@@ -1166,7 +1149,7 @@ table.table {
 @media screen and (max-width: 1400px) {
     .categories-list {
         .categories-item {
-            width: 100/6+%;
+            width: 100/6+"%";
         }
     }
 }

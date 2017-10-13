@@ -14,14 +14,14 @@ class PermissionsTableSeeder extends DatabaseSeeder
     {
         Permission::create([
             'id'    => 1,
-            'key'   => 'buget_upload',
-            'name'  => 'Upload bugets',
+            'key'   => 'budget_upload',
+            'name'  => 'Upload budgets',
             ]);
         
         Permission::create([
             'id'    => 2,
-            'key'   => 'buget_manage',
-            'name'  => 'Manage bugets',
+            'key'   => 'budget_manage',
+            'name'  => 'Manage budgets',
             ]);
         
         Permission::create([
@@ -33,8 +33,8 @@ class PermissionsTableSeeder extends DatabaseSeeder
         // Admin
         Permission::create([
             'id'    => 4,
-            'key'   => 'upload_bugets',
-            'name'  => 'Upload bugets',
+            'key'   => 'upload_budgets',
+            'name'  => 'Upload budgets',
             ]);
         
         Permission::create([
@@ -63,8 +63,8 @@ class PermissionsTableSeeder extends DatabaseSeeder
 
         Permission::create([
             'id'    => 9,
-            'key'   => 'manage_bugets',
-            'name'  => 'Manage bugets',
+            'key'   => 'manage_budgets',
+            'name'  => 'Manage budgets',
             ]);
 
         Permission::create([

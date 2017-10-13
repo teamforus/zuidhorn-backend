@@ -27,7 +27,7 @@ oauth2App.component('debugComponent', {
             }];
 
             ctrl.form.values.device = DeviceIdService.getDeviceId();
-            ctrl.form.values.endpoint = '/api/';
+            ctrl.form.values.endpoint = '/';
             ctrl.form.values.method = ctrl.methods[0];
             ctrl.form.values.params = JSON.stringify({}, null, '    ');
             ctrl.form.values.headers = JSON.stringify({}, null, '    ');

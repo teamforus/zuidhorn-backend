@@ -41,6 +41,9 @@
             }, {
                 "from": "../../node_modules/jshashes/hashes.min.js",
                 "to": "assets/dist/jshashes"
+            }, {
+                "from": "../../node_modules/core-js/client/core.min.js",
+                "to": "assets/dist/core-js"
             }],
             "server": false,
             "tasks": {
@@ -54,13 +57,13 @@
                     "less": [],
                     "js": [{
                         "src": [
-                            "angular/angular.app.js",
+                            "app.js",
+                            "angular/*.js",
                             "angular/controllers/**/**.js",
                             "angular/components/**/**.js",
                             "angular/directives/**/**.js",
                             "angular/services/**/**.js",
-                            "angular/filters/**/**.js",
-                            "app.js"
+                            "angular/filters/**/**.js"
                         ],
                         "dest": "/",
                         "name": "app.js"
@@ -325,6 +328,9 @@
             }, {
                 "from": "../../node_modules/qrcodejs/qrcode.js",
                 "to": "assets/dist/qrcodejs"
+            }, {
+                "from": "../../node_modules/core-js/client/core.min.js",
+                "to": "assets/dist/core-js"
             }],
             "server": false,
             "tasks": {
@@ -332,14 +338,14 @@
                     "less": [],
                     "js": [{
                         "src": [
-                            "angular/oauth2App.js",
+                            "app.js",
+                            "angular/*.js",
                             "angular/controllers/**/**.js",
                             "angular/components/**/**.js",
                             "angular/directives/**/**.js",
                             "angular/providers/**/**.js",
                             "angular/services/**/**.js",
-                            "angular/filters/**/**.js",
-                            "app.js"
+                            "angular/filters/**/**.js"
                         ],
                         "dest": "/",
                         "name": "app.js"
@@ -385,19 +391,22 @@
             }, {
                 "from": "../../node_modules/nanoscroller/bin/javascripts/jquery.nanoscroller.js",
                 "to": "assets/dist/nanoscroller"
+            }, {
+                "from": "../../node_modules/core-js/client/core.min.js",
+                "to": "assets/dist/core-js"
             }],
             "tasks": {
                 "settings": {
                     "js": [{
                         "src": [
-                            "angular/angular.app.js",
+                            "app.js",
+                            "angular/*.js",
                             "angular/controllers/**/**.js",
                             "angular/components/**/**.js",
                             "angular/directives/**/**.js",
                             "angular/providers/**/**.js",
                             "angular/services/**/**.js",
-                            "angular/filters/**/**.js",
-                            "app.js"
+                            "angular/filters/**/**.js"
                         ],
                         "dest": "/",
                         "name": "app.js"
@@ -437,6 +446,9 @@
             }, {
                 "from": "../../node_modules/moment/min/moment-with-locales.min.js",
                 "to": "assets/dist/moment/"
+            }, {
+                "from": "../../node_modules/core-js/client/core.min.js",
+                "to": "assets/dist/core-js"
             }],
             "source": "kindpakket-shopkeeper-panel",
             "paths": {
@@ -451,7 +463,7 @@
                     "js": [{
                         "src": [
                             "app.js",
-                            "angular/angular.app.js",
+                            "angular/*.js",
                             "angular/controllers/**/**.js",
                             "angular/components/**/**.js",
                             "angular/directives/**/**.js",
@@ -517,13 +529,16 @@
             }, {
                 "from": "../../node_modules/moment/min/moment-with-locales.min.js",
                 "to": "assets/dist/moment/"
+            }, {
+                "from": "../../node_modules/core-js/client/core.min.js",
+                "to": "assets/dist/core-js"
             }],
             "tasks": {
                 "settings": {
                     "js": [{
                         "src": [
                             "app.js",
-                            "angular/angular.app.js",
+                            "angular/*.js",
                             "angular/controllers/**/**.js",
                             "angular/components/**/**.js",
                             "angular/directives/**/**.js",

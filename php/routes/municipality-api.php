@@ -18,9 +18,9 @@ use Illuminate\Support\Facades\Mail;
 Route::group(['prefix' => 'api', 'middleware' => 'auth:api'], function() {
     Route::get('user', 'MunicipalityApi\UserController@user');
 
-    Route::get('buget', 'MunicipalityApi\BugetController@get');
-    Route::put('buget', 'MunicipalityApi\BugetController@update');
-    Route::post('buget/csv', 'MunicipalityApi\BugetController@csv');
+    Route::get('budget', 'MunicipalityApi\BudgetController@get');
+    Route::put('budget', 'MunicipalityApi\BudgetController@update');
+    Route::post('budget/csv', 'MunicipalityApi\BudgetController@csv');
 
     Route::resource('categories', 'MunicipalityApi\CategoryController');
 

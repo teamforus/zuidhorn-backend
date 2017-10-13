@@ -9,7 +9,7 @@ municipalityApp.service('CategoryService', [
     ) {
         return {
             list: function() {
-                return ApiRequest.get('/api/categories');
+                return ApiRequest.get('/categories');
             }
         };
     }

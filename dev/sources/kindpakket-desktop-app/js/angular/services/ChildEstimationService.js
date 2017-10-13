@@ -18,7 +18,7 @@ municipalityApp.service('ChildEstimationService', ['$http', function($http) {
 
             return selection;
         },
-        estimateChildsByBuget: function(val) {
+        estimateChildsByBudget: function(val) {
             var count_childrens = 1;
             var selection = this.getSelection();
 

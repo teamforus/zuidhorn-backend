@@ -54,11 +54,11 @@ Route::group(['prefix' => 'panel', 'middleware' => 'auth'], function() {
     Route::resource('shop-keepers.offices', 'Panel\OfficeController');
     Route::get('/shop-keepers/{shopKeeper}/offices/{office}/destroy', 'Panel\OfficeController@destroy');
 
-    Route::resource('/bugets', 'Panel\BugetController');
-    Route::get('/bugets/{buget}/destroy', 'Panel\BugetController@destroy');
+    Route::resource('/budgets', 'Panel\BudgetController');
+    Route::get('/budgets/{budget}/destroy', 'Panel\BudgetController@destroy');
 
-    Route::resource('/buget-categories', 'Panel\BugetCategoryController');
-    Route::get('/buget-categories/{bugetCategory}/destroy', 'Panel\BugetCategoryController@destroy');
+    Route::resource('/budget-categories', 'Panel\BudgetCategoryController');
+    Route::get('/budget-categories/{budgetCategory}/destroy', 'Panel\BudgetCategoryController@destroy');
 
     Route::get('/users', 'Panel\UsersController@getAdminsList');
     Route::get('/permissions', 'Panel\UsersController@getPermissions');
@@ -67,7 +67,7 @@ Route::group(['prefix' => 'panel', 'middleware' => 'auth'], function() {
 
 Route::group(['prefix' => 'ajax', 'middleware' => 'auth'], function() {
     Route::get('/category/select-option', 'Ajax\CategoryController@getSelectOptions');
-    Route::put('/buget/submit-data', 'Ajax\BugetController@putSubmitData');
+    Route::put('/budget/submit-data', 'Ajax\BudgetController@putSubmitData');
 });
 
 Auth::routes();

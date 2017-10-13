@@ -19,7 +19,7 @@ class Voucher extends Model
      * @var array
      */
     protected $fillable = [
-        'code', 'public_key', 'private_key', 'buget_id', 'user_id', 'status', 'amount'
+        'code', 'public_key', 'private_key', 'budget_id', 'user_id', 'status', 'amount'
     ];
 
     /**
@@ -35,8 +35,8 @@ class Voucher extends Model
         return $this->belongsTo('App\Models\User');
     }
 
-    public function buget() {
-        return $this->belongsTo('App\Models\Buget');
+    public function budget() {
+        return $this->belongsTo('App\Models\Budget');
     }
 
     public function transactions()

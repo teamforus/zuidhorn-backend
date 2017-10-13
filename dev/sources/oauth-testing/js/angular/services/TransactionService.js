@@ -7,7 +7,7 @@ oauth2App.service('TransactionService', [
     ) {
         return new(function() {
             this.doRefund = function(transactions) {
-                return ApiRequest.get('/api/transactions/refund', {
+                return ApiRequest.get('/transactions/refund', {
                     transactions: transactions
                 });
             };

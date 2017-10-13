@@ -1,5 +1,6 @@
 // file system
 var fs = require('fs');
+var historyApiFallback = require('connect-history-api-fallback');
 
 // console colors
 var colors = require('colors');
@@ -71,19 +72,22 @@ gulp.task('server', function() {
         var platforms = [qdt_e.server.platform];
     else
         var platforms = qdt_e.server.platform;
-    
+
     platforms.forEach(function(platform) {
         if (typeof qdt_c.platforms[platform] == 'undefined')
             return console.log(colors.red(qdt_verbose.serv_plat_unknown));
-    
+
         if (!qdt_c.platforms[platform].server)
             return console.log(colors.red(qdt_verbose.serv_path_unknown));
-    
+
         var _platform = qdt_c.platforms[platform];
         var path = _platform.paths.root + _platform.server.path;
-    
+
         var server = {
-            server: path,
+            server: {
+                baseDir: path,
+                middleware: [historyApiFallback()]
+            },
             notify: true,
             open: false,
             port: _platform.server.port || 3000,
@@ -91,7 +95,7 @@ gulp.task('server', function() {
                 port: (_platform.server.port || 3000) + 1,
             }
         };
-    
+
         browserSync[platform].init(server);
     });
 });
@@ -176,7 +180,7 @@ var scss_compiler = function(platform, src, dest, name) {
 
     if (qdt_e.server.enabled && (qdt_e.server.watch_platforms == "all" ||
             qdt_e.server.watch_platforms.indexOf(platform.name) !== -1))
-            streams.push(browserSync[platform.name].reload(pluginSettings.browserSyncReload));
+        streams.push(browserSync[platform.name].reload(pluginSettings.browserSyncReload));
 
     streamCombiner.apply(streamCombiner, streams).on('error', _doNotify);
 };
@@ -202,7 +206,7 @@ var js_compiler = function(platform, src, dest, name) {
 
         if (qdt_e.server.enabled && (qdt_e.server.watch_platforms == "all" ||
                 qdt_e.server.watch_platforms.indexOf(platform.name) !== -1))
-                streams.push(browserSync[platform.name].reload(pluginSettings.browserSyncReload));
+            streams.push(browserSync[platform.name].reload(pluginSettings.browserSyncReload));
 
         streamCombiner.apply(streamCombiner, streams).on('error', _doNotify);
     }
@@ -249,7 +253,7 @@ var ts_compiler = function(source) {
 
     if (qdt_e.server.enabled && (qdt_e.server.watch_platforms == "all" ||
             qdt_e.server.watch_platforms.indexOf(item.name) !== -1))
-            streams.push(browserSync[platform.name].reload(pluginSettings.browserSyncReload));
+        streams.push(browserSync[platform.name].reload(pluginSettings.browserSyncReload));
 
     streamCombiner.apply(streamCombiner, streams).on('error', _doNotify);
 };
@@ -302,15 +306,16 @@ var pug_compiler = function(source, platform, src, dest) {
         plugins.pug(Object.assign(pluginSettings.pug, {
             data: {
                 qdt_c: {
-                    platform: platform
-                }
+                    "platform": platform
+                },
+                "env_data": platform.env_data
             }
         })),
         gulp.dest(platform.paths.root + dest));
 
     if (qdt_e.server.enabled && (qdt_e.server.watch_platforms == "all" ||
             qdt_e.server.watch_platforms.indexOf(platform.name) !== -1))
-                streams.push(browserSync[platform.name].reload(pluginSettings.browserSyncReload));
+        streams.push(browserSync[platform.name].reload(pluginSettings.browserSyncReload));
 
     streamCombiner(streams).on('error', _doNotify);
 };

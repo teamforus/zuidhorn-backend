@@ -3,6 +3,9 @@ shopkeeperApp.provider('ApiRequest', function() {
         var host = false;
 
         this.setHost = function(_host) {
+            while (_host[_host.length - 1] == '/')
+                _host = _host.slice(0, _host.length - 1);
+
             host = _host;
         };
 

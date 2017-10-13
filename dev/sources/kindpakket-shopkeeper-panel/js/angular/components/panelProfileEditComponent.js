@@ -51,7 +51,6 @@ shopkeeperApp.component('panelProfileEditComponent', {
 
                 promises[map.profile_categories] = $q(function(resolve, reject) {
                     ShopKeeperService.getShopKeeperCategories($rootScope.user.shop_keeper.id).then(function(response) {
-                        console.log(response);
                         resolve(response.data);
                     });
                 });
@@ -141,8 +140,6 @@ shopkeeperApp.component('panelProfileEditComponent', {
 
                     var input = $('<input type="file" />');
 
-                    input.click();
-
                     input.unbind('change').bind('change', function(e) {
                         ShopKeeperService.updatePhoto(
                             profile.shop_keeper.id,
@@ -151,6 +148,8 @@ shopkeeperApp.component('panelProfileEditComponent', {
                             $scope.$emit('user:sync');
                         }, console.log);
                     });
+
+                    input.click();
                 }
             };
         }

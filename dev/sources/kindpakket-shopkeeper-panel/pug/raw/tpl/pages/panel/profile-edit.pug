@@ -15,7 +15,7 @@
                 | Change photo
             .logo-description
                 | Lorem ipsum dolor sit amet, consectetur adipiscing elit
-        .form.form-sm
+        form(ng-submit="$ctrl.submitForm($event, $ctrl.form.profile)").form.form-sm
             .row: .col.col-12: .form-heading Details
             .row
                 .col.col-12
@@ -68,6 +68,7 @@
                         label.label IBAN
                         input(type="text" placeholder="IBAN" ng-model="$ctrl.form.profile.values.iban").form-control
                         p(ng-repeat="error in $ctrl.form.profile.errors.iban track by $index" ng-bind="error").text-danger
+            button(type="submit").hidden
         .buttons 
             a(href="#" ng-click="$ctrl.submitForm($event, $ctrl.form.profile)").button.button-success Submit
             a(ui-sref="panel-offices").button.button-muted Cancel

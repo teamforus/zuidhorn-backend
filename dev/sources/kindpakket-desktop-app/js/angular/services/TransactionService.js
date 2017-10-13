@@ -7,11 +7,11 @@ municipalityApp.service('TransactionService', [
     ) {
         return new(function() {
             this.getTransactions = function() {
-                return ApiRequest.get('/api/transactions');
+                return ApiRequest.get('/transactions');
             };
 
             this.countTransactions = function() {
-                return ApiRequest.get('/api/transactions/count');
+                return ApiRequest.get('/transactions/count');
             };
         });
     }

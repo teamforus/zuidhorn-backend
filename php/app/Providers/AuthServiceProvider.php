@@ -22,8 +22,8 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\ShopKeeperCategory::class => \App\Policies\ShopKeeperCategoryPolicy::class,
         \App\Models\Office::class => \App\Policies\OfficePolicy::class,
         \App\Models\User::class => \App\Policies\UserPolicy::class,
-        \App\Models\Buget::class => \App\Policies\BugetPolicy::class,
-        \App\Models\BugetCategory::class => \App\Policies\BugetCategoryPolicy::class,
+        \App\Models\Budget::class => \App\Policies\BudgetPolicy::class,
+        \App\Models\BudgetCategory::class => \App\Policies\BudgetCategoryPolicy::class,
     ];
 
     /**
@@ -43,8 +43,8 @@ class AuthServiceProvider extends ServiceProvider
             'prefix' => 'municipality/oauth'
             ]);
 
-        Gate::define('upload_bugets', function ($user) {
-            return $user->permissions()->where('key', 'upload_bugets')->count();
+        Gate::define('upload_budgets', function ($user) {
+            return $user->permissions()->where('key', 'upload_budgets')->count();
         });
 
         Gate::define('manage_categories', function ($user) {
@@ -59,8 +59,8 @@ class AuthServiceProvider extends ServiceProvider
             return $user->permissions()->where('key', 'manage_shop-keepers')->count();
         });
 
-        Gate::define('manage_bugets', function ($user) {
-            return $user->permissions()->where('key', 'manage_bugets')->count();
+        Gate::define('manage_budgets', function ($user) {
+            return $user->permissions()->where('key', 'manage_budgets')->count();
         });
 
         Gate::define('manage_vouchers', function ($user) {

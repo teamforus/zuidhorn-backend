@@ -55,11 +55,11 @@ class User extends Authenticatable
             'user_permissions');
     }
 
-    public function bugets()
+    public function budgets()
     {
         return $this->belongsToMany(
-            'App\Models\Buget', 
-            'user_bugets');
+            'App\Models\Budget', 
+            'user_budgets');
     }
 
     public function vouchers()

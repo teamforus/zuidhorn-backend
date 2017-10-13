@@ -43,8 +43,4 @@
             new tabulation($(this[i]));
         }
     };
-
-    $('[tabulation]').tabulation();
-    $('[slow-scroll]').slowScroll();
-    $(".nano").nanoScroller();
 })(jQuery);

@@ -35,8 +35,8 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('shopKeeperCategory', \App\Models\ShopKeeperCategory::class);
         
         Route::model('office', \App\Models\Office::class);
-        Route::model('buget', \App\Models\Buget::class);
-        Route::model('bugetCategory', \App\Models\BugetCategory::class);
+        Route::model('budget', \App\Models\Budget::class);
+        Route::model('budgetCategory', \App\Models\BudgetCategory::class);
         
         Route::model('voucher_transaction', \App\Models\Transaction::class);
         Route::model('user', \App\Models\User::class);

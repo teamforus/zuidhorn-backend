@@ -1,7 +1,8 @@
 doctype
-html(lang="en")
+-env_data = env_data || {html5Mode: {enable: false, basePath: "/"}, apiUrl: "/"};
+html(lang="en" ng-app="shopkeeperApp" ng-controller="BaseController")
     include includes/head
-    body(ng-app="shopkeeperApp", ng-controller="BaseController", ng-csp)
+    body(ng-cloak)
         include includes/header
         block content
         include includes/popups

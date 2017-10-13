@@ -9,15 +9,15 @@ shopkeeperApp.service('AuthService', [
             apiRequest = ApiRequest;
 
             this.signIn = function(values) {
-                return ApiRequest.post('/../api/shop-keepers/devices', values);
+                return ApiRequest.post('/shop-keepers/devices', values);
             };
 
             this.generateToken = function() {
-                return ApiRequest.get('/../api/shop-keepers/devices/token');
+                return ApiRequest.get('/shop-keepers/devices/token');
             };
 
             this.checkTokenState = function(token) {
-                return ApiRequest.get('/../api/shop-keepers/devices/token/' + token + '/state');
+                return ApiRequest.get('/shop-keepers/devices/token/' + token + '/state');
             };
 
             this.signOut = function(values) {
@@ -25,7 +25,7 @@ shopkeeperApp.service('AuthService', [
             };
 
             this.getUser = function(credentails) {
-                return ApiRequest.get('/api/user');
+                return ApiRequest.get('/user');
             };
         });
     }

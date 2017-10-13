@@ -58,7 +58,7 @@ class TransactionController extends Controller
         $shop_keeper = ShopKeeper::whereUserId($user->id)->first();
 
         $available_categs = $shop_keeper->categories->pluck('id')->intersect(
-            $voucher->buget->categories->pluck('id'));
+            $voucher->budget->categories->pluck('id'));
 
         if ($available_categs->count() < 1)
             return response(collect([

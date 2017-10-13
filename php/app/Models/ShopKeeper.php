@@ -139,7 +139,13 @@ class ShopKeeper extends Model
         $kvk_data = KvkApi::kvkNumberData($kvk_number);
         $kvk_item = collect($kvk_data->data->items)->first();
 
-        $shopkeeper_name = $kvk_item->tradeNames->currentNames;
+        $shopkeeper_name = '';
+
+        if (isset($kvk_item->tradeNames->businessName))
+            $shopkeeper_name = [$kvk_item->tradeNames->businessName];
+        elseif (isset($kvk_item->tradeNames->shortBusinessName))
+            $shopkeeper_name = [$kvk_item->tradeNames->shortBusinessName];
+
         $shopkeeper_websites = $kvk_item->websites;
 
         do {

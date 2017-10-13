@@ -7,29 +7,29 @@ shopkeeperApp.service('OfficeService', [
     ) {
         return new(function() {
             this.getOffices = function() {
-                return ApiRequest.get('/api/offices');
+                return ApiRequest.get('/offices');
             };
 
             this.getOffice = function(id) {
-                return ApiRequest.get('/api/offices/' + id);
+                return ApiRequest.get('/offices/' + id);
             };
 
             this.countOffices = function() {
-                return ApiRequest.get('/api/offices/count');
+                return ApiRequest.get('/offices/count');
             };
 
             this.updateOffice = function(id, values) {
-                return ApiRequest.post('/api/offices/' + id, values);
+                return ApiRequest.post('/offices/' + id, values);
             };
 
             this.create = function(values) {
-                return ApiRequest.post('/api/offices', values);
+                return ApiRequest.post('/offices', values);
             };
 
             this.update = function(id, values) {
                 values._method = "PUT";
 
-                return ApiRequest.post('/api/offices/' + id, values);
+                return ApiRequest.post('/offices/' + id, values);
             };
 
             this.updatePhoto = function(id, image) {
@@ -38,7 +38,7 @@ shopkeeperApp.service('OfficeService', [
                 formData.append('image', image);
                 formData.append('_method', 'PUT');
 
-                return ApiRequest.post('/api/offices/' + id + '/image', formData, {
+                return ApiRequest.post('/offices/' + id + '/image', formData, {
                     'Content-Type': undefined
                 });
             };

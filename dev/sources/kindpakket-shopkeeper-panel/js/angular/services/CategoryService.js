@@ -9,7 +9,7 @@ shopkeeperApp.service('CategoryService', [
     ) {
         return {
             getCategories: function() {
-                return ApiRequest.get('/api/categories');
+                return ApiRequest.get('/categories');
             }
         };
     }

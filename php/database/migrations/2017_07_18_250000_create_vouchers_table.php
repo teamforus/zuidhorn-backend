@@ -18,13 +18,13 @@ class CreateVouchersTable extends Migration
             $table->string('code')->nullable();
             $table->string('public_key')->nullable();
             $table->string('private_key')->nullable();
-            $table->integer('buget_id')->unsigned();
+            $table->integer('budget_id')->unsigned();
             $table->integer('user_id')->unsigned()->nullable();
             $table->float('amount')->unsigned()->nullable();
             $table->timestamps();
 
-            $table->foreign('buget_id')
-            ->references('id')->on('bugets')
+            $table->foreign('budget_id')
+            ->references('id')->on('budgets')
             ->onDelete('cascade');
 
             $table->foreign('user_id')

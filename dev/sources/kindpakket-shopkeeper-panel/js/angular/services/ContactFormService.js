@@ -9,7 +9,7 @@ shopkeeperApp.service('ContactFormService', [
     ) {
         return new(function() {
             this.submitForm = function(values) {
-                return ApiRequest.post('/api/contact-form', values);
+                return ApiRequest.post('../client/api/contact-form', values);
             };
         });
     }

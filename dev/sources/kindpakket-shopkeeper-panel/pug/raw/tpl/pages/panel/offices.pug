@@ -32,7 +32,10 @@
                 div.text-center.hide-desktop.office-li-button
                     a(ui-sref="panel-offices-edit({id: office.id})").button.button-success
                         em.mdi.mdi-settings
-                        | Edit
+                        | Edit 
+                a(href="https://www.google.com/maps/place/{{office.lat}},{{office.lon}}" target="_blank").office-li-map-link
+                    em.mdi.mdi-map-marker
+                    | View on map
 
     .section.section-panel(ng-show="$ctrl.offices.length == 0")
         h4.text-center No offices

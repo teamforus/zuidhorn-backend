@@ -55,7 +55,7 @@ shopkeeperApp.directive('authByQrCode', [
                         $(qr_code).find('img').bind('load', function() {
                             $scope.timeout = $timeout(function() {
                                 $scope.qr_code = $(qr_code).find('img').attr('src');
-                            }, 0);
+                            }, 100);
                         });
 
                         var successHandler = function(response) {

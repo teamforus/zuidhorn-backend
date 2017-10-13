@@ -4,7 +4,7 @@
         .popup-inner
             a(href="#" ng-click="auth.closeModals($event)").popup-close.mdi.mdi-close
             .popup-heading Login
-            .form
+            form.form(ng-submit="auth.signInSubmit($event, forms.login)")
                 .row
                     .col.col-12: .form-group
                         label.label Email
@@ -17,14 +17,14 @@
                 .row
                     br
                     .col.col-12: .form-group.text-center
-                        a(href="#" ng-click="auth.signInSubmit($event, forms.login)").button.button-success Submit
+                        button(type="submit").button.button-success Submit
 
     .popup.popup-voucher
         .popup-backdrop(ng-click="auth.closeModals($event)")
         .popup-inner
             a(href="#" ng-click="auth.closeModals($event)").popup-close.mdi.mdi-close
             .popup-heading Activate voucher
-            div(ng-hide="forms.voucher.submit").form
+            form(ng-hide="forms.voucher.submit" ng-submit="auth.activateVoucherSubmit($event, forms.voucher)").form
                 .row
                     .col.col-12: .form-group
                         label.label Voucher
@@ -37,7 +37,7 @@
                 .row
                     br
                     .col.col-12: .form-group.text-center
-                        a(href="#" ng-click="auth.activateVoucherSubmit($event, forms.voucher)").button.button-success Submit
+                        button(type="submit").button.button-success Submit
             div(ng-show="forms.voucher.submit").voucher-activation-loading: img(src="./assets/img/progress.gif", alt="")
 
     .popup.popup-voucher-success

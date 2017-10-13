@@ -12,15 +12,18 @@ head
 
     //- material design icons (by google)
     if (qdt_c.platform.libs.mdi)
-        link(rel="stylesheet", href="assets/dist/mdi/css/materialdesignicons.min.css")
+        link(rel="stylesheet", href=(env_data.html5Mode.enable?env_data.html5Mode.basePath:'') + "assets/dist/mdi/css/materialdesignicons.min.css")
 
     //- bootstrap 3
     if (qdt_c.platform.libs.bootstrap_3)
-        link(rel="stylesheet", href="assets/dist/bootstrap/css/bootstrap.min.css")
+        link(rel="stylesheet", href=(env_data.html5Mode.enable?env_data.html5Mode.basePath:'') + "assets/dist/bootstrap/css/bootstrap.min.css")
 
     //- angular csp (cloack)
     if (qdt_c.platform.libs.angular)
-        link(rel="stylesheet", href="assets/dist/angular/angular-csp.css")
-
+        link(rel="stylesheet", href=(env_data.html5Mode.enable?env_data.html5Mode.basePath:'') + "assets/dist/angular/angular-csp.css")
+    
     //- custom style
-    link(rel="stylesheet", href="assets/css/style.min.css")
+    link(rel="stylesheet" href=(env_data.html5Mode.enable?env_data.html5Mode.basePath:'') + "assets/css/style.min.css")
+
+    if(env_data.html5Mode.enable)
+        base(href=env_data.html5Mode.basePath)

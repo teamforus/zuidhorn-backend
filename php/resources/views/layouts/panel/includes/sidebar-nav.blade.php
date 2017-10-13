@@ -9,7 +9,7 @@
             </a>
         </div>
         
-        @can('upload_bugets')
+        @can('upload_budgets')
         <div class="aside-nav-item">
             <a class="{{ $view_page == 'csv-parser' ? 'active' : '' }} aside-nav-link" href="{{ url('/panel/csv-parser') }}">
                 <em class="aside-nav-icon mdi mdi-database"></em>
@@ -27,11 +27,11 @@
         </div>
         @endcan
 
-        @can('manage_bugets')
+        @can('manage_budgets')
         <div class="aside-nav-item">
-            <a class="{{ strpos($view_page, 'bugets') === 0 ? 'active' : '' }} aside-nav-link" href="{{ url('/panel/bugets') }}">
+            <a class="{{ strpos($view_page, 'budgets') === 0 ? 'active' : '' }} aside-nav-link" href="{{ url('/panel/budgets') }}">
                 <em class="aside-nav-icon mdi mdi-coins"></em>
-                Bugets
+                Budgets
             </a>
         </div>
         @endcan
@@ -64,7 +64,7 @@
         @endcan
 
         @if(FALSE)
-        @can('manage_bugets')
+        @can('manage_budgets')
         <div class="aside-nav-item">
             <a class="{{ strpos($view_page, 'users') === 0 ? 'active' : '' }} aside-nav-link" href="{{ url('/panel/users') }}">
                 <em class="aside-nav-icon mdi mdi-account-circle"></em>

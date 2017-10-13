@@ -1,6 +1,6 @@
 .section.section-container: .wrapper 
     .section.section-panel
-        .form
+        form(ng-submit="$ctrl.submitFilters($event, $ctrl.forms.filters)").form
             .row: .col.col-12: .form-heading Filter by
             .row
                 .col.col-3: .form-group
@@ -16,7 +16,11 @@
                     label.label Kvk Number
                     input(type="number" placeholder="Kvk Number" ng-model="$ctrl.forms.filters.values.kvk_number").form-control
             .row: .col.col-12
-                a(href="#" ng-click="$ctrl.submitFilters($event, $ctrl.forms.filters)").button.button-success Filter
+                button(type="submit")#submit.hidden
+                label(for="submit").button.button-success Filter
+                label(ng-show="$ctrl.forms.filters.success").button.button-text.disabled 
+                    em.mdi.mdi-check
+                    | Filtered
     
     .section.section-title Stores
     

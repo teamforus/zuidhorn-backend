@@ -1,0 +1,133 @@
+header.section.section-header: .wrapper
+    .section-header-inner(ng-show="$root.credentials")
+        a(ui-sref="landing").logo: img(src="./assets/img/logo.png")
+        .section-header-actions
+            .button-group
+                .button.button-white.disabled
+                    span Budget &nbsp; 
+                    strong €
+                    strong(ng-bind="$root.targetVoucher.funds")
+                a(ui-sref="account").button.button-white
+                    span.mdi.mdi-account
+                    | Mijn Account
+            a(href="#" ng-click="$root.auth.signOut($event)").button.button-primary
+                em.mdi.mdi-logout
+                | Logout
+    .section-header-inner(ng-show="!$root.credentials")
+        a(href="./").logo: img(src="./assets/img/logo.png", alt="")
+        .section-header-actions
+            a(href="#" ng-click="$root.auth.activateVoucher($event)").button.button-success
+                em.mdi.mdi-ticket-confirmation
+                | Activate voucher
+            a(href="#" ng-click="$root.auth.signIn($event)").button.button-white
+                em.mdi.mdi-account
+                | Login
+
+    .section-header-text
+        .section-header-text-title
+            strong Zuidhorn. 
+            | Kindpakket
+        .section-header-text-description
+            | Welkom om de website van het kindpakket Zuidhorn. Op deze website vindt u een overzicht van de deelnemende winkeliers. Begin gelijk door rechtsboven in te loggen of uw voucher te activeren.
+        a(href="#how-it-works" slow-scroll).button.button-success 
+            span Leer meer over hoe het
+            span systeem werkt
+
+.section.section-categories
+    .wrapper
+        h1.section-header Door te klikken op de blokken zoekt u de winkels die meedoen aan het systee
+
+        .categories-list
+            .categories-list-inner
+                .categories-item(ng-repeat="category in $ctrl.categories track by $index")
+                    .categories-item-inner(ng-class="{active: category.selected}" ng-click="$ctrl.selectCategory($event, category)")
+                        img(ng-src="{{ category.preview }}" alt="").categories-item-img
+                        .categories-item-radio
+                        div(ng-bind="category.name").categories-item-title
+            
+            .categories-list-actions
+                a(href="#" ng-click="$ctrl.selectAll($event)").button.button-primary
+                    em.mdi.mdi-chevron-double-right
+                    | Selecteer alles
+                a(href="#" ng-click="$ctrl.updateOfficesCategory($event)").button.button-success
+                    em.mdi.mdi-magnify
+                    | Filter
+
+.section.section-offices
+    .section-offices-list
+        .section-offices-list-header
+            h4 We found for you {{ $ctrl.locations.length }} shop(s).
+            small Please select one to see the details
+        .section-offices-list-inner.nano: .nano-content 
+            .section.section-panel(ng-repeat="location in $ctrl.locations track by $index" ng-click="$ctrl.selectLocation($event, location)" ng-class="{active: location.selected}")
+                .office-li
+                    img(ng-src="{{location.preview || 'assets/img/no-image.jpg'}}", alt="").office-li-thumb
+                    .office-li-name(ng-bind="location.shopkeeper.name")
+                    .office-li-description
+                        strong Adress: 
+                        span(ng-bind="location.address || 'Geen data'")
+                        br
+                        strong Phone: 
+                        span(ng-bind="location.phone || 'Geen data'")
+                        br
+                        br
+                        strong.text-primary Opening times:
+                        br
+                        div
+                            span.br(ng-repeat="schedule in location.schedules track by $index")
+                                strong {{ ['MO', 'TU', 'WE', 'TH', 'FR'][$index] }}: 
+                                | {{ schedule.start_time }}-{{ schedule.end_time }}{{ $index < location.schedules.length - 1 ? ',' : '' }} 
+
+    .section-offices-map(google-map)
+
+.section.section-how-it-works
+    .bg-image
+    .how-it-works-inner
+        h1#how-it-works.how-it-works-title Hoe het systeem werkt
+        .how-it-works-list
+            .how-it-works-item 
+                em.how-it-works-item-number 1
+                | U heeft een brief ontvangen van de gemeente
+            .how-it-works-item 
+                em.how-it-works-item-number 2
+                | In deze brief staat een activatie code
+            .how-it-works-item 
+                em.how-it-works-item-number 3
+                | U activeert uw voucher op deze webiste door te drukken op de knop activeer voucher
+            .how-it-works-item 
+                em.how-it-works-item-number 4
+                | Hierna zal u uw budget te zien krijgen
+            .how-it-works-item 
+                em.how-it-works-item-number 5
+                | U print uw voucher code uit of mailt deze naar u zelf toe
+            .how-it-works-item 
+                em.how-it-works-item-number 6
+                | U bekijkt het aanbod van de deelnemende winkels
+            .how-it-works-item 
+                em.how-it-works-item-number 7
+                | De winkelier scant uw voucher
+            .how-it-works-item 
+                em.how-it-works-item-number 8
+                | De kosten worden afgeschreben van uw budget
+
+.section.section-faq
+    .faq-inner(tabulation)
+        .faq-tabs: .faq-tabs-inner
+            h4.faq-tabs-title Veel gestelde vragen
+            a(href="#" tabulation-tab="1").faq-tab Lorem ipsum dolor sit amet
+            a(href="#" tabulation-tab="2").faq-tab Excepteur sint occaecat cupidatat non proident, sunt in culpa
+            a(href="#" tabulation-tab="3").faq-tab Numquam eius modi tempora incidunt
+            a(href="#" tabulation-tab="4").faq-tab Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit
+        .faq-panes: .faq-panes-inner
+            -var i = 0;
+
+            while i++ < 5
+                .faq-pane(tabulation-pane=i)
+                    h4 ##{i} nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit
+                    p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+                    p Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo
+
+                    p Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+
+div(contact-form)

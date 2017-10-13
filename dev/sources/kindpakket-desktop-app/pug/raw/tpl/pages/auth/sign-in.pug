@@ -1,11 +1,11 @@
 .section.section-auth-layout
-    .logo: img(src="./assets/img/logo.png", alt="")
+    .logo.no-select: img(src="./assets/img/logo.png", alt="")
     .popups
         .popup.popup-auth.active
             .popup-backdrop.popup-backdrop-pasive
             .popup-inner
                 .popup-heading Login
-                .form
+                form(ng-submit="$ctrl.submitSignIn($event, $ctrl.forms.sign_in)").form
                     .row
                         .col.col-12: .form-group
                             label.label Email
@@ -31,4 +31,4 @@
                     .row
                         br
                         .col.col-12: .form-group.text-center
-                            a(ng-click="$ctrl.submitSignIn($event, $ctrl.forms.sign_in)").button.button-success Submit
+                            button(type="submit").button.button-success Submit

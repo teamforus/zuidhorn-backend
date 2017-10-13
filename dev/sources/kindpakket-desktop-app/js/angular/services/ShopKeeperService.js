@@ -9,13 +9,13 @@ municipalityApp.service('ShopKeeperService', [
     ) {
         return {
             list: function() {
-                return ApiRequest.get('/api/shop-keepers');
+                return ApiRequest.get('/shop-keepers');
             },
             find: function(id) {
-                return ApiRequest.get('/api/shop-keepers/' + id);
+                return ApiRequest.get('/shop-keepers/' + id);
             },
             listOffices: function(id, values) {
-                return ApiRequest.get('/api/shop-keepers/' + id + '/offices');
+                return ApiRequest.get('/shop-keepers/' + id + '/offices');
             },
             availableStates: function(id) {
                 return [{
@@ -30,7 +30,7 @@ municipalityApp.service('ShopKeeperService', [
                 }];
             },
             setStates: function(id, state) {
-                return ApiRequest.post('/api/shop-keepers/' + id + '/state', {
+                return ApiRequest.post('/shop-keepers/' + id + '/state', {
                     state: state
                 });
             }

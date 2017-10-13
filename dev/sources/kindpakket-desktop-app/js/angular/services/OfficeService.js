@@ -7,11 +7,11 @@ municipalityApp.service('OfficeService', [
     ) {
         return new(function() {
             this.list = function() {
-                return ApiRequest.get('/api/offices');
+                return ApiRequest.get('/offices');
             };
 
             this.find = function(id) {
-                return ApiRequest.get('/api/offices/' + id);
+                return ApiRequest.get('/offices/' + id);
             };
         });
     }
