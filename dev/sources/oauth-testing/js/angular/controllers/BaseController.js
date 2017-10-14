@@ -1,5 +1,6 @@
 oauth2App.controller('BaseController', [
     '$scope',
+    '$rootScope',
     '$state',
     '$http',
     'AuthService',
@@ -9,6 +10,7 @@ oauth2App.controller('BaseController', [
     'FormBuilderService',
     function(
         $scope,
+        $rootScope,
         $state,
         $http,
         AuthService,
@@ -17,7 +19,7 @@ oauth2App.controller('BaseController', [
         CredentialsService,
         FormBuilderService
     ) {
-        $scope.$state = $state;
+        $rootScope.$state = $scope.$state = $state;
 
         $scope.$on('auth:sign-in', function() {
             $scope.credentials = CredentialsService.get();

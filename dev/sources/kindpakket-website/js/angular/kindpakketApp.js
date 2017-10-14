@@ -14,7 +14,7 @@ kindpakketApp.config(['$stateProvider', '$locationProvider', function($stateProv
             name: 'landing',
             component: 'landingComponent',
             data: {
-                title: "Landing"
+                title: "Home"
             }
         });
 

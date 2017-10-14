@@ -1,5 +1,6 @@
 kindpakketApp.controller('BaseController', [
     '$scope',
+    '$state',
     '$rootScope',
     'AuthService',
     'CategoryService',
@@ -7,12 +8,15 @@ kindpakketApp.controller('BaseController', [
     'CredentialsService',
     function(
         $scope,
+        $state,
         $rootScope,
         AuthService,
         CategoryService,
         FormBuilderService,
         CredentialsService
     ) {
+        $rootScope.$state = $scope.$state = $state;
+        
         $scope.locations = [];
         $scope.forms = {};
         $scope.forms.login = FormBuilderService.build();

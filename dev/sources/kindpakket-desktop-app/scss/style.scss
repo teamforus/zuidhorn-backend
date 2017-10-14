@@ -984,8 +984,34 @@ table.table {
     }
 }
 
-.section {
+.info-card {
+    padding: 15px 25px 10px;
+    border: 1px dashed #999;
+    border-radius: 6px;
 
+    .info-card-header {
+        font: 700 24px/40px $bf;
+        color: #083f49;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #cccccc;
+    }
+
+    .info-card-description {
+        padding: 10px 0;
+        font: 400 13px/19px $bf;
+        color: #333333;
+    }
+
+    &.info-card-success {
+        border-color: #70c567;
+    }
+
+    &.info-card-danger {
+        border-color: #c93315;
+    }
+}
+
+.section {
     &.section.section-header {
         background-color: #f7f9fc;
 
@@ -1037,9 +1063,26 @@ table.table {
     &.section-panel {
         width: 100%;
         background-color: #fff;
-        padding: 20px;
+        padding: 30px;
         box-shadow: 0px 0px 25px rgba(0,0,0,.1);
         margin: 0 0 20px;
+        border: 1px solid #e7e7e7;
+        border-radius: 4px;
+
+        &.section-panel-devieded {
+            position: relative;
+
+            &:after {
+                content: '';
+                display: block;
+                position: absolute;
+                left: 50%;
+                top: 0;
+                width: 1px;
+                height: 100%;
+                background-color: #e7e7e7;
+            }
+        }
     }
 
     &.section-title {

@@ -14,7 +14,7 @@ shopkeeperApp.config(['$stateProvider', '$locationProvider', function($stateProv
             name: 'welcome',
             component: 'landingComponent',
             data: {
-                title: "Welcome"
+                title: "Home"
             }
         })
         .state({
@@ -35,7 +35,7 @@ shopkeeperApp.config(['$stateProvider', '$locationProvider', function($stateProv
             name: 'profile-edit',
             component: 'panelProfileEditComponent',
             data: {
-                title: "Offices"
+                title: "Edit Profile"
             }
         })
 
@@ -54,7 +54,7 @@ shopkeeperApp.config(['$stateProvider', '$locationProvider', function($stateProv
             name: 'panel-offices-create',
             component: 'panelOfficesCreateComponent',
             data: {
-                title: "Offices"
+                title: "Add office"
             }
         })
         .state({
@@ -62,7 +62,7 @@ shopkeeperApp.config(['$stateProvider', '$locationProvider', function($stateProv
             name: 'panel-offices-edit',
             component: 'panelOfficesEditComponent',
             data: {
-                title: "Offices"
+                title: "Edit office"
             },
             params: {
                 id: null
@@ -76,7 +76,7 @@ shopkeeperApp.config(['$stateProvider', '$locationProvider', function($stateProv
             name: 'panel-transactions',
             component: 'panelTransactionsComponent',
             data: {
-                title: "Offices"
+                title: "Transactions"
             }
         });
 }]);

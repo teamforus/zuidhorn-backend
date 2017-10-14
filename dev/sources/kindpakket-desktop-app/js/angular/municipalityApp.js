@@ -79,7 +79,7 @@ municipalityApp.config(['$stateProvider', '$locationProvider', function($statePr
             name: 'budget-upload',
             component: 'panelBudgetUploadComponent',
             data: {
-                title: "Offices",
+                title: "Vouchers",
                 layout: 'panel'
             }
         });
@@ -91,7 +91,7 @@ municipalityApp.config(['$stateProvider', '$locationProvider', function($statePr
             name: 'budget-manage',
             component: 'panelBudgetManageComponent',
             data: {
-                title: "Offices",
+                title: "Manage budget",
                 layout: 'panel'
             }
         });
@@ -103,7 +103,7 @@ municipalityApp.config(['$stateProvider', '$locationProvider', function($statePr
             name: 'shopkeeper-manage',
             component: 'panelShopkeeperManageComponent',
             data: {
-                title: "Offices",
+                title: "Manage Shopkeepers",
                 layout: 'panel'
             }
         });

@@ -1,11 +1,10 @@
 head
     meta(charset="UTF-8")
-    title Zuidhorn. Kindpakket
-
-    //- disable resize on mobiles
     meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no')
 
-    //- fonts (Open Sans)
+    title(ng-bind="'Zuidhorn. Kindpakket - ' + $root.$state.current.data.title")
+        
+    link(rel="icon" href=(env_data.html5Mode.enable?env_data.html5Mode.basePath:'') + "assets/img/favicon.png")
     link(href='https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i&amp;subset=latin-ext', rel='stylesheet', type='text/css')
 
     //- material design icons (by google)
