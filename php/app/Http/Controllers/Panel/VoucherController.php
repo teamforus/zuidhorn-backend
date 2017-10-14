@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Panel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Voucher;
-use App\Services\BunqService\BunqService;
 
 class VoucherController extends Controller
 {

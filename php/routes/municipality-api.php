@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Mail;
 
 Route::group(['prefix' => 'api', 'middleware' => 'auth:api'], function() {
     Route::get('user', 'MunicipalityApi\UserController@user');
+    Route::get('user/funds', 'MunicipalityApi\UserController@funds');
 
     Route::get('budget', 'MunicipalityApi\BudgetController@get');
     Route::put('budget', 'MunicipalityApi\BudgetController@update');

@@ -24,6 +24,10 @@ municipalityApp.service('AuthService', [
             this.getUser = function(credentails) {
                 return ApiRequest.get('/user');
             };
+
+            this.fundsAvailable = function() {
+                return ApiRequest.get('/user/funds');
+            };
         });
     }
 ]);

@@ -20,16 +20,16 @@
                         em.mdi.mdi-check
                         | Updated
         .col.col-6
-            .col.col-12
+            .col.col-12(ng-if="$ctrl.fundsInfo.diff >= 0")
                 .info-card.info-card-success(style="max-width: 320px;") 
-                    .info-card-header €{{ 40000 | number_format:2 }} 
+                    .info-card-header €{{ $ctrl.fundsInfo.funds | number_format:2 }} 
                     .info-card-description 
                         strong Congratulations. 
                         | The budget is enough for funding the vouchers.
-            .col.col-12
+            .col.col-12(ng-if="$ctrl.fundsInfo.diff < 0")
                 .info-card.info-card-danger(style="max-width: 320px;")
-                    .info-card-header €{{ 5000 | number_format:2 }} 
+                    .info-card-header €{{ $ctrl.fundsInfo.funds | number_format:2 }} 
                     .info-card-description 
                         strong Not enough. 
                         | Please supply the bank account with 
-                        strong €403,13
+                        strong €{{ $ctrl.fundsInfo.diff | abs | number_format:2 }}

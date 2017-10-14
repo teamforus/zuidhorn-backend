@@ -1,21 +1,25 @@
 var app = require('electron').app;
 var open = require('open');
+var path = require('path');
 var electron = require('electron');
-var BrowserWindow = electron.BrowserWindow;
-var win;
 
+var Tray = electron.Tray;
+var BrowserWindow = electron.BrowserWindow;
+
+var win;
 
 app.commandLine.appendSwitch('--ignore-gpu-blacklist');
 
 app.on('ready', function() {
+    const appIcon = new Tray(path.join(__dirname, 'www/assets/img/favicon.png'));
+
     win = new BrowserWindow({
         minWidth: 1024,
         minHeight: 650,
         show: false,
         backgroundColor: '#000000',
         center: true,
-        title: 'Visitmy.Country',
-        icon: 'icon.png',
+        icon: path.join(__dirname, 'www/assets/img/favicon.png')
     });
     
     var menu = new electron.Menu();

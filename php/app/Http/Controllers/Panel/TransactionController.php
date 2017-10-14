@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Panel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
-use App\Services\BunqService\BunqService;
 
 class TransactionController extends Controller
 {

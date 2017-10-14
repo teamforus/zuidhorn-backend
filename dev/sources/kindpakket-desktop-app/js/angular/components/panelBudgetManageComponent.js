@@ -5,6 +5,7 @@ municipalityApp.component('panelBudgetManageComponent', {
         '$state',
         '$scope',
         '$timeout',
+        'AuthService',
         'BudgetService',
         'CredentialsService',
         'FormBuilderService',
@@ -13,12 +14,14 @@ municipalityApp.component('panelBudgetManageComponent', {
             $state,
             $scope,
             $timeout,
+            AuthService,
             BudgetService,
             CredentialsService,
             FormBuilderService
         ) {
             var ctrl = this;
 
+            ctrl.fundsInfo = {};
             ctrl.forms = {};
             ctrl.forms.budget = FormBuilderService.build();
 
@@ -51,6 +54,19 @@ municipalityApp.component('panelBudgetManageComponent', {
                     form.fillErrors(response.data).unlock();
                 });
             };
+
+            var fetchfundsAvailable = function() {
+                AuthService.fundsAvailable().then(function(response) {
+                    ctrl.fundsInfo.funds = response.data.funds;
+                    ctrl.fundsInfo.funds_required = response.data.funds_required;
+                    ctrl.fundsInfo.diff =
+                        ctrl.fundsInfo.funds - ctrl.fundsInfo.funds_required;
+
+                    console.log(ctrl.fundsInfo);
+                });
+            };
+
+            fetchfundsAvailable();
         }
     ]
 });

@@ -68,3 +68,9 @@ municipalityApp.filter('startFrom', function() {
         return _in.slice(_from);
     }
 });
+
+municipalityApp.filter('abs', function() {
+    return function(_in) {
+        return Math.abs(_in);
+    }
+});
