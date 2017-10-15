@@ -42,14 +42,9 @@ class DeviceIdMiddleware
         if (!$device_id) {
             return response(collect(['error' => 'no-device-id']), 401);
         }
-        
-        $device_status = $shop_keeper->checkDevice($device_id);
 
-        if (!$device_status) {
-            $shop_keeper->requestDeviceApprovement($device_id);
+        if (!$shop_keeper->checkDevice($device_id)) {
             return response(collect(['error' => 'device-unknown']), 401);
-        } elseif ($device_status->status == 'pending') {
-            return response(collect(['error' => 'device-pending']), 401);
         }
         
         return $next($request);

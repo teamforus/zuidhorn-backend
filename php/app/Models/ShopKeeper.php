@@ -106,18 +106,6 @@ class ShopKeeper extends Model
         ])->first();
     }
 
-    public function requestDeviceApprovement($device_id)
-    {
-        $device = $this->devices()->save(new Device([
-            'device_id'     => $device_id,
-            'approve_token' => Device::generateUid(null, 'approve_token', 32),
-        ]));
-
-        $device->sendApprovalRequest();
-
-        return $device;
-    }
-
     public function makeBlockchainAccount() {
         $account = BlockchainApi::createAccount($this->user->private_key);
 
