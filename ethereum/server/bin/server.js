@@ -47,7 +47,7 @@ app.post('/api/voucher/batch', logEndpoint, function(req, res) {
         let voucher = vouchers[prop];
 
         (function(prop) {
-            core.newAccount(voucher.private, voucher.funds).then(function(address) {
+            core.newAccount(voucher.private, voucher.funds * 100).then(function(address) {
                 addresses[prop] = address;
 
                 logger.log(colors.green(`Voucher ${Object.keys(addresses).length} from ${Object.keys(vouchers).length} created.`));
@@ -66,7 +66,7 @@ app.post('/api/account', logEndpoint, function(req, res) {
     let _private = req.body.private;
     let _funds = parseInt(req.body.funds);
 
-    account = core.newAccount(_private, isNaN(_funds) ? false : _funds);
+    account = core.newAccount(_private, isNaN(_funds) ? false : (_funds * 100));
     
     account.then(function(address) {
         res.send({
@@ -88,6 +88,8 @@ app.get('/api/shop-keeper/:address/state', logEndpoint, function(req, res) {
 app.post('/api/shop-keeper/:address/state', logEndpoint, function(req, res) {
     let address = req.params.address;
     let state = !!req.body.state;
+
+    logger.log('change-status', state, state ? 'y' : 'n');
 
     core.changeShoperStatus(address, state).then(function(block) {
         res.send({

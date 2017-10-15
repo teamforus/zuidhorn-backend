@@ -102,9 +102,10 @@ kindpakketApp.component('landingComponent', {
                 ctrl.deselectAll();
                 ctrl.updateOfficesCategory();
             }, console.log);
-        
 
-            $rootScope.$broadcast('voucher:fetch');
+            if ($rootScope.credentials) {
+                $rootScope.$broadcast('voucher:fetch');
+            }
         }
     ]
 });
