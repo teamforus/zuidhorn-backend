@@ -132,6 +132,40 @@ app.post('/api/transaction/request-funds', logEndpoint, function(req, res) {
     });
 });
 
+app.post('/api/transaction/refund', logEndpoint, function(req, res) {
+    let from_public = req.body.from_public;
+    let from_private = req.body.from_private;
+
+    let to_public = req.body.to_public;
+
+    let amount = req.body.amount * 100;
+
+    logger.log(
+        "ShopKeeper " + colors.green(from_public) +
+        " is refunding " + colors.green(amount + " coin(s)") +
+        " to " + colors.green(to_public));
+
+    core.checkShopStatus(from_public).then(function(state) {
+        if (!state)
+            return res.status(403).send({
+                error: "Shopkeeper is not approved!"
+            });
+
+        core.getBalance(from_public).then(function(balance) {
+            if (balance < amount)
+                return res.status(403).send({
+                    error: "Not enough funds!"
+                });
+
+            core.refundPayment(from_public, to_public, from_private, amount).then(function(block) {
+                res.send({
+                    blockId: block.blockNumber
+                });
+            });
+        });
+    });
+});
+
 app.get('/api/account/:address/balance', logEndpoint, function(req, res) {
     let address = req.params.address;
 

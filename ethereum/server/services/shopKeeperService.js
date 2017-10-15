@@ -83,6 +83,23 @@ let ShopKeeperService = function(web3) {
             }, console.error);
         });
     };
+    
+    self.refundPayment = function(from_address, to_address, password, funds) {
+        return new Promise(function(resolve, reject) {
+            getContract().then(function(contract) {
+                accountsService.unlockAccount(from_address, password).then(function() {
+                    contract.refundPayment(to_address, funds, { from: from_address }, function(err, transactionHash) {
+                        if (err)
+                            return reject(err);
+
+                        self.checkTransaction(transactionHash, function(block) {
+                            resolve(block);
+                        });
+                    });
+                }, reject);
+            }, console.error);
+        });
+    };
 
     return self;
 };

@@ -8,6 +8,7 @@ use App\Models\ShopKeeper;
 use App\Models\Transaction;
 
 use App\Http\Requests\App\VoucherSubmitRequest;
+use App\Services\BlockchainApiService\Facades\BlockchainApi;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -130,9 +131,8 @@ class TransactionController extends Controller
      */
     public function refund(Request $request, Voucher $voucher, Transaction $transaction)
     {
-
         $user = $request->user();
-        $shop_keeper = ShopKeeper::whereUserId($user->id)->first();
+        $shopKeeper = ShopKeeper::whereUserId($user->id)->first();
 
         if (collect(['refund', 'refunded'])
             ->search($transaction->status) !== false)
@@ -142,7 +142,7 @@ class TransactionController extends Controller
             ], 401);
 
         $refund = Refund::where([
-            'shop_keeper_id'    => $shop_keeper->id,
+            'shop_keeper_id'    => $shopKeeper->id,
             'status'            => 'pending',
         ])->first();
 
@@ -152,14 +152,21 @@ class TransactionController extends Controller
             $refund->applyOrRevokeBunqRequest();
         }
 
-        $transaction->update(['status' => 'refund']);
+        $transaction->update(['status' => 'refund']);        
+
+        BlockchainApi::requestFunds(
+            $shopKeeper->user->public_key,
+            $transaction->voucher->public_key,
+            $transaction->voucher->private_key,
+            $transaction->amount
+        );
 
         $refund = Refund::create([
-            'shop_keeper_id'    => $shop_keeper->id,
+            'shop_keeper_id'    => $shopKeeper->id,
             'status'            => 'pending',
         ]);
 
-        $refund->transactions()->attach($shop_keeper->transactions()->where([
+        $refund->transactions()->attach($shopKeeper->transactions()->where([
             'status' => 'refund'
         ])->pluck('id'));
 

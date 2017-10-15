@@ -102,7 +102,7 @@ class ShopKeeperController extends Controller
         $shopKeeper = ShopKeeper::find($request->shopKeeper);
         $shopKeeper->update($request->only('state'));
 
-        if (!$shopKeeper->public_key && ($data['state'] == 'approved'))
+        if (!$shopKeeper->public_key && $request->input('state') == 'approved')
             $shopKeeper->makeBlockchainAccount();
 
         BlockchainApi::setShopKeeperState(

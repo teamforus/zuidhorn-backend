@@ -40,6 +40,15 @@ let requestMoney = function(fromAddress, toAddress, password, funds) {
     });
 };
 
+let refundPayment = function(fromAddress, toAddress, password, funds) {
+    return new Promise(function(resolve, reject) {
+        shopKeeperService.refundPayment(fromAddress, toAddress, password, funds).then(function(block) {
+            logger.log("\tThe transaction block number: ", colors.green(block.blockNumber));
+            resolve(block);
+        }, reject);
+    });
+};
+
 let getBalance = function(targetAddress) {
     return new Promise(function(resolve, reject) {
         balanceService.getBalance(targetAddress).then(function(balance) {

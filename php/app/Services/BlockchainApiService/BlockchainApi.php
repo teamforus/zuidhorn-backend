@@ -68,6 +68,18 @@ class BlockchainApi
             ]);
     }
 
+    public function refund($from_public, $from_private, $to_public, $amount)
+    {
+        $endpoint = "{$this->api_url}/api/transaction/refund";
+
+        return $this->makeRequest($endpoint, "post", 'json', [
+            "from_public" => $from_public,
+            "from_private" => $from_private,
+            "to_public" => $to_public,
+            "amount" => $amount,
+            ]);
+    }
+
     public function makeRequest(
         $endpoint, 
         $method = 'get', 
