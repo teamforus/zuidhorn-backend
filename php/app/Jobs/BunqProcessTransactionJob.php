@@ -52,10 +52,10 @@ class BunqProcessTransactionJob implements ShouldQueue
 
         $shopKeeper = $this->transaction->shop_keeper;
 
-        BlockchainApi::refund(
+        BlockchainApi::requestFunds(
+            $this->transaction->voucher->public_key,
             $shopKeeper->user->public_key,
             $shopKeeper->user->private_key,
-            $this->transaction->voucher->public_key,
             $this->transaction->amount
         );
     }
