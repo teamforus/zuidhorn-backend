@@ -56,7 +56,7 @@ web3.personal.unlockAccount(sponsor.public, sponsor.private, 0, function(err) {
 
                 // TODO: write contract parameters somewhere
                 if (contract_name == 'KindpakketCoin')
-                    contract_init.unshift(50000);
+                    contract_init.unshift(5000000);
 
                 // initialize contract with 50.000 coins
                 let _contract = web3.eth.contract(JSON.parse(contract_interface));

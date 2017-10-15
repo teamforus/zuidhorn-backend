@@ -102,7 +102,7 @@ app.post('/api/transaction/request-funds', logEndpoint, function(req, res) {
     let to_public = req.body.to_public;
     let to_private = req.body.to_private;
 
-    let amount = req.body.amount;
+    let amount = req.body.amount * 100;
 
     logger.log(
         "ShopKeeper " + colors.green(to_public) +
@@ -135,7 +135,7 @@ app.get('/api/account/:address/balance', logEndpoint, function(req, res) {
 
     core.getBalance(address).then(function(balance) {
         res.send({
-            balance: balance
+            balance: balance / 100
         });
     });
 });

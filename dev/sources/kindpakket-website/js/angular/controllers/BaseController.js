@@ -16,7 +16,7 @@ kindpakketApp.controller('BaseController', [
         CredentialsService
     ) {
         $rootScope.$state = $scope.$state = $state;
-        
+
         $scope.locations = [];
         $scope.forms = {};
         $scope.forms.login = FormBuilderService.build();
@@ -116,10 +116,12 @@ kindpakketApp.controller('BaseController', [
             $('.popup').hide();
         };
 
-        if ($rootScope.credentials) {
+        var fetchVoucher = function() {
             AuthService.getVoucher().then(function(response) {
                 $rootScope.targetVoucher = response.data;
             });
-        };
+        }
+
+        $scope.$on('voucher:fetch', fetchVoucher);
     }
 ]);

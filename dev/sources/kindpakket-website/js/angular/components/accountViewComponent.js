@@ -77,6 +77,8 @@ kindpakketApp.component('accountViewComponent', {
                 });
 
                 ctrl.loadQrCode();
+
+                $rootScope.$broadcast('voucher:fetch');
             }
         }
     ]

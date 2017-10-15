@@ -22,6 +22,18 @@ shopkeeperApp.provider('ApiRequest', function() {
                 $rootScope,
                 DeviceIdService
             ) {
+                var resolveUrl = function(input) {
+                    var parser = document.createElement('a');
+
+                    parser.href = input;
+
+                    var pathname = parser.pathname.split('/');
+
+                    if (pathname[0] !== '')
+                        pathname.unshift('');
+
+                    return parser.protocol + '//' + parser.host + pathname.join('/');
+                }
 
                 var makeHeaders = function() {
                     var credentails = JSON.parse(localStorage.getItem('credentails'));
@@ -47,7 +59,7 @@ shopkeeperApp.provider('ApiRequest', function() {
                     params.data = data || {};
                     params.headers = Object.assign(makeHeaders(), headers || {});
 
-                    params.url = host + endpoint;
+                    params.url = resolveUrl(host + endpoint);
                     params.method = method;
 
                     return $q(function(done, reject) {
