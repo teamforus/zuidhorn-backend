@@ -83,6 +83,7 @@ module.exports = {
     checkShopStatus: checkShopStatus,
     changeShoperStatus: changeShoperStatus,
     requestMoney: requestMoney,
+    refundPayment: refundPayment,
     getBalance: getBalance,
     fundAccount: fundAccount,
     newAccount: newAccount,

@@ -154,10 +154,10 @@ class TransactionController extends Controller
 
         $transaction->update(['status' => 'refund']);        
 
-        BlockchainApi::requestFunds(
+        BlockchainApi::refund(
             $shopKeeper->user->public_key,
+            $shopKeeper->user->private_key,
             $transaction->voucher->public_key,
-            $transaction->voucher->private_key,
             $transaction->amount
         );
 
