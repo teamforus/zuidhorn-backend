@@ -1,7 +1,0 @@
-# Cordova
-/platforms
-/plugins
-
-!/platforms/platforms.json
-!/plugins/android.json
-!/plugins/fetch.json
