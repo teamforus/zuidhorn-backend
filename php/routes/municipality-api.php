@@ -22,6 +22,7 @@ Route::group(['prefix' => 'api', 'middleware' => 'auth:api'], function() {
     Route::get('budget', 'MunicipalityApi\BudgetController@get');
     Route::put('budget', 'MunicipalityApi\BudgetController@update');
     Route::post('budget/csv', 'MunicipalityApi\BudgetController@csv');
+    Route::post('budget/voucher-state', 'MunicipalityApi\BudgetController@voucherState');
 
     Route::resource('categories', 'MunicipalityApi\CategoryController');
 

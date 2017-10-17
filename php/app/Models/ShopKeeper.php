@@ -134,7 +134,6 @@ class ShopKeeper extends Model
         elseif (isset($kvk_item->tradeNames->shortBusinessName))
             $shopkeeper_name = [$kvk_item->tradeNames->shortBusinessName];
 
-        $shopkeeper_websites = $kvk_item->websites;
 
         do {
             $password = User::generateUid([], 'password', 16);
@@ -150,13 +149,15 @@ class ShopKeeper extends Model
             'private_key'   => $private_key
         ]));
         
+        $websites = isset($kvk_item->websites) ? $kvk_item->websites : [];
+        
         $shopKeeper = ShopKeeper::create([
             'name'          => collect($shopkeeper_name)->implode(', '),
             'user_id'       => $user->id,
             'iban'          => strtoupper($iban),
             'kvk_number'    => $kvk_number,
             'state'         => 'pending',
-            "website"       => collect($shopkeeper_websites)->implode(', '),
+            "website"       => collect($websites)->implode(', '),
             'kvk_data'      => json_encode($kvk_data),
         ]);
 

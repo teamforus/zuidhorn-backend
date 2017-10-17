@@ -100,14 +100,30 @@ class ShopKeeperController extends Controller
     public function state(Request $request)
     {
         $shopKeeper = ShopKeeper::find($request->shopKeeper);
+
+        if ($request->input('state') == 'approved') {
+            if ($shopKeeper->offices()->count() < 1)
+                return response(collect([
+                    'error' => 'no-offices',
+                    'message' => 'Shopkeeper should add at least one office.'
+                    ]), 401);
+
+            if ($shopKeeper->categories()->count() < 1) 
+                return response(collect([
+                    'error' => 'no-categories',
+                    'message' => 'Shopkeeper should add at least one category.'
+                    ]), 401);
+        }
+
         $shopKeeper->update($request->only('state'));
 
         if (!$shopKeeper->public_key && $request->input('state') == 'approved')
             $shopKeeper->makeBlockchainAccount();
 
-        BlockchainApi::setShopKeeperState(
-            $shopKeeper->user->public_key, 
-            $request->input('state') == 'approved');
+        if ($shopKeeper->public_key)
+            BlockchainApi::setShopKeeperState(
+                $shopKeeper->user->public_key, 
+                $request->input('state') == 'approved');
 
         return $shopKeeper;
     }

@@ -27,4 +27,19 @@ class UserController extends Controller
 
         return $user->toArray();
     }
+    
+    public function revokeToken(Request $request) {
+        $deviceId = $request->header('Device-Id');
+        
+        // revoke and delete access token
+        $user = $request->user();
+        $user->token()->revoke();
+        $user->token()->delete();
+        
+        // delete device id from trusted list
+        $shopKeeper = ShopKeeper::whereUserId($user->id)->first();
+        $shopKeeper->devices()->whereDeviceId($deviceId)->delete();
+        
+        return [];
+    }
 }
