@@ -5,6 +5,6 @@
         "watch_platforms": "all"
     },
     "platforms": {
-        "enabled": ["panel-html", "panel"]
+        "enabled": ["panel"]
     }
 }
