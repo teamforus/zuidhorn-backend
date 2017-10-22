@@ -11,7 +11,7 @@ use App\Services\UIDGeneratorService\Facades\UIDGenerator;
 
 class BlockchainApi
 {   
-    protected $api_url = "http://localhost:8500";
+    protected $api_url = env("BLOCKCHAIN_API_URL");
     private $log_path = "blockchain\ethereum-logs.log";
 
     public function generateWallet() {
