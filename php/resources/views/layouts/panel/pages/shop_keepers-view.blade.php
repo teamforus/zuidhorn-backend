@@ -17,9 +17,7 @@
         <h4>User details</h4>
         <hr>
         <p>
-            <strong>First name:</strong> {{ $view->user->first_name }}
-            <br>
-            <strong>Last name:</strong> {{ $view->user->last_name }}
+            <strong>Shopkeeper name:</strong> {{ $view->user->name }}
             <br>
             <strong>E-mail:</strong> {{ $view->user->email }}
         </p>

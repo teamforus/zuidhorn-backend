@@ -15,7 +15,7 @@ class BunqProcessTransactionJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     
-    public $tries = 1;
+    public $tries = 2;
     public $timeout = 120;
     protected $transaction;
 
@@ -36,9 +36,15 @@ class BunqProcessTransactionJob implements ShouldQueue
      */
     public function handle()
     {
+        if (is_numeric($this->transaction->payment_id)) {
+            return $this->transaction->update([
+                'status' => 'success'
+            ]);
+        }
+
         $this->transaction->update([
             'status' => 'processing'
-            ]);
+        ]);
 
         $payment_id = $this->transaction->makeTransaction();
 
@@ -48,14 +54,14 @@ class BunqProcessTransactionJob implements ShouldQueue
         $this->transaction->update([
             'payment_id' => $payment_id,
             'status'     => 'success',
-            ]);
+        ]);
 
         $shopKeeper = $this->transaction->shop_keeper;
 
         BlockchainApi::requestFunds(
-            $this->transaction->voucher->public_key,
-            $shopKeeper->user->public_key,
-            $shopKeeper->user->private_key,
+            $this->transaction->voucher->wallet->address,
+            $shopKeeper->wallet->address,
+            $shopKeeper->wallet->passphrase,
             $this->transaction->amount
         );
     }
@@ -71,6 +77,6 @@ class BunqProcessTransactionJob implements ShouldQueue
         // Send user notification of failure, etc...
         $this->transaction->update([
             'status'     => 'fail',
-            ]);
+        ]);
     }
 }

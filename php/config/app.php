@@ -189,6 +189,7 @@ return [
 
         // App services
         App\Services\KvkApiService\KvkApiServiceProvider::class,
+        App\Services\UIDGeneratorService\UIDGeneratorServiceProvider::class,
         App\Services\BlockchainApiService\BlockchainApiServiceProvider::class,
     ],
 

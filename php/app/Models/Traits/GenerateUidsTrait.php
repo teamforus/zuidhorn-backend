@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models\Traits;
+use App\Services\UIDGeneratorService\Facades\UIDGenerator;
 
 /**
  * summary
@@ -18,10 +19,7 @@ trait GenerateUidsTrait
         };
 
         do {
-            $uid = collect(range(0, $block_count - 1))->map(function() use ($block_length) {
-                return bin2hex(openssl_random_pseudo_bytes($block_length / 2));
-            })->implode('-');
-
+            $uid = UIDGenerator::generate($block_length, $block_count);
         } while ($check_uid($key, $uid, $old_values));
 
         return strtoupper($uid);
