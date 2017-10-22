@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Services\BlockchainApiService\Facades\BlockchainApi;
 use App\Services\KvkApiService\Facades\KvkApi;
 
+use App\Jobs\BlockchainRequestJob;
 use App\Models\OfficeSchedule;
 
 class ShopKeeper extends Model
@@ -24,7 +25,7 @@ class ShopKeeper extends Model
      */
     protected $fillable = [
         'user_id', 'name', 'kvk_number', 'btw_number', 'bussines_address', 
-        'phone', 'state', 'iban','kvk_data', "website"
+        'phone', 'state', 'iban', 'iban_name', 'kvk_data', "website"
     ];
 
     protected $hidden = [
@@ -48,6 +49,10 @@ class ShopKeeper extends Model
             'declined'  => 'Declined',
             'approved'  => 'Approved',
         ]);
+    }
+
+    public function wallet() {
+        return $this->morphOne('App\Models\Wallet', 'walletable');
     }
 
     public function user()
@@ -106,55 +111,46 @@ class ShopKeeper extends Model
         ])->first();
     }
 
-    public function makeBlockchainAccount() {
-        $account = BlockchainApi::createAccount($this->user->private_key);
-
-        $this->user->update([
-            'public_key' => $account['address']
-        ]);
-
-        return $account;
-    }
-
-    public static function registerNewShopkeeper(Request $request) {
+    public static function signUpShopkeeper(Request $request) {
+        // user type and new device
         $role = Role::where('key', 'shop-keeper')->first();
         $device_id = $request->header('Device-Id');
 
+        // new user details
         $email = $request->input('email');
+        $name = $request->input('name', '');
         $iban = $request->input('iban');
         $kvk_number = $request->input('kvk_number');
 
+        // fetch kvk api
         $kvk_data = KvkApi::kvkNumberData($kvk_number);
         $kvk_item = collect($kvk_data->data->items)->first();
 
-        $shopkeeper_name = '';
-
         if (isset($kvk_item->tradeNames->businessName))
-            $shopkeeper_name = [$kvk_item->tradeNames->businessName];
+            $shop_name = $kvk_item->tradeNames->businessName;
         elseif (isset($kvk_item->tradeNames->shortBusinessName))
-            $shopkeeper_name = [$kvk_item->tradeNames->shortBusinessName];
+            $shop_name = $kvk_item->tradeNames->shortBusinessName;
 
-
+        // generate random password
         do {
             $password = User::generateUid([], 'password', 16);
         } while(User::wherePassword(bcrypt($password))->count() > 0);
 
-        do {
-            $private_key = User::generateUid([], 'private_key', 32);
-        } while(User::wherePublicKey($private_key)->count() > 0);
-
+        // save user
         $user = $role->users()->save(new User([
+            'name'          => $name,
             'email'         => $email,
-            'password'      => Hash::make($password),
-            'private_key'   => $private_key
+            'password'      => Hash::make($password)
         ]));
-        
+
+        // get websites if any
         $websites = isset($kvk_item->websites) ? $kvk_item->websites : [];
-        
+
         $shopKeeper = ShopKeeper::create([
-            'name'          => collect($shopkeeper_name)->implode(', '),
+            'name'          => $shop_name,
             'user_id'       => $user->id,
             'iban'          => strtoupper($iban),
+            'iban_name'     => $name != '' ? $name : $shop_name,
             'kvk_number'    => $kvk_number,
             'state'         => 'pending',
             "website"       => collect($websites)->implode(', '),
@@ -166,7 +162,12 @@ class ShopKeeper extends Model
             'status'    => 'approved'
         ]));
 
-        $addresses = collect($kvk_data->data->items[0]->addresses);
+        $shopKeeper->load('user');
+
+        if (isset($kvk_data->data->items[0]->addresses))
+            $addresses = collect($kvk_data->data->items[0]->addresses);
+        else
+            $addresses = collect([]);
 
         $addresses->each(function($office) use ($shopKeeper) {
             $office_address = collect([$office->street, $office->houseNumber, 
@@ -187,12 +188,9 @@ class ShopKeeper extends Model
             }
         });
 
-        $bussines_address = '';
-
-        if ($shopKeeper->offices()->count() > 0)
-            $bussines_address = $shopKeeper->offices()->first()->address;
-
-        $shopKeeper->update(compact('bussines_address'));
+        // create shopkeeper's wallet and add 
+        // ether for transactions
+        $shopKeeper->generateWallet()->export()->fundEther(1000);
 
         return $shopKeeper;
     }
@@ -223,5 +221,29 @@ class ShopKeeper extends Model
 
         // return default avatar
         return false;
+    }
+
+    public function changeState($state) {
+        $this->update(['state' => $state]);
+
+        if (!$this->wallet)
+            throw new \Exception('No wallet, please create wallet first.');
+
+        dispatch(new BlockchainRequestJob(
+            'setShopKeeperState', 
+            [$this->wallet->address, $state == 'approved']
+        ));
+
+        return $this;
+    }
+
+    public function generateWallet() {
+        if ($this->wallet)
+            return $this->wallet;
+        
+        $this->wallet()->create(BlockchainApi::generateWallet());
+        $this->load('wallet');
+
+        return $this->wallet;
     }
 }

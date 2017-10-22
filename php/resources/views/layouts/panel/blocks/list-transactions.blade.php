@@ -5,7 +5,9 @@
             <th>Id</th>
             <th>Voucher</th>
             <th>Amount</th>
+            <th>Extra amount</th>
             <th>Date</th>
+            <th>Status</th>
             <th class="text-right">Actions</th>
         </tr>
     </tHead>
@@ -23,7 +25,13 @@
                 <strong>€{{ number_format($row->amount, 2) }}</strong>
             </td>
             <td>
+                <strong>€{{ number_format($row->extra_amount, 2) }}</strong>
+            </td>
+            <td>
                 <strong>{{ $row->created_at->format('M d, Y H:i') }}</strong>
+            </td>
+            <td>
+                <strong>{{ ucfirst($row->status) }}</strong>
             </td>
             <td class="text-right">
                 <div class="btn-group">

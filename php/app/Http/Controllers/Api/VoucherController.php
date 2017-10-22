@@ -36,21 +36,9 @@ class VoucherController extends Controller
                 required by voucher."
                 ]), 401);
 
-        $public_key = $voucher->public_key;
+        $public_key = $voucher->wallet->address;
         $max_amount = $voucher->getAvailableFunds();
 
         return compact('public_key', 'max_amount');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Voucher  $voucher
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Voucher $voucher)
-    {
-        
     }
 }

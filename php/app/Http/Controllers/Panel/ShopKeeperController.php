@@ -40,13 +40,13 @@ class ShopKeeperController extends Controller
             if ($category = Category::find($request->input('category_id')))
                 $ids = $category->shop_keepers->pluck('id')->toArray();
 
-            $rows->whereIn('id', $ids);
-        }
+                $rows->whereIn('id', $ids);
+            }
 
-        $rows = $rows->paginate(10);
-        
-        return $this->_make('panel', 'shop_keepers-index', compact('rows'));
-    }
+            $rows = $rows->paginate(10);
+            
+            return $this->_make('panel', 'shop_keepers-index', compact('rows'));
+        }
 
     /**
      * Show the form for creating a new resource.
@@ -72,23 +72,18 @@ class ShopKeeperController extends Controller
         $this->authorize('create', ShopKeeper::class);
 
         $user = Role::where('key', 'shop-keeper')->first()->users()->create([
-            // 'first_name' => $request->input('first_name'),
-            // 'last_name' => $request->input('last_name'),
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
-            ]);
+        ]);
 
         $shopKeeper = ShopKeeper::create([
             'user_id' => $user->id
-            ]);
+        ]);
 
         $data = $request->all();
 
         if ($shopKeeper->update($data))
             session()->flash('alert_default', 'Shoop Keeper created!');
-
-        if (!$shopKeeper->public_key && ($data['state'] == 'approved'))
-            $shopKeeper->makeBlockchainAccount();
 
         return redirect(action('Panel\ShopKeeperController@index'));
     }
@@ -144,12 +139,7 @@ class ShopKeeperController extends Controller
             unset($data['password_confirmation']);
         }
 
-        if (!$shopKeeper->public_key && ($data['state'] == 'approved'))
-            $shopKeeper->makeBlockchainAccount();
-
-        BlockchainApi::setShopKeeperState(
-            $shopKeeper->user->public_key, 
-            $data['state'] == 'approved');
+        $shopKeeper->changeState($data['state']);
 
         if ($edit->update($data) && $edit->user->update($data))
             session()->flash('alert_default', 'Shop Keeper updated!');
@@ -180,15 +170,10 @@ class ShopKeeperController extends Controller
      * @param  \App\Models\ShopKeeper  $shopKeeper
      * @return \Illuminate\Http\Response
      */
-    public function stateApprove(ShopKeeper $shopKeeper)
+    public function stateApprove(Request $request, ShopKeeper $shopKeeper)
     {
-        if ($shopKeeper->update(['state' => 'approved']))
+        if ($shopKeeper->changeState('approved')->state == 'approved')
             session()->flash('alert_default', 'Shop Keeper has been approved!');
-
-        if (!$shopKeeper->public_key)
-            $shopKeeper->makeBlockchainAccount();
-        
-        BlockchainApi::setShopKeeperState($shopKeeper->user->public_key, true);
 
         return redirect()->back();
     }

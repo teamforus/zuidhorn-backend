@@ -31,6 +31,7 @@ class ShopKeeperUpdateRequest extends FormRequest
             'phone'         => 'required', 
             'kvk_number'    => 'required|kvk_number', 
             'iban'          => 'required|iban',
+            'iban_name'     => 'required', 
             'email'         => "required|string|email|max:255|unique:users,id,$id"
         ];
     }

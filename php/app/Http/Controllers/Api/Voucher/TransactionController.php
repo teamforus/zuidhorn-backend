@@ -50,32 +50,36 @@ class TransactionController extends Controller
      */
     public function store(Request $request, Voucher $voucher)
     {
-        if (!$voucher->id)
-            return response(collect([
-                'message' => 'Voucher not found!'
-            ]), 404);
+        $amount = $request->input('amount');
+        $max_amount = $voucher->getAvailableFunds();
+        $full_amount = $request->input('full_amount');
+        $extra_amount = $request->input('extra_amount', 0);
 
         $user = $request->user();
         $shop_keeper = ShopKeeper::whereUserId($user->id)->first();
 
-        $available_categs = $shop_keeper->categories->pluck('id')->intersect(
+        // validation
+        $this->validate($request, [
+            "full_amount"   => "nullable|boolean",
+            "amount"        => "required|max:" . $max_amount,
+            "extra_amount"  => "nullable|numeric"
+        ]);
+
+        // validate available categories
+        $available_categs = $shop_keeper->categories->pluck('id');
+        $available_categs = $available_categs->intersect(
             $voucher->budget->categories->pluck('id'));
 
         if ($available_categs->count() < 1)
             return response(collect([
-                'error' => 'no-available-categories',
-                'message' => "Shopkeeper don't have categories required by voucher."
+                'error'     => 'no-available-categories',
+                'message'   => "Shopkeeper don't have categories required by voucher."
             ]), 401);
 
-        $max_amount = $voucher->getAvailableFunds();
-
-        $amount = $request->input('full_amount') ? $max_amount : $request->input('amount');
-        $extra_amount = $request->input('extra_amount');
-
-        if (!$extra_amount)
-            $extra_amount = 0;
-
-        return $voucher->logTransaction($shop_keeper->id, $amount, $extra_amount);
+        return $voucher->logTransaction(
+            $shop_keeper->id, 
+            $full_amount ? $max_amount : $amount, 
+            $extra_amount);
     }
 
     /**
@@ -152,21 +156,12 @@ class TransactionController extends Controller
             $refund->applyOrRevokeBunqRequest();
         }
 
-        $transaction->update(['status' => 'refund']);        
+        $transaction->update(['status' => 'refund']);
 
-        BlockchainApi::refund(
-            $shopKeeper->user->public_key,
-            $shopKeeper->user->private_key,
-            $transaction->voucher->public_key,
-            $transaction->amount
-        );
-
-        $refund = Refund::create([
+        Refund::create([
             'shop_keeper_id'    => $shopKeeper->id,
             'status'            => 'pending',
-        ]);
-
-        $refund->transactions()->attach($shopKeeper->transactions()->where([
+        ])->transactions()->attach($shopKeeper->transactions()->where([
             'status' => 'refund'
         ])->pluck('id'));
 

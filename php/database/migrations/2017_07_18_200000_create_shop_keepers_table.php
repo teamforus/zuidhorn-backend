@@ -16,6 +16,7 @@ class CreateShopKeepersTable extends Migration
         Schema::create('shop_keepers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->default('Unnamed');
+            $table->string('iban_name')->default('Unnamed');
             $table->integer('user_id')->unsigned();
             $table->string('iban')->nullable()->default(null);
             $table->string('kvk_number')->nullable()->default(null);

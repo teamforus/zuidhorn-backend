@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
+
 use App\Services\BunqService\BunqService;
+use App\Jobs\BlockchainRequestJob;
 
 class Refund extends Model
 {
@@ -26,8 +28,19 @@ class Refund extends Model
 
     public function applyOrRevokeBunqRequest() {
         if($this->bunqRequestFulfilled()) {
-            $this->transactions()->update(['status' => 'refunded']);
             $this->update(['status' => 'refunded']);
+            $this->transactions()->update(['status' => 'refunded']);
+
+            $this->transactions->each(function($transaction) {
+                dispatch(new BlockchainRequestJob(
+                    'refund', [
+                        $transaction->shop_keeper->wallet->address,
+                        $transaction->shop_keeper->wallet->private_key,
+                        $transaction->voucher->wallet->address,
+                        $transaction->amount
+                    ] 
+                ));
+            });
         } else {
             $this->bunqRequestRevoke();
             $this->transactions()->detach();
@@ -80,7 +93,7 @@ class Refund extends Model
             "name"  => $this->shop_keeper->name,
         ], 'Refund.');
 
-        Log::info('bunq - create payment request :' . json_encode($response, JSON_PRETTY_PRINT));
+        // Log::info('bunq - create payment request :' . json_encode($response, JSON_PRETTY_PRINT));
 
         $this->update([
             'bunq_request_id' => $response->Response[0]->Id->id,
@@ -101,7 +114,7 @@ class Refund extends Model
 
         $response = $bunq_service->verifyPaymentRequest($monetaryAccountId, $this->bunq_request_id);
 
-        Log::info('bunq - check payment request :' . json_encode($response, JSON_PRETTY_PRINT));
+        // Log::info('bunq - check payment request :' . json_encode($response, JSON_PRETTY_PRINT));
 
         return $response->Response[0];
     }
@@ -118,7 +131,7 @@ class Refund extends Model
 
         $response = $bunq_service->revokePaymentRequest($monetaryAccountId, $this->bunq_request_id);
 
-        Log::info('bunq - revoke payment request :' . json_encode($response, JSON_PRETTY_PRINT));
+        // Log::info('bunq - revoke payment request :' . json_encode($response, JSON_PRETTY_PRINT));
 
         return $response;
     }

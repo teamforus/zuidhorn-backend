@@ -56,7 +56,7 @@ class BunqService extends BunqServiceBase
         ];
         
         $arrayBody = null;
-
+        
         return BunqRequest::makeRequest(
             'user/' . $this->userId . '/monetary-account/' . $monetaryAccount . '/payment/' . $paymentId, 
             BunqRequest::METHOD_GET, 

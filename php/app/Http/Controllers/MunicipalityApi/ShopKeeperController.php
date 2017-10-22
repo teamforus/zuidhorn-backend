@@ -97,34 +97,31 @@ class ShopKeeperController extends Controller
         //
     }
 
-    public function state(Request $request)
+    public function state(Request $request, ShopKeeper $shopKeeper)
     {
         $shopKeeper = ShopKeeper::find($request->shopKeeper);
 
-        if ($request->input('state') == 'approved') {
-            if ($shopKeeper->offices()->count() < 1)
+        // validation
+        $this->validate($request, [
+            'state' => 'required|in:pending,declined,approved',
+        ]);
+
+        /*if ($request->input('state') == 'approved') {
+            if ($request->shopKeeper->offices()->count() < 1) {
                 return response(collect([
                     'error' => 'no-offices',
                     'message' => 'Shopkeeper should add at least one office.'
-                    ]), 401);
+                ]), 401);
+            }
 
-            if ($shopKeeper->categories()->count() < 1) 
+            if ($request->shopKeeper->categories()->count() < 1) {
                 return response(collect([
                     'error' => 'no-categories',
                     'message' => 'Shopkeeper should add at least one category.'
-                    ]), 401);
-        }
+                ]), 401);
+            }
+        }*/
 
-        $shopKeeper->update($request->only('state'));
-
-        if (!$shopKeeper->public_key && $request->input('state') == 'approved')
-            $shopKeeper->makeBlockchainAccount();
-
-        if ($shopKeeper->public_key)
-            BlockchainApi::setShopKeeperState(
-                $shopKeeper->user->public_key, 
-                $request->input('state') == 'approved');
-
-        return $shopKeeper;
+        return $shopKeeper->changeState($request->input('state'));
     }
 }

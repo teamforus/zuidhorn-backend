@@ -15,6 +15,10 @@ class Role extends Model
         'key', 'name',
     ];
 
+    protected $hidden = [
+        'pivot', 'created_at', 'updated_at'
+    ];
+
     public $timestamps = false;
 
     public function users()

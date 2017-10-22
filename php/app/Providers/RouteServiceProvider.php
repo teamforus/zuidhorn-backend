@@ -31,7 +31,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('category', \App\Models\Category::class);
         Route::model('voucher', \App\Models\Voucher::class);
         
-        Route::model('shopKeeper', \App\Models\ShopKeeper::class);
+        // Route::model('shopKeeper', App\Models\ShopKeeper::class);
         Route::model('shopKeeperCategory', \App\Models\ShopKeeperCategory::class);
         
         Route::model('office', \App\Models\Office::class);
@@ -41,6 +41,11 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('voucher_transaction', \App\Models\Transaction::class);
         Route::model('user', \App\Models\User::class);
 
+        Route::bind('shopKeeper', function ($shopKeeper) {
+            exit("here:" . $shopKeeper);
+            return \App\Models\ShopKeeper::find($shopKeeper);
+        });
+
         Route::bind('device_approve_token', function ($token) {
             return \App\Models\Device::whereApproveToken($token)->first();
         });
@@ -49,8 +54,13 @@ class RouteServiceProvider extends ServiceProvider
             return \App\Models\Voucher::whereCode($code)->first();
         });
 
-        Route::bind('voucher_public_key', function ($public_key) {
-            return \App\Models\Voucher::wherePublicKey($public_key)->first();
+        Route::bind('voucher_public_key', function ($address) {
+            $wallet = \App\Models\Wallet::where([
+                'address' => $address,
+                'walletable_type' => \App\Models\Voucher::class
+            ])->first();
+
+            return $wallet ? $wallet->walletable : $wallet;
         });
     }
 
