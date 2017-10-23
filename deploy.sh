@@ -6,7 +6,7 @@ echo "Pull the lastest updates..."
 git pull
 
 echo "Install the latest packages"
-cd php && composer install
+cd php && composer install && cd ..
 
 echo -e "Adjusting file permissions..."
 sudo chmod -R 0774 php/bootstrap/cache php/storage php/public/uploads
