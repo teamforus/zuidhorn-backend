@@ -39,6 +39,12 @@
             <strong class="{{ @["declined" => "text-danger", "approved" => "text-success"][strtolower($view->state)] }}">
                 {{ ucfirst(strtolower($view->state)) }}
             </strong>
+            <br>
+            <strong>Blockchain status:</strong>
+            <?php $state = $view->getBlockchainState(); ?>
+            <strong class="{{ $state ? 'text-success' : 'text-danger' }}">
+                {{  $state ? 'Approved' : 'Pending/Declined' }}
+            </strong>
         </p>
         <br>
     </div>

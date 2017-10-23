@@ -246,4 +246,11 @@ class ShopKeeper extends Model
 
         return $this->wallet;
     }
+
+    public function getBlockchainState() {
+        if ($this->wallet)
+            return BlockchainApi::checkShopKeeperState($this->wallet->address);
+
+        return '';
+    }
 }
