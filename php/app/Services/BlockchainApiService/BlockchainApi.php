@@ -19,7 +19,8 @@ class BlockchainApi
     }
 
     public function generateWallet() {
-        $command = storage_path('/bash/ethereum-wallet-generator.sh');
+        $command = "cd " . storage_path('/bash/');
+        $command .= "; ./ethereum-wallet-generator.sh;";
 
         try {
             $wallet = json_decode(shell_exec($command));

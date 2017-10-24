@@ -20,6 +20,6 @@ class TestController extends Controller
 {
     public function getTest(Request $request)
     {
-        
+        return BlockchainApi::generateWallet();
     }
 }

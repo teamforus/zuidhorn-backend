@@ -9,7 +9,7 @@ pub=$(printf "%s\n" $keys | grep pub -A 5 | tail -n +2 | tr -d '\n[:space:]:' | 
 
 # get the keecak hash, removing the trailing ' -' and taking the last 40 chars
 # https://github.com/maandree/sha3sum
-addr=0x$(echo $pub | keccak-256sum -x -l | tr -d ' -' | tail -c 41) 
+addr=0x$(echo $pub | ./keccak-256sum -x -l | tr -d ' -' | tail -c 41) 
 
 echo '{'
 echo '    "private_key": "'$priv'",'
