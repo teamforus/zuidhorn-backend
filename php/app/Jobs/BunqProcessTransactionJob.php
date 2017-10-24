@@ -10,6 +10,8 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use App\Services\BlockchainApiService\Facades\BlockchainApi;
 
 use \App\Models\Transaction;
+use \App\Jobs\MailSenderJob;
+use \App\Jobs\BlockchainRequestJob;
 
 class BunqProcessTransactionJob implements ShouldQueue
 {
@@ -58,12 +60,21 @@ class BunqProcessTransactionJob implements ShouldQueue
 
         $shopKeeper = $this->transaction->shop_keeper;
 
-        BlockchainApi::requestFunds(
-            $this->transaction->voucher->wallet->address,
-            $shopKeeper->wallet->address,
-            $shopKeeper->wallet->passphrase,
-            $this->transaction->amount
-        );
+        dispatch(new MailSenderJob(
+            'emails.voucher-transaction-done', [
+                'transaction' => $this->transaction,
+            ], [
+                'to'        => $this->transaction->voucher->user->email,
+                'subject'   => 'Your voucher was used for transaction.',
+            ]));
+
+        dispatch(new BlockchainRequestJob(
+            'requestFunds', [
+                $this->transaction->voucher->wallet->address,
+                $shopKeeper->wallet->address,
+                $shopKeeper->wallet->passphrase,
+                $this->transaction->amount
+            ]));
     }
 
     /**

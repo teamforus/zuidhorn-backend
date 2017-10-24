@@ -11,6 +11,7 @@ use App\Services\BlockchainApiService\Facades\BlockchainApi;
 use App\Services\KvkApiService\Facades\KvkApi;
 
 use App\Jobs\BlockchainRequestJob;
+use App\Jobs\MailSenderJob;
 use App\Models\OfficeSchedule;
 
 class ShopKeeper extends Model
@@ -224,10 +225,21 @@ class ShopKeeper extends Model
     }
 
     public function changeState($state) {
-        $this->update(['state' => $state]);
+        $shopkeeper = $this;
+        $shopkeeper->update(['state' => $state]);
 
-        if (!$this->wallet)
+        if (!$shopkeeper->wallet)
             throw new \Exception('No wallet, please create wallet first.');
+
+        dispatch(
+            new MailSenderJob(
+                'emails.shopkeeper-state-changed', [
+                    'state'     => $state
+                ], [
+                    'to'        => $shopkeeper->user->email,
+                    'subject'   => 'You shopkeeper state was changed.',
+                ]
+            ));
 
         dispatch(new BlockchainRequestJob(
             'setShopKeeperState', 
