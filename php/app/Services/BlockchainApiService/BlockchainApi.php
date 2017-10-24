@@ -11,11 +11,16 @@ use App\Services\UIDGeneratorService\Facades\UIDGenerator;
 
 class BlockchainApi
 {   
-    protected $api_url = env("BLOCKCHAIN_API_URL");
+    protected $api_url = "http://localhost:8500";
     private $log_path = "blockchain\ethereum-logs.log";
 
+    public function __construct() {
+        $this->api_url = env("BLOCKCHAIN_API_URL");
+    }
+
     public function generateWallet() {
-        $command = storage_path('/bash/ethereum-wallet-generator.sh');
+        $command = "cd " . storage_path('/bash/');
+        $command .= "; ./ethereum-wallet-generator.sh;";
 
         try {
             $wallet = json_decode(shell_exec($command));

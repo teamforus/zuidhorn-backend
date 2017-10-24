@@ -10,7 +10,6 @@ use App\Models\Voucher;
 use App\Models\Wallet;
 use App\Models\User;
 
-use App\Jobs\BunqProcessTransactionJob;
 use App\Services\KvkApiService\Facades\KvkApi;
 use App\Services\BlockchainApiService\Facades\BlockchainApi;
 
@@ -20,6 +19,6 @@ class TestController extends Controller
 {
     public function getTest(Request $request)
     {
-        
+        return BlockchainApi::generateWallet();
     }
 }

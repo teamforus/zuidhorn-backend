@@ -23,7 +23,8 @@
             <br>
             Created at: <strong class="text-primary">{{ $view->created_at->format('M d, Y H:i') }}</strong><br>
             Status: <strong class="text-primary">{{ $view->wallet ? 'Active' : 'Pending' }}</strong><br>
-            Funds available: <strong>€{{ number_format($view->getAvailableFunds(), 2) }}</strong>
+            Funds available: <strong>€{{ number_format($view->getAvailableFunds(), 2) }}</strong><br>
+            Blockchain funds availavle: <strong>€{{ number_format($view->getBlockchainAmount(), 2) }}</strong>
         </p>
         <br>
 

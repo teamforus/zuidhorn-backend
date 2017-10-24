@@ -31,7 +31,6 @@ class ShopKeeperUpdateRequest extends FormRequest
         'name'              => 'required', 
         'phone'             => 'required', 
         'kvk_number'        => 'required|kvk_number', 
-        'iban'              => 'required|iban',
         'email'             => "required|string|email|max:255|unique:users,id,$id",
         'password'          => 'nullable|string|min:6|confirmed',
         'state'             => 'required|in:' . $states->keys()->implode(','),

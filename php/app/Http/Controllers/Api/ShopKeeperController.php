@@ -56,7 +56,7 @@ class ShopKeeperController extends Controller
             ], $status = 401);
 
         $shopKeeper->update($request->only(
-            ['name', 'phone', 'kvk_number', 'btw_number', 'iban', 'iban_name']));
+            ['name', 'phone', 'kvk_number', 'btw_number', 'iban_name']));
         
         $shopKeeper->user->update($request->only(['email']));
         $shopKeeper->user->update([
