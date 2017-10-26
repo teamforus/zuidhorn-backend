@@ -2,6 +2,7 @@
 
 ```
 sudo apt-get install apache2 php libapache2-mod-php7.0 php7.0-xml php7.0-mbstring php7.0-gd php7.0-mysql php7.0-sqlite3 php7.0-mcrypt composer
+sudo a2enmod rewrite
 ```
 
 ```
