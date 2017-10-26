@@ -42,7 +42,6 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('user', \App\Models\User::class);
 
         Route::bind('shopKeeper', function ($shopKeeper) {
-            exit("here:" . $shopKeeper);
             return \App\Models\ShopKeeper::find($shopKeeper);
         });
 
@@ -105,7 +104,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapApiRoutes()
     {
-        Route::prefix('api')
+        Route::domain(env("APP_API_URL"))
         ->middleware('api')
         ->namespace($this->namespace)
         ->group(base_path('routes/api.php'));
@@ -120,7 +119,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapClientRoutes()
     {
-        Route::prefix('client')
+        Route::domain(env("APP_API_URL"))
         ->middleware('client-api')
         ->namespace($this->namespace)
         ->group(base_path('routes/client-api.php'));
@@ -135,7 +134,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapMunicipalityRoutes()
     {
-        Route::prefix('municipality')
+        Route::domain(env("APP_API_URL"))
         // ->middleware('municipality-api')
         ->namespace($this->namespace)
         ->group(base_path('routes/municipality-api.php'));

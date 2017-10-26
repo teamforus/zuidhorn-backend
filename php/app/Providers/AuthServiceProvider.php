@@ -36,11 +36,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Passport::routes(null, [
-            'prefix' => 'api/oauth'
-            ]);
-
-        Passport::routes(null, [
-            'prefix' => 'municipality/oauth'
+            'prefix' => 'oauth'
             ]);
 
         Gate::define('upload_budgets', function ($user) {
