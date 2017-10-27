@@ -4,6 +4,7 @@ echo -e "Forus-backend will be reployed now...\n"
 
 echo "Pull the lastest updates..."
 git pull
+git submodule update
 
 echo "Install the latest packages"
 cd php && composer install && cd ..
