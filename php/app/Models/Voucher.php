@@ -115,8 +115,12 @@ class Voucher extends Model
     }
 
     public function getBlockchainAmount() {
-        if ($this->wallet)
-            return BlockchainApi::getBalance($this->wallet->address)['balance'];
+        try {
+            if ($this->wallet)
+                return BlockchainApi::getBalance($this->wallet->address)['balance'];
+        } catch(\Exception $e) {
+
+        }
 
         return 0;
     }

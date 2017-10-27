@@ -4,6 +4,7 @@
 <h4 class="heading-title">{{ 'View category: ' . $view->name }}</h4>
 <hr>
 <div class="row">
+    @if ($view->wallet)
     <div class="col-xs-12">
         <h4>Voucher qr-code:</h4>
         <hr>
@@ -42,5 +43,10 @@
         </p>
         @endif
     </div>
+    @else
+    <div class="col-xs-12">
+        <p class="text-muted">Voucher is yet to be activated!</p>
+    </div>
+    @endif
 </div>
 @endsection

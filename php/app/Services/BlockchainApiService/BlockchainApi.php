@@ -65,7 +65,7 @@ class BlockchainApi
     {
         $endpoint = "/api/shop-keeper/{$address}/state";
 
-        return $this->makeRequest($endpoint, "get");
+        return $this->makeRequest($endpoint, "get")['state'];
     }
 
     public function setShopKeeperState($address, $state)

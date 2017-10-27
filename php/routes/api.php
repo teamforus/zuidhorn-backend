@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -51,7 +49,7 @@ Route::group(['prefix' => '', 'middleware' => 'auth:api'], function() {
         return response(["status" => "operational"]);
     });
 
-    Route::get('/{any}', function ($any) {
+    Route::get('/{any}', function ($any = false) {
         return response(['message' => 'Endpoint not found.'], 404);
     })->where('any', '.*');
 
