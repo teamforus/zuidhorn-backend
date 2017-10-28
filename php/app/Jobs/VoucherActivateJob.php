@@ -65,8 +65,8 @@ class VoucherActivateJob implements ShouldQueue
 
         // create voucher wallet, add initial tokkens and 
         // send activation email
-        $voucher->generateWallet()->export()->fundTokens($voucher->amount);
         $voucher->emailActivationDetails($password);
+        $voucher->generateWallet()->export()->fundTokens($voucher->amount);
     }
 
     /**
