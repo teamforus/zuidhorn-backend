@@ -1,0 +1,4 @@
+[submodule "php/public/assets"]
+	path = php/public/assets
+	url = git@github.com:teamforus/forus-backend-assets.git
+	branch = testing

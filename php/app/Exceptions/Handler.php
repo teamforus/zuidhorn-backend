@@ -56,7 +56,9 @@ class Handler extends ExceptionHandler
      */
     protected function unauthenticated($request, AuthenticationException $exception)
     {
-        if ($request->expectsJson()) {
+        $host = isset($_SERVER["HTTP_HOST"]) ? $_SERVER["HTTP_HOST"] : false;
+        
+        if ($request->expectsJson() || $host === env("APP_API_URL")) {
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
 

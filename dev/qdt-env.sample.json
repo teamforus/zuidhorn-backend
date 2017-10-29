@@ -1,40 +1,10 @@
 {
     "server": {
         "enabled": true,
-        "platform": ["oauth-testing-html", "kindpakket-website", "kindpakket-shopkeeper-panel", "kindpakket-desktop-app"],
+        "platform": [],
         "watch_platforms": "all"
     },
     "platforms": {
-        "enabled": ["panel-html", "panel", "oauth-testing-html", "kindpakket-desktop-app", "kindpakket-website", "kindpakket-shopkeeper-panel"]
-    },
-    "platforms_data": {
-        "kindpakket-desktop-app": {
-            "html5Mode": {
-                "enable": false,
-                "basePath": "/"
-            },
-            "apiUrl": "http://mvp.forus.io/municipality/api"
-        },
-        "kindpakket-shopkeeper-panel": {
-            "html5Mode": {
-                "enable": true,
-                "basePath": "/"
-            },
-            "apiUrl": "http://mvp.forus.io/api"
-        },
-        "kindpakket-website": {
-            "html5Mode": {
-                "enable": true,
-                "basePath": "/"
-            },
-            "apiUrl": "http://mvp.forus.io/client/api"
-        },
-        "oauth-testing-html": {
-            "html5Mode": {
-                "enable": true,
-                "basePath": "/"
-            },
-            "apiUrl": "http://mvp.forus.io/api"
-        }
+        "enabled": ["panel"]
     }
 }

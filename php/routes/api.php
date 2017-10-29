@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -21,6 +19,7 @@ Route::group(['prefix' => '', 'middleware' => 'auth:api'], function() {
     Route::post('/shop-keepers/devices/token/{device_token}', 'Api\ShopKeeperController@authorizeDeviceToken');
 
     Route::get('/user', 'Api\UserController@curentUser');
+    Route::get('/user/revoke-token', 'Api\UserController@revokeToken');
 
     Route::post('/vouchers/{voucher_public_key}/transactions/{transaction}/refund', 'Api\Voucher\TransactionController@refund');
     Route::resource('vouchers.transactions', 'Api\Voucher\TransactionController', [
@@ -50,7 +49,7 @@ Route::group(['prefix' => '', 'middleware' => 'auth:api'], function() {
         return response(["status" => "operational"]);
     });
 
-    Route::get('/{any}', function ($any) {
+    Route::get('/{any}', function ($any = false) {
         return response(['message' => 'Endpoint not found.'], 404);
     })->where('any', '.*');
 

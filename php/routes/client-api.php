@@ -1,8 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,12 +11,13 @@ use Illuminate\Support\Facades\Mail;
 |
 */
 
+Route::group(['prefix' => 'client'], function() {
+    Route::post('/voucher/{voucher_code}/activate', 'ClientApi\VoucherController@activate');
+    Route::get('/categories', 'ClientApi\CategoryController@index');
+    Route::post('/contact-form', 'ClientApi\ContactController@postIndex');
+});
 
-Route::post('/api/voucher/{voucher_code}/activate', 'ClientApi\VoucherController@activate');
-Route::get('/api/categories', 'ClientApi\CategoryController@index');
-Route::post('/api/contact-form', 'ClientApi\ContactController@postIndex');
-
-Route::group(['prefix' => 'api', 'middleware' => 'auth:api'], function() {
+Route::group(['prefix' => 'client', 'middleware' => 'auth:api'], function() {
     Route::get('/user/voucher', 'ClientApi\VoucherController@target');
     Route::get('/user/voucher/qr-code', 'ClientApi\VoucherController@getQrCode');
     Route::post('/user/voucher/email', 'ClientApi\VoucherController@sendQrCodeEmail');

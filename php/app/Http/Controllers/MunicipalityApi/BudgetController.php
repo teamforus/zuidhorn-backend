@@ -58,4 +58,13 @@ class BudgetController extends Controller
 
         return compact('response');
     }
+
+    public function voucherState(Request $request) {
+        $vouchers = Voucher::whereIn('code', $request->input('codes'))->get();
+
+        return $vouchers->keyBy('code')->map(function($voucher) {
+            return !is_null($voucher->user_id);
+        });
+
+    }
 }

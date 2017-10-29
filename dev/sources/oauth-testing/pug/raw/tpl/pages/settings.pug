@@ -1,9 +1,0 @@
-.row
-    .col-xs-12
-        .form-group
-            label(for='device_id') Device ID
-            select(name="device_id" select ng-options="item as item.name for item in $ctrl.devices track by item.id" ng-model="$ctrl.form.values.device").form-control
-        .form-group.text-center
-            a(href="#", ng-click="$ctrl.submit($event)").btn.btn-primary Submit
-            | &nbsp;&nbsp;&nbsp;
-            a(ui-sref="welcome").btn.btn-default Cancel

@@ -16,20 +16,16 @@ class CreateMediasTable extends Migration
         {
             // media index
             $table->increments('id')->index();
-
-            // mediable details
-            $table->integer('mediable_id')->unsigned()->nullable();
-            $table->string('mediable_type');
-
-            // media type
             $table->string('type')->index();
-            
-            // media details
             $table->string('name', 255)->default('');
             $table->text('description');
             $table->string('ext', 10);
             $table->boolean('wide')->default(0);
             $table->boolean('confirmed', FALSE);
+
+            // mediable details
+            $table->integer('mediable_id')->unsigned()->nullable();
+            $table->string('mediable_type');
 
             // timestamps
             $table->timestamps();

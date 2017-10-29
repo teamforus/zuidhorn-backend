@@ -25,37 +25,6 @@ use App\Http\Controllers\Controller;
 class ShopKeeperController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  \App\Models\ShopKeeper  $shopKeeper
@@ -72,17 +41,6 @@ class ShopKeeperController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\ShopKeeper  $shopKeeper
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ShopKeeper $shopKeeper)
-    {
-
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -91,10 +49,21 @@ class ShopKeeperController extends Controller
      */
     public function update(ShopKeeperUpdateRequest $request, ShopKeeper $shopKeeper)
     {
-        $shopKeeper->update($request->only(
-            ['name', 'phone', 'kvk_number', 'btw_number', 'iban']));
+        if ($shopKeeper->user_id != $request->user()->id)
+            return response([
+                'error' => 'foreign-shopkeeper',
+                'message' => 'You can edit only your own Shopkeeper details.',
+            ], $status = 401);
 
+        $shopKeeper->update($request->only(
+            ['name', 'phone', 'kvk_number', 'btw_number', 'iban_name']));
+        
         $shopKeeper->user->update($request->only(['email']));
+        $shopKeeper->user->update([
+            'email' => $request->input('email'),
+            'name' => $request->input('iban_name')
+        ]);
+
         $shopKeeper->categories()->sync($request->input('categories'));
 
         return $this->show($shopKeeper);
@@ -130,17 +99,6 @@ class ShopKeeperController extends Controller
         )->encode('data-url')->encoded;
 
         return compact('image');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\ShopKeeper  $shopKeeper
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(ShopKeeper $shopKeeper)
-    {
-        //
     }
 
     /**
@@ -218,7 +176,7 @@ class ShopKeeperController extends Controller
 
     public function signUp(AuthSignUpRequest $request)
     {
-        $shopKeeper = ShopKeeper::registerNewShopkeeper($request);
+        $shopKeeper = ShopKeeper::signUpShopkeeper($request);
 
         $access_token = $shopKeeper->user->createToken('Token')->accessToken;
         $token_type = "Bearer";

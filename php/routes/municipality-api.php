@@ -14,14 +14,18 @@ use Illuminate\Support\Facades\Mail;
 |
 */
 
+Route::group(['prefix' => 'municipality', 'middleware' => 'auth:api'], function() {
+    Auth::routes();
+});
 
-Route::group(['prefix' => 'api', 'middleware' => 'auth:api'], function() {
+Route::group(['prefix' => 'municipality', 'middleware' => 'auth:api'], function() {
     Route::get('user', 'MunicipalityApi\UserController@user');
     Route::get('user/funds', 'MunicipalityApi\UserController@funds');
 
     Route::get('budget', 'MunicipalityApi\BudgetController@get');
     Route::put('budget', 'MunicipalityApi\BudgetController@update');
     Route::post('budget/csv', 'MunicipalityApi\BudgetController@csv');
+    Route::post('budget/voucher-state', 'MunicipalityApi\BudgetController@voucherState');
 
     Route::resource('categories', 'MunicipalityApi\CategoryController');
 
@@ -30,4 +34,4 @@ Route::group(['prefix' => 'api', 'middleware' => 'auth:api'], function() {
     Route::resource('shop-keepers.offices', 'MunicipalityApi\ShopKeeper\OfficeController');
 });
 
-Auth::routes(); 
+Auth::routes();
