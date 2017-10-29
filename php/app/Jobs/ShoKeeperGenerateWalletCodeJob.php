@@ -43,7 +43,7 @@ class ShoKeeperGenerateWalletCodeJob implements ShouldQueue
      */
     public function handle()
     {
-        $shopKeeper->generateWallet()->export()->fundEther($this->ether);
+        $this->shopKeeper->generateWallet()->export()->fundEther($this->ether);
     }
 
     /**
