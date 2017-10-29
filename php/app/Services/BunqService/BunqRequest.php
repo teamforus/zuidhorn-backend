@@ -14,7 +14,8 @@ class BunqRequest
     * The serviceUrl is the base URL of the API.
     * The apiVersion is the version of the API.
     */
-    const BUNQ_API_SERVICE_URL = 'https://sandbox.public.api.bunq.com';
+    const BUNQ_API_SANDBOX_URL = 'https://sandbox.public.api.bunq.com';
+    const BUNQ_API_PRODUCTION_URL = 'https://api.bunq.com';
     const BUNQ_API_VERSION = 'v1';
 
     /**
@@ -60,11 +61,12 @@ class BunqRequest
         $headers[Request::HEADER_REQUEST_CUSTOM_REQUEST_ID] = self::createUuid();
         $headers[Request::HEADER_REQUEST_CUSTOM_GEOLOCATION] = self::getGeolocationHeader();
         
+        $url = env('BUNQ_SANDBOX') ? 
+        self::BUNQ_API_SANDBOX_URL : self::BUNQ_API_PRODUCTION_URL;
+
         // New Request
-        $request = new Request(
-            self::BUNQ_API_SERVICE_URL, 
-            self::BUNQ_API_VERSION);
-            
+        $request = new Request($url, self::BUNQ_API_VERSION);
+
         $request->setMethod($method);
         $request->setEndpoint($endpoint);
         
@@ -75,10 +77,6 @@ class BunqRequest
         foreach ($headers as $key => $value) {
             $request->setHeader($key, $value);
         }
-        
-        /* if ($endpoint == 'user/2858/monetary-account') {
-            exit($signature);
-        } */
         
         $request->setEndpoint($endpoint);
         
