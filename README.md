@@ -57,3 +57,10 @@ Load front-end
 git submodule init
 git submodule update
 ```
+
+
+## Task Scheduling
+To perform some automatic tasks, like cleaning old files you should add following command to `/etc/crontab`.
+```
+* * * * * php /path-to-project/artisan schedule:run >> /dev/null 2>&1
+```
