@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# git and composer should not be run by root or with sudo
+if (( $EUID == 0 )); then
+    echo "Please run as non root user."
+    exit
+fi
+
 echo -e "Forus-backend will be reployed now...\n"
 
 echo "Pull the lastest updates..."
