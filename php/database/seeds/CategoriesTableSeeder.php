@@ -13,22 +13,35 @@ class CategoriesTableSeeder extends DatabaseSeeder
      */
     public function run()
     {
-        $categoris = collect(['Books', 'Bikes', 'Piano lessons', 
-            'Sport toys', 'Swimming']);
+        $categoris = collect(['Books', 'Bikes', /*'Piano lessons',*/ 
+            'Sport toys', 'Swimming', 'Computer', 'Clothing', 'Toys']);
 
-        $categoris->map(function($category_name, $category_id) {
+        $names = [
+            'Books'         => "Boeken", 
+            'Bikes'         => "Fiets", 
+            // 'Piano lessons' => "lorem", 
+            'Sport toys'    => "Sport accessoires", 
+            'Swimming'      => "Zwemmen", 
+            'Computer'      => "Computer", 
+            'Clothing'      => "Kleding", 
+            'Toys'          => "Speelgoed"
+        ];
+
+        $names_flip = array_flip($names);
+
+        $categoris->map(function($key, $category_id) use ($names) {
             return Category::create([
                 'id'        => $category_id + 1,
-                'name'      => $category_name,
+                'name'      => $names[$key],
                 ]);
-        })->each(function($edit) {
+        })->each(function($edit) use ($names_flip) {
             // media details
             $original_type  = 'original';
             $preview_type   = 'preview';
             $mediable_type  = Category::class;
             $mediable_id    = $edit->id;
 
-            $image = storage_path("/app/seed/categories/{$edit->name}.jpg");
+            $image = storage_path("/app/seed/categories/{$names_flip[$edit->name]}.jpg");
 
             // upload photo
             if (file_exists($image)) {
