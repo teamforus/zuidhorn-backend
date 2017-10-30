@@ -21,25 +21,28 @@ class UsersTableSeeder extends DatabaseSeeder
             'password'      => Hash::make('mvp-admin-pass'),
             ]);
 
+        // budget-uploader
         User::create([
             'id'            => 2,
-            'name'          => 'Budget uploader',
-            'email'         => 'budget-uploader@rminds.nl',
-            'password'      => Hash::make('budget-uploader'),
+            'name'          => 'Margrieta Maatjes',
+            'email'         => 'mmaatjes@zuidhorn.nl',
+            'password'      => '$2y$10$amPG2VvsZE3VtfKGaxxLSez62dpSOUmct7pt0Cl0lAubFw4LKV5FW',
             ]);
 
+        // budget-manager
         User::create([
             'id'            => 3,
-            'name'          => 'Budget manager',
-            'email'         => 'budget-manager@rminds.nl',
-            'password'      => Hash::make('budget-manager'),
+            'name'          => 'Jan Pastoor',
+            'email'         => 'jpastoor@zuidhorn.nl',
+            'password'      => '$2y$10$/bam6vm48gOETCXN2jj89ulvW.dfZOcpliHVgsElkM.5PZ4Biv2li',
             ]);
 
+        // shopkeepers-manager
         User::create([
             'id'            => 4,
-            'name'          => 'Shopkeepers manager',
-            'email'         => 'shopkeepers-manager@rminds.nl',
-            'password'      => Hash::make('shopkeepers-manager'),
+            'name'          => 'Marleen Bolwijn',
+            'email'         => 'mebolwijn@zuidhorn.nl',
+            'password'      => '$2y$10$enMKn9SlQBsxjQhTCuPatOe3WdbR7iUgjXzIPb1iM2Cr7WoJ1L4Me',
             ]);
     }
 }
