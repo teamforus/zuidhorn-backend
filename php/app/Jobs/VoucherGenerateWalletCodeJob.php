@@ -8,13 +8,14 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
+use App\Services\BlockchainApiService\Facades\BlockchainApi;
+
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
-use \App\Models\User;
 use \App\Models\Voucher;
 
-class VoucherEmailActivationEmailJob implements ShouldQueue
+class VoucherGenerateWalletCodeJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     
@@ -22,17 +23,17 @@ class VoucherEmailActivationEmailJob implements ShouldQueue
     public $timeout = 120;
 
     protected $voucher;
-    protected $password;
+    protected $tokens;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Voucher $voucher, $password)
+    public function __construct(Voucher $voucher, $tokens)
     {
         $this->voucher = $voucher;
-        $this->password = $password;
+        $this->tokens = $tokens;
     }
 
     /**
@@ -42,17 +43,7 @@ class VoucherEmailActivationEmailJob implements ShouldQueue
      */
     public function handle()
     {
-        $voucher = $this->voucher;
-        $password = $this->password;
-
-        // send message to client
-        Mail::send(
-            'emails.voucher-activate', 
-            compact('voucher', 'password'), 
-            function ($message) use ($voucher) {
-                $message->to($voucher->user->email);
-                $message->subject('Voucher activation');
-            });
+        $this->voucher->generateWallet()->export()->fundTokens($this->tokens);
     }
 
     /**

@@ -7,10 +7,13 @@ use App\Services\BunqService\BunqService;
 use App\Services\BlockchainApiService\Facades\BlockchainApi;
 use App\Models\ShopKeeper;
 
+use App\Jobs\MailSenderJob;
 use App\Jobs\VoucherActivateJob;
 use App\Jobs\VoucherEmailQrCodeJob;
 use App\Jobs\VoucherEmailActivationEmailJob;
 use App\Jobs\BunqProcessTransactionJob;
+
+use App\Services\UIDGeneratorService\Facades\UIDGenerator;
 
 class Voucher extends Model
 {
@@ -23,7 +26,8 @@ class Voucher extends Model
      * @var array
      */
     protected $fillable = [
-        'code', 'budget_id', 'user_id', 'status', 'amount'
+        'code', 'budget_id', 'user_id', 'status', 'amount', 'activation_token',
+        'activation_email'
     ];
 
     /**
@@ -33,7 +37,7 @@ class Voucher extends Model
      */
     protected $hidden = [
         'private_key', 'code', 'walletable_id', 'walletable_type', 
-        'created_at', 'updated_at'
+        'created_at', 'updated_at', 'activation_token', 'activation_email'
     ];
 
     public function wallet() {
@@ -78,14 +82,22 @@ class Voucher extends Model
         return $transaction;
     }
 
-    public function activate($email) 
+    public function activateByEmail($email) 
     {
-        return dispatch(new VoucherActivateJob($this, $email));
-    }
+        $this->update([
+            'activation_token' => UIDGenerator::generate(128),
+            'activation_email' => $email,
+        ]);
 
-    public function emailActivationDetails($password) 
-    {
-        return dispatch(new VoucherEmailActivationEmailJob($this, $password));
+        dispatch(new MailSenderJob(
+            'emails.voucher-activation-email', [
+                'voucher'   => $this,
+            ], [
+                'subject'   => 'Activate voucher',
+                'to'        => $email
+            ]));
+
+        return [];
     }
 
     public function setOwner($user_id) 
@@ -104,16 +116,6 @@ class Voucher extends Model
         return dispatch(new VoucherEmailQrCodeJob($this, $email));
     }
 
-    public function generateWallet() {
-        if ($this->wallet)
-            return $this->wallet;
-        
-        $this->wallet()->create(BlockchainApi::generateWallet());
-        $this->load('wallet');
-
-        return $this->wallet;
-    }
-
     public function getBlockchainAmount() {
         try {
             if ($this->wallet)
@@ -123,5 +125,15 @@ class Voucher extends Model
         }
 
         return 0;
+    }
+
+    public function generateWallet() {
+        if ($this->wallet)
+            return $this->wallet;
+        
+        $this->wallet()->create(BlockchainApi::generateWallet());
+        $this->load('wallet');
+
+        return $this->wallet;
     }
 }

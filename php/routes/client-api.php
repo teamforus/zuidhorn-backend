@@ -12,12 +12,17 @@
 */
 
 Route::group(['prefix' => 'client'], function() {
-    Route::post('/voucher/{voucher_code}/activate', 'ClientApi\VoucherController@activate');
+    Route::post('/voucher/{voucher_code}/activate', 'ClientApi\VoucherController@activateByEmail');
+    Route::post('/voucher/activate-token', 'ClientApi\VoucherController@activateToken');
+
+    Route::post('/user/send-token', 'ClientApi\CitizenController@sendAuthToken');
+    Route::post('/user/sign-in', 'ClientApi\CitizenController@signIn');
+    
     Route::get('/categories', 'ClientApi\CategoryController@index');
     Route::post('/contact-form', 'ClientApi\ContactController@postIndex');
 });
 
-Route::group(['prefix' => 'client', 'middleware' => 'auth:api'], function() {
+Route::group(['prefix' => 'client', 'middleware' => ['auth:api', 'client.api']], function() {
     Route::get('/user/voucher', 'ClientApi\VoucherController@target');
     Route::get('/user/voucher/qr-code', 'ClientApi\VoucherController@getQrCode');
     Route::post('/user/voucher/email', 'ClientApi\VoucherController@sendQrCodeEmail');

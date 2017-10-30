@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Storage;
 use App\Models\Transaction;
+use App\Models\Citizen;
 use App\Models\Voucher;
 use App\Models\Wallet;
 use App\Models\User;
@@ -19,6 +20,7 @@ class TestController extends Controller
 {
     public function getTest(Request $request)
     {
+        return get_class(Citizen::first()->user->createToken('Token'));
         return BlockchainApi::generateWallet();
     }
 }

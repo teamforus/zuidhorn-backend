@@ -2,21 +2,27 @@
 
 namespace App\Http\Controllers\ClientApi;
 
-use App\Models\User;
-use App\Models\Voucher;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
-
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
+
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\Http\Controllers\Controller;
+
+use App\Jobs\VoucherGenerateWalletCodeJob;
+
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Citizen;
+use App\Models\Voucher;
 
 class VoucherController extends Controller
 {
-    public function activate(Request $request, Voucher $voucher)
+    public function activateByEmail(Request $request, Voucher $voucher)
     {
         $this->validate($request, [
             'email' => "required|email",
-            'code' => "required|exists:vouchers,code"
+            'code'  => "required|exists:vouchers,code"
         ]);
 
         // get or create user
@@ -24,9 +30,54 @@ class VoucherController extends Controller
             return response(['code' => ['Voucher already active!']], 422);
 
         // activate voucher and send email
-        $voucher->activate($request->input('email'));
+        $voucher->activateByEmail($request->input('email'));
 
         return [];
+    }
+
+    public function activateToken(Request $request) {
+        $this->validate($request, [
+            'activation_token' => "required|exists:vouchers,activation_token"
+        ]);
+
+        $voucher = Voucher::whereActivationToken(
+            $request->input('activation_token')
+        )->first();
+
+        if ($voucher->user)
+            return response([
+                'error' => 'voucher-active',
+                'message' => 'Voucher already active!',
+            ], $status = 401);
+
+        if (User::whereEmail($voucher->activation_email)->count() > 0)
+            return response([
+                'error' => 'email-busy',
+                'message' => 'This email is already in use!',
+            ], $status = 401);
+
+        $password = \App\Models\User::generateUid([], 'password', 4, 16);
+
+        $user = User::create([
+            'password'  => Hash::make($password),
+            'email'     => $voucher->activation_email,
+        ]);
+
+        $user->roles()->attach(
+            Role::where('key', 'citizen')->first()->id
+        );
+
+        // update voucher user and load model
+        $voucher->setOwner($user->id);
+        
+        // create voucher's wallet and add tokens
+        dispatch(new VoucherGenerateWalletCodeJob($voucher, $voucher->amount));
+
+        $access_token = Citizen::create([
+            'user_id' => $user->id,
+        ])->generateAccessToken();
+
+        return compact('access_token');
     }
 
     public function target(Request $request)
