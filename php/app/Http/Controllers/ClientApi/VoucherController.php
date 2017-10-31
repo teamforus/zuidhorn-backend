@@ -21,9 +21,15 @@ class VoucherController extends Controller
     public function activateByEmail(Request $request, Voucher $voucher)
     {
         $this->validate($request, [
-            'email' => "required|email",
+            'email' => "required|email|confirmed",
             'code'  => "required|exists:vouchers,code"
         ]);
+
+        if (User::whereEmail($request->input('email'))->count() > 0)
+            return response(['email' => [
+                'Dit E-mailadres is al gebruikt om een Kindpakket account ' . 
+                'te activeren. Probeer het nogmaals met een ander' . 
+                'E-mailadres.']], 422);
 
         // get or create user
         if ($voucher->user)

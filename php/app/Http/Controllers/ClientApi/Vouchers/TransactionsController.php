@@ -19,9 +19,12 @@ class TransactionsController extends Controller
         $user = $request->user();
         $voucher = $user->vouchers->first();
 
-        return $voucher->transactions->map(function($transaction) {
+        return $voucher->transactions->load('shop_keeper')->map(function($transaction) {
             $transaction->prety_date = date("M d, Y H:i", $transaction->created_at->timestamp);
+            $transaction->shopKeeper = $transaction->shop_keeper->name;
 
+            unset($transaction->shop_keeper);
+            
             return $transaction;
         });
     }
