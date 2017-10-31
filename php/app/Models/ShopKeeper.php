@@ -232,15 +232,14 @@ class ShopKeeper extends Model
         if (!$shopkeeper->wallet)
             throw new \Exception('No wallet, please create wallet first.');
 
-        dispatch(
-            new MailSenderJob(
-                'emails.shopkeeper-state-changed', [
-                    'state'     => $state
-                ], [
-                    'to'        => $shopkeeper->user->email,
-                    'subject'   => 'You shopkeeper state was changed.',
-                ]
-            ));
+        MailSenderJob::dispatch(
+            'emails.shopkeeper-state-changed', [
+                'state'     => $state
+            ], [
+                'to'        => $shopkeeper->user->email,
+                'subject'   => 'You shopkeeper state was changed.',
+            ]
+        )->onQueue('high');
 
         dispatch(new BlockchainRequestJob(
             'setShopKeeperState', 

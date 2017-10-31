@@ -76,7 +76,7 @@ class TransactionController extends Controller
                 'message'   => "Shopkeeper don't have categories required by voucher."
             ]), 401);
 
-        return $voucher->logTransaction(
+        return $voucher->makeTransaction(
             $shop_keeper->id, 
             $full_amount ? $max_amount : $amount, 
             $extra_amount);
@@ -138,7 +138,7 @@ class TransactionController extends Controller
         $user = $request->user();
         $shopKeeper = ShopKeeper::whereUserId($user->id)->first();
 
-        if (collect(['refund', 'refunded'])
+        if (collect(['pending-refund', 'refunded'])
             ->search($transaction->status) !== false)
             return response([
                 'error' => 'already-marked',
@@ -156,13 +156,13 @@ class TransactionController extends Controller
             $refund->applyOrRevokeBunqRequest();
         }
 
-        $transaction->update(['status' => 'refund']);
+        $transaction->update(['status' => 'pending-refund']);
 
         Refund::create([
             'shop_keeper_id'    => $shopKeeper->id,
             'status'            => 'pending',
         ])->transactions()->attach($shopKeeper->transactions()->where([
-            'status' => 'refund'
+            'status' => 'pending-refund'
         ])->pluck('id'));
 
         return $transaction;
