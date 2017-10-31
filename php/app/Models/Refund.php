@@ -32,14 +32,14 @@ class Refund extends Model
             $this->transactions()->update(['status' => 'refunded']);
 
             $this->transactions->each(function($transaction) {
-                dispatch(new BlockchainRequestJob(
+                BlockchainRequestJob::dispatch(
                     'refund', [
                         $transaction->shop_keeper->wallet->address,
                         $transaction->shop_keeper->wallet->private_key,
                         $transaction->voucher->wallet->address,
                         $transaction->amount
-                    ] 
-                ));
+                    ]
+                );
             });
         } else {
             $this->bunqRequestRevoke();

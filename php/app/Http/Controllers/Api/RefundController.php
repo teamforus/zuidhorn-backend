@@ -22,7 +22,7 @@ class RefundController extends Controller
             $amount = 0;
         else
             $amount = $refund->transactions()->where([
-                'status' => 'refund'
+                'status' => 'pending-refund'
             ])->sum('amount');
 
         return compact('amount');

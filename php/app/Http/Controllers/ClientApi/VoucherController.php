@@ -25,11 +25,12 @@ class VoucherController extends Controller
             'code'  => "required|exists:vouchers,code"
         ]);
 
-        if (User::whereEmail($request->input('email'))->count() > 0)
+        if (User::whereEmail($request->input('email'))->count() > 0) {
             return response(['email' => [
                 'Dit E-mailadres is al gebruikt om een Kindpakket account ' . 
                 'te activeren. Probeer het nogmaals met een ander' . 
                 'E-mailadres.']], 422);
+        }
 
         // get or create user
         if ($voucher->user)
@@ -46,23 +47,25 @@ class VoucherController extends Controller
             'activation_token' => "required|exists:vouchers,activation_token"
         ]);
 
-        $voucher = Voucher::whereActivationToken(
-            $request->input('activation_token')
-        )->first();
+        $voucher = Voucher::where([
+            'activation_token' => $request->input('activation_token')
+        ])->first();
 
-        if ($voucher->user)
+        if ($voucher->user) {
             return response([
                 'error' => 'voucher-active',
                 'message' => 'Voucher already active!',
             ], $status = 401);
+        }
 
-        if (User::whereEmail($voucher->activation_email)->count() > 0)
+        if (User::whereEmail($voucher->activation_email)->count() > 0) {
             return response([
                 'error' => 'email-busy',
                 'message' => 'This email is already in use!',
             ], $status = 401);
+        }
 
-        $password = \App\Models\User::generateUid([], 'password', 4, 16);
+        $password = \App\Models\User::generateUid([], 'password', 16, 4);
 
         $user = User::create([
             'password'  => Hash::make($password),
@@ -74,7 +77,13 @@ class VoucherController extends Controller
         );
 
         // update voucher user and load model
-        $voucher->setOwner($user->id);
+        $voucher->forceFill([
+            'user_id'           => $user->id,
+            'activation_email'  => null,
+            'activation_token'  => null,
+        ])
+        ->save()
+        ->load('user');
         
         // create voucher's wallet and add tokens
         dispatch(new VoucherGenerateWalletCodeJob($voucher, $voucher->amount));

@@ -26,12 +26,12 @@ class CitizenController extends Controller
 
         $citizenToken = $citizen->generateAuthToken();
 
-        dispatch(new MailSenderJob('emails.voucher-sign-in-email', [
+        MailSenderJob::dispatch('emails.voucher-sign-in-email', [
             'citizenToken'  => $citizenToken
         ], [
             'to'            => $user->email,
             'subject'       => 'Kindpakket sign in link'
-        ]));
+        ])->onQueue('high');
 
         return [];
     }
