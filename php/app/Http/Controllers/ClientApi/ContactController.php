@@ -12,7 +12,15 @@ use App\Jobs\MailSenderJob;
 
 class ContactController extends Controller
 {
-    public function postIndex(ContactFormRequest $request) {
+    /**
+     * Send contact form messages.
+     *
+     * @param  \App\Http\Requests\ClientApi\ContactFormRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function postIndex(
+        ContactFormRequest $request
+    ) {
         $form = $request->all();
         $subject = 'Kindpakket contact form - ' . ucfirst($form['subject']);
 

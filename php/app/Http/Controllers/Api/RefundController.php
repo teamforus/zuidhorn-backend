@@ -10,11 +10,21 @@ use App\Http\Controllers\Controller;
 
 class RefundController extends Controller
 {
-    public function amount(Request $request) {
-        $target_user = $request->user();
-        $shop_keeper = ShopKeeper::whereUserId($target_user->id)->first();
+    /**
+     * Amount all funds marked for refunding.
+     * 
+     * @param  \Illuminate\Http\Request     $request
+     * @return \Illuminate\Http\Response
+     */
+    public function amount(
+        Request $request
+    ) {
+        // current shopkeeper
+        $shopKeeper = ShopKeeper::whereUserId(
+            $request->user()->id
+        )->first();
 
-        $refund = $shop_keeper->refunds()->where([
+        $refund = $shopKeeper->refunds()->where([
             'status' => 'pending'
         ])->first();
 
@@ -28,18 +38,28 @@ class RefundController extends Controller
         return compact('amount');
     }
 
-    public function link(Request $request) {
-        $target_user = $request->user();
-        $shop_keeper = ShopKeeper::whereUserId($target_user->id)->first();
+    /**
+     * Generate link for the refund payment.
+     * 
+     * @param  \Illuminate\Http\Request     $request
+     * @return \Illuminate\Http\Response
+     */
+    public function link(
+        Request $request
+    ) {
+        // current shopkeeper
+        $shopKeeper = ShopKeeper::whereUserId(
+            $request->user()->id
+        )->first();
         
-        $refund = $shop_keeper->refunds()->where([
+        $refund = $shopKeeper->refunds()->where([
             'status' => 'pending'
         ])->first();
 
         if (!$refund)
             return response([
-                'error' => 'nothing-to-refund',
-                'description' => 'Nothing to refund.',
+                'error'         => 'nothing-to-refund',
+                'description'   => 'Nothing to refund.',
             ], $status = 401);
 
         $url = $refund->getBunqUrl();

@@ -20,7 +20,6 @@ class TestController extends Controller
 {
     public function getTest(Request $request)
     {
-        return get_class(Citizen::first()->user->createToken('Token'));
-        return BlockchainApi::generateWallet();
+        
     }
 }

@@ -26,6 +26,7 @@ class AuthSignUpRequest extends FormRequest
         return [
             'kvk_number'    => 'required|kvk_number',
             'iban'          => 'required|iban',
+            'name'          => 'nullable|string',
             'email'         => 'required|string|email|max:255|unique:users',
         ];
     }

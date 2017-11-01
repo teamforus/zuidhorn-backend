@@ -11,7 +11,13 @@ class Category extends Model
     use Traits\SelectInputTrait;
     use Traits\SelectInputHierarchicalTrait;
 
-    protected $fillable = ['name', 'parent_id'];
+    protected $fillable = [
+        'name', 'parent_id'
+    ];
+
+    protected $hidden = [
+        'pivot'
+    ];
 
     protected $media_size = [
         'preview' => [200, 130],

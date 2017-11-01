@@ -99,10 +99,10 @@ class Voucher extends Model
         return $transaction;
     }
 
-    public function activateByEmail($email) 
+    public function sendActivationToken($email) 
     {
         $this->update([
-            'activation_token' => UIDGenerator::generate(128),
+            'activation_token' => UIDGenerator::generate(32, 4),
             'activation_email' => $email,
         ]);
 

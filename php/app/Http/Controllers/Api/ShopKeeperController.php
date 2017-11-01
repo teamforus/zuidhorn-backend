@@ -21,6 +21,7 @@ use App\Models\Device;
 use App\Models\DeviceToken;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiShopKeeperBaseController;
 
 class ShopKeeperController extends Controller
 {
@@ -30,14 +31,11 @@ class ShopKeeperController extends Controller
      * @param  \App\Models\ShopKeeper  $shopKeeper
      * @return \Illuminate\Http\Response
      */
-    public function show(ShopKeeper $shopKeeper)
+    public function show(Request $request)
     {
-        if (!$shopKeeper->id)
-            return response(collect([
-                'message' => 'Shopkeeper not found!'
-            ]), 404);
-
-        return $shopKeeper->load('user');
+        return ShopKeeper::whereUserId(
+            $request->user()->id
+        )->first()->load('user');
     }
 
     /**
@@ -47,30 +45,35 @@ class ShopKeeperController extends Controller
      * @param  \App\Models\ShopKeeper  $shopKeeper
      * @return \Illuminate\Http\Response
      */
-    public function update(ShopKeeperUpdateRequest $request, ShopKeeper $shopKeeper)
+    public function update(ShopKeeperUpdateRequest $request)
     {
-        if ($shopKeeper->user_id != $request->user()->id)
-            return response([
-                'error' => 'foreign-shopkeeper',
-                'message' => 'You can edit only your own Shopkeeper details.',
-            ], $status = 401);
+        $shopKeeper = ShopKeeper::whereUserId(
+            $request->user()->id
+        )->first();
 
-        $shopKeeper->update($request->only(
-            ['name', 'phone', 'kvk_number', 'btw_number', 'iban_name']));
+        $shopKeeper->update($request->only([
+            'name'          => $request->input('name'),
+            'phone'         => $request->input('phone'),
+            'kvk_number'    => $request->input('kvk_number'),
+            'btw_number'    => $request->input('btw_number'),
+            'iban_name'     => $request->input('iban_name'),
+        ]));
         
-        $shopKeeper->user->update($request->only(['email']));
         $shopKeeper->user->update([
-            'email' => $request->input('email'),
-            'name' => $request->input('iban_name')
+            'email'         => $request->input('email'),
+            'name'          => $request->input('iban_name')
         ]);
 
         $shopKeeper->categories()->sync($request->input('categories'));
 
-        return $this->show($shopKeeper);
+        return $this->show($request);
     }
 
-    public function updateImage(ShopKeeperUpdateImageRequest $request, ShopKeeper $shopKeeper)
-    {
+    public function updateImage(ShopKeeperUpdateImageRequest $request) {
+        $shopKeeper = ShopKeeper::whereUserId(
+            $request->user()->id
+        )->first();
+
         // media details
         $original_type  = 'original';
         $preview_type   = 'preview';
@@ -108,7 +111,6 @@ class ShopKeeperController extends Controller
      */
     public function createDeviceToken(Request $request)
     {
-
         $token = DeviceToken::generateUid(null, 'token', 32);
         $ip = $request->ip();
 
@@ -131,10 +133,8 @@ class ShopKeeperController extends Controller
             'token' => $token,
         ])->first();
 
-        $authorized = !!$device_token;
-
         if (!$device_token)
-            return compact('authorized');
+            return ['authorized' => false];
 
         $user = $device_token->shop_keeper->user;
         $access_token = $user->createToken('Token')->accessToken;
@@ -153,8 +153,9 @@ class ShopKeeperController extends Controller
 
     public function authorizeDeviceToken(Request $request, $token)
     {
-        $target_user = $request->user();
-        $shop_keeper = ShopKeeper::whereUserId($target_user->id)->first();
+        $shopKeeper = ShopKeeper::whereUserId(
+            $request->user()->id
+        )->first();
 
         $device_token = DeviceToken::where([
             'token' => $token,
@@ -162,13 +163,13 @@ class ShopKeeperController extends Controller
 
         if (!$device_token)
             return response([
-                'error' => 'token-not-found',
-                'message' => 'Token not found.'
-            ], $status = 404);
+                'error'         => 'token-not-found',
+                'message'       => 'Token not found.'
+            ], 404);
 
         $device_token->update([
-            'authorized' => 1,
-            'shop_keeper_id' => $shop_keeper->id
+            'authorized'        => 1,
+            'shop_keeper_id'    => $shopKeeper->id
         ]);
 
         return [];
@@ -176,15 +177,16 @@ class ShopKeeperController extends Controller
 
     public function signUp(AuthSignUpRequest $request)
     {
-        $shopKeeper = ShopKeeper::signUpShopkeeper($request);
-
-        $access_token = $shopKeeper->user->createToken('Token')->accessToken;
-        $token_type = "Bearer";
+        $shopKeeper     = ShopKeeper::signUpShopkeeper($request);
+        $access_token   = $shopKeeper->user->createToken('Token')->accessToken;
+        $token_type     = "Bearer";
 
         return compact('access_token', 'token_type');
     }
 
-    public function categories(ShopKeeper $shopKeeper) {
-        return $shopKeeper->categories;
+    public function categories(Request $request) {
+        return ShopKeeper::whereUserId(
+            $request->user()->id
+        )->first()->categories;
     }
 }
