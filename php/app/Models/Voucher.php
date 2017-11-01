@@ -83,7 +83,7 @@ class Voucher extends Model
                 'transaction' => $transaction,
             ], [
                 'to'        => $transaction->voucher->user->email,
-                'subject'   => 'Your voucher was used for transaction.',
+                'subject'   => 'gebruik gemaakt kindpakket budget',
             ]
         )->onQueue('high');
 
@@ -110,7 +110,7 @@ class Voucher extends Model
             'emails.voucher-activation-email', [
                 'voucher'   => $this,
             ], [
-                'subject'   => 'Activate voucher',
+                'subject'   => 'activeer uw kindpakket account',
                 'to'        => $email
             ]
         )->onQueue('high');
@@ -127,7 +127,7 @@ class Voucher extends Model
             'emails.voucher-qr-code', [
                 'voucher'   => $this
             ], [
-                'subject'   => 'Voucher QR Code',
+                'subject'   => 'QR-code kindpakket',
                 'to'        => $email
             ]
         )->onQueue('high');

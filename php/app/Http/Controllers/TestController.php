@@ -20,6 +20,6 @@ class TestController extends Controller
 {
     public function getTest(Request $request)
     {
-        
+        return Voucher::whereCode("D901-8F03")->first()->sendActivationToken("valik432@gmail.com");
     }
 }

@@ -36,8 +36,17 @@ class ContactController extends Controller
             ];
         }
 
+        // send email to zuidhorn/forus
         MailSenderJob::dispatch(
             'emails.contact-form', compact('form'), compact('to', 'subject')
+        )->onQueue('high');
+
+        // send a confirmation email
+        MailSenderJob::dispatch(
+            'emails.contact-form-submitted', compact('form'), [
+                'to'        => $form['email'],
+                'subject'   => 'bevestiging ontvangst van uw contactformulier',
+            ]
         )->onQueue('high');
     }
 }

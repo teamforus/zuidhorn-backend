@@ -40,7 +40,7 @@ class CitizenController extends Controller
             'citizenToken'  => $citizenToken
         ], [
             'to'            => $user->email,
-            'subject'       => 'Kindpakket sign in link'
+            'subject'       => 'inloggen op uw kindpakket account'
         ])->onQueue('high');
 
         return [];
