@@ -24,11 +24,14 @@ class OfficeStoreRequest extends FormRequest
      */
     public function rules()
     {
+        $schedule_keys = implode(',', range(0, 6));
+        
         return [
-            'email'     => '',
-            'phone'     => '',
-            'address'   => 'required',
-            'schedules' => 'required',
+            'email'         => '',
+            'phone'         => '',
+            'address'       => 'required',
+            'schedules'     => 'required|require_keys:' . $schedule_keys,
+            'schedules.*'   => 'required|schedule',
         ];
     }
 }

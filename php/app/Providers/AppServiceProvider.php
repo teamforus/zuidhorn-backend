@@ -21,7 +21,9 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(200);
 
         Validator::extend('iban', '\App\Validators\IbanValidator@rule');
+        Validator::extend('schedule', '\App\Validators\ScheduleValidator@rule');
         Validator::extend('kvk_number', '\App\Validators\KvkNumberValidator@rule');
+        Validator::extend('require_keys', '\App\Validators\RequireKeysValidator@rule');
     }
 
     /**

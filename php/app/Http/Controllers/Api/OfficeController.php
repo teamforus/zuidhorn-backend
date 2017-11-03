@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Http\Request;
+
 use App\Models\Media;
 use App\Models\Office;
 use App\Models\OfficeSchedule;
@@ -10,9 +12,9 @@ use App\Models\ShopKeeper;
 use App\Http\Requests\Api\OfficeStoreRequest;
 use App\Http\Requests\Api\OfficeUpdateRequest;
 use App\Http\Requests\Api\OfficeUpdateImageRequest;
-
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+
+use App\Jobs\UpdateOfficeCoordinatesJob;
 
 class OfficeController extends Controller
 {
@@ -63,20 +65,28 @@ class OfficeController extends Controller
 
         // save office schedule
         foreach(collect($request->input('schedules')) as $key => $schedule) {
+            if ($schedule['start_time'] == 'none') {
+                $schedule = [
+                    'start_time' => null,
+                    'end_time' => null,
+                ];
+            } else {
+                $schedule = collect($schedule)->only([
+                    'start_time', 
+                    'end_time'
+                ])->toArray();
+            }
+
             OfficeSchedule::firstOrCreate([
                 'office_id' => $office->id,
                 'week_day' => (intval($key) + 1),
-            ])->update(
-                collect($schedule)->only([
-                    'start_time', 'end_time'
-                ])->toArray()
-            );
+            ])->update($schedule);
         }
 
         // update coordinates by address string
-        $office->updateCoordinates();
+        UpdateOfficeCoordinatesJob::dispatch($office)->onQueue('high');
 
-        return $this->show($office);
+        return $this->show($request, $office);
     }
 
     /**
@@ -146,18 +156,26 @@ class OfficeController extends Controller
 
         // update office schedule details
         foreach(collect($request->input('schedules')) as $key => $schedule) {
+            if ($schedule['start_time'] == 'none') {
+                $schedule = [
+                    'start_time' => null,
+                    'end_time' => null,
+                ];
+            } else {
+                $schedule = collect($schedule)->only([
+                    'start_time', 
+                    'end_time'
+                ])->toArray();
+            }
+
             OfficeSchedule::firstOrCreate([
                 'office_id' => $office->id,
                 'week_day' => (intval($key) + 1),
-            ])->update(
-                collect($schedule)->only([
-                    'start_time', 'end_time'
-                ])->toArray()
-            );
+            ])->update($schedule);
         }
 
         // update coordinates by address string
-        $office->updateCoordinates();
+        UpdateOfficeCoordinatesJob::dispatch($office)->onQueue('high');
 
         return [];
     }
