@@ -31,7 +31,7 @@ class ShopKeeper extends Model
     ];
 
     protected $hidden = [
-        'kvk_data', '_original', '_preview'
+        'kvk_data', '_original', '_preview', 'pivot'
     ];
 
     protected $media_size = [

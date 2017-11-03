@@ -77,6 +77,11 @@ class User extends Authenticatable
         return $this->roles()->where('key', $role)->count() > 0;
     }
 
+    public function hasPermission($permission)
+    {
+        return $this->permissions()->where('key', $permission)->count() > 0;
+    }
+
     public function unlink()
     {
         return $this->delete();

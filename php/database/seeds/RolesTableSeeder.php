@@ -29,5 +29,11 @@ class RolesTableSeeder extends DatabaseSeeder
             'key' => 'citizen',
             'name' => 'Citizen',
             ]);
+
+        Role::create([
+            'id' => 4,
+            'key' => 'municipality',
+            'name' => 'Mmunicipality',
+            ]);
     }
 }

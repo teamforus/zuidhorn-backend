@@ -60,9 +60,9 @@ class Voucher extends Model
         if (is_null($this->user_id))
             return $this->amount;
 
-        return $this->amount - $this->transactions()->where(
-            'status', '!=', 'refunded'
-        )->sum('amount');
+        return $this->amount - $this->transactions()->whereNotIn(
+            'status', ['pending-refund', 'refunded'
+        ])->sum('amount');
 
         return floatval(min($max_amount, $funds_available));
     }
@@ -83,7 +83,7 @@ class Voucher extends Model
                 'transaction' => $transaction,
             ], [
                 'to'        => $transaction->voucher->user->email,
-                'subject'   => 'Your voucher was used for transaction.',
+                'subject'   => 'gebruik gemaakt kindpakket budget',
             ]
         )->onQueue('high');
 
@@ -99,10 +99,10 @@ class Voucher extends Model
         return $transaction;
     }
 
-    public function activateByEmail($email) 
+    public function sendActivationToken($email) 
     {
         $this->update([
-            'activation_token' => UIDGenerator::generate(128),
+            'activation_token' => UIDGenerator::generate(32, 4),
             'activation_email' => $email,
         ]);
 
@@ -110,7 +110,7 @@ class Voucher extends Model
             'emails.voucher-activation-email', [
                 'voucher'   => $this,
             ], [
-                'subject'   => 'Activate voucher',
+                'subject'   => 'activeer uw kindpakket account',
                 'to'        => $email
             ]
         )->onQueue('high');
@@ -127,7 +127,7 @@ class Voucher extends Model
             'emails.voucher-qr-code', [
                 'voucher'   => $this
             ], [
-                'subject'   => 'Voucher QR Code',
+                'subject'   => 'QR-code kindpakket',
                 'to'        => $email
             ]
         )->onQueue('high');

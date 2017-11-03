@@ -10,37 +10,73 @@ use App\Http\Controllers\Controller;
 
 class RefundController extends Controller
 {
-    public function amount(Request $request) {
-        $target_user = $request->user();
-        $shop_keeper = ShopKeeper::whereUserId($target_user->id)->first();
+    /**
+     * Amount all funds marked for refunding.
+     * 
+     * @param  \Illuminate\Http\Request     $request
+     * @return \Illuminate\Http\Response
+     */
+    public function amount(
+        Request $request
+    ) {
+        // current shopkeeper
+        $shopKeeper = ShopKeeper::whereUserId(
+            $request->user()->id
+        )->first();
 
-        $refund = $shop_keeper->refunds()->where([
-            'status' => 'pending'
-        ])->first();
-
-        if (!$refund)
-            $amount = 0;
-        else
-            $amount = $refund->transactions()->where([
-                'status' => 'pending-refund'
-            ])->sum('amount');
+        $amount = $shopKeeper->transactions()->where([
+            'status' => 'pending-refund'
+        ])->sum('amount');
 
         return compact('amount');
     }
 
-    public function link(Request $request) {
-        $target_user = $request->user();
-        $shop_keeper = ShopKeeper::whereUserId($target_user->id)->first();
+    /**
+     * Generate link for the refund payment.
+     * 
+     * @param  \Illuminate\Http\Request     $request
+     * @return \Illuminate\Http\Response
+     */
+    public function link(
+        Request $request
+    ) {
+        // current shopkeeper
+        $shopKeeper = ShopKeeper::whereUserId(
+            $request->user()->id
+        )->first();
         
-        $refund = $shop_keeper->refunds()->where([
+        // get current refund model
+        $refund = $shopKeeper->refunds()->where([
             'status' => 'pending'
         ])->first();
 
-        if (!$refund)
+        // total funds to be refund
+        $amount = $shopKeeper->transactions()->where([
+            'status' => 'pending-refund'
+        ])->sum('amount');
+
+        // nothing to refund
+        if ($amount == 0) {
             return response([
-                'error' => 'nothing-to-refund',
-                'description' => 'Nothing to refund.',
+                'error'         => 'nothing-to-refund',
+                'description'   => 'Nothing to refund.',
             ], $status = 401);
+        }
+
+        // no refund model or amount is wrong
+        if (!$refund || ($refund->transactions()->sum('amount') != $amount)) {
+            // refund model exists, check state and remove model
+            if ($refund)
+                $refund->applyOrRevokeBunqRequest();
+
+            // create new pending refund
+            $refund = Refund::create([
+                'shop_keeper_id'    => $shopKeeper->id,
+                'status'            => 'pending',
+            ])->transactions()->attach($shopKeeper->transactions()->where([
+                'status' => 'pending-refund'
+            ])->pluck('id'));
+        }
 
         $url = $refund->getBunqUrl();
 

@@ -10,14 +10,32 @@ use App\Http\Controllers\Controller;
 
 class BudgetController extends Controller
 {
-    public function get(Request $request) {
+    /**
+     * Get budget details.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Request $request) {
+        if (!$request->user()->hasPermission('budget_manage'))
+            return response([], 401);
+        
         return Budget::first();
     }
 
+    /**
+     * Update budget details.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @return \Illuminate\Http\Response
+     */
     public function update(Request $request) {
+        if (!$request->user()->hasPermission('budget_manage'))
+            return response([], 401);
+
         $this->validate($request, [
-            'name' => 'required|min:2',
-            'amount_per_child' => 'required|min:1'
+            'name'              => 'required|min:2',
+            'amount_per_child'  => 'required|min:1'
         ]);
 
         $budget = Budget::first();
@@ -26,7 +44,16 @@ class BudgetController extends Controller
         return $budget;
     }
 
+    /**
+     * Update budget .csv file.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @return \Illuminate\Http\Response
+     */
     public function csv(Request $request) {
+        if (!$request->user()->hasPermission('budget_upload'))
+            return response([], 401);
+
         $codes = Voucher::whereNotNull('code')->select('code')->get();
         $codes = $codes->toArray();
 
@@ -59,7 +86,16 @@ class BudgetController extends Controller
         return compact('response');
     }
 
+    /**
+     * Get uploaded voucher states.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @return \Illuminate\Http\Response
+     */
     public function voucherState(Request $request) {
+        if (!$request->user()->hasPermission('budget_upload'))
+            return response([], 401);
+        
         $vouchers = Voucher::whereIn('code', $request->input('codes'))->get();
 
         return $vouchers->keyBy('code')->map(function($voucher) {

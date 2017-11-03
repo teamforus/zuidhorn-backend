@@ -53,7 +53,7 @@ class RouteServiceProvider extends ServiceProvider
             return \App\Models\Voucher::whereCode($code)->first();
         });
 
-        Route::bind('voucher_public_key', function ($address) {
+        Route::bind('voucherAddress', function ($address) {
             $wallet = \App\Models\Wallet::where([
                 'address' => $address,
                 'walletable_type' => \App\Models\Voucher::class
@@ -135,7 +135,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapMunicipalityRoutes()
     {
         Route::domain(env("APP_API_URL"))
-        // ->middleware('municipality-api')
+        ->middleware('municipality-api')
         ->namespace($this->namespace)
         ->group(base_path('routes/municipality-api.php'));
     }

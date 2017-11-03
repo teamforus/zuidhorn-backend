@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace App\Http\Middleware\Api;
 
 use Carbon\Carbon;
 use Closure;
 
-class ClientApiMiddleware
+class MunicipalityApiMiddleware
 {
     /**
      * Handle an incoming request.
@@ -18,7 +18,7 @@ class ClientApiMiddleware
     {
         $user = $request->user();
 
-        if (!$user || !$user->token() || !$user->hasRole('citizen'))
+        if (!$user || !$user->token() || !$user->hasRole('municipality'))
             return response(collect([
                 'error'         => 'unauthenticated',
                 'description'   => "Unauthenticated."
@@ -30,7 +30,6 @@ class ClientApiMiddleware
             $request->user()->token()->revoke();
             $request->user()->token()->delete();
         }
-
 
         return $next($request);
     }
