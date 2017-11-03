@@ -148,6 +148,8 @@ class ShopKeeperController extends Controller
                 'status'    => 'approved'
             ]));
 
+        $authorized = true;
+
         return compact('access_token', 'token_type', 'authorized');
     }
 
