@@ -108,8 +108,7 @@ class VoucherController extends Controller
             'activation_email'  => null,
             'activation_token'  => null,
         ])
-        ->save()
-        ->load('user');
+        ->save();
         
         // create voucher's wallet and add tokens
         dispatch(new VoucherGenerateWalletCodeJob($voucher, $voucher->amount));
