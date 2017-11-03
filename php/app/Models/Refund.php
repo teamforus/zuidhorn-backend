@@ -27,10 +27,24 @@ class Refund extends Model
     }
 
     public function applyOrRevokeBunqRequest() {
-        if($this->bunqRequestFulfilled()) {
+        $this->updateState();
+
+        if ($this->status == 'pending') {
+            $this->revoke();
+        }
+
+        return $this;
+    }
+
+    public function updateState() {
+        $status = $this->bunqRequestStatus();
+
+        if($status == 'ACCEPTED') {
+            // update refund and transactions status
             $this->update(['status' => 'refunded']);
             $this->transactions()->update(['status' => 'refunded']);
 
+            // dispatch to blockchain
             $this->transactions->each(function($transaction) {
                 BlockchainRequestJob::dispatch(
                     'refund', [
@@ -41,13 +55,20 @@ class Refund extends Model
                     ]
                 );
             });
-        } else {
-            $this->bunqRequestRevoke();
-            $this->transactions()->detach();
-            $this->update(['status' => 'revoked']);
+        } else if ($status == 'REJECTED' || $status == 'REVOKED') {
+            $this->revoke($status);
         }
 
         return $this;
+    }
+
+    private function revoke($current_state = FALSE) {
+        // revoke bunq request, detach transactions and update status
+        if ($current_state != 'REVOKED')
+            $this->bunqRequestRevoke();
+        
+        $this->transactions()->detach();
+        $this->forceFill(['status' => 'revoked'])->save();
     }
 
     public function getBunqUrl() {
@@ -71,10 +92,13 @@ class Refund extends Model
         return false;
     }
 
-    public function bunqRequestFulfilled() {
+    public function bunqRequestStatus() {
         $bunq_details = $this->bunqRequestDetails();
 
-        return $bunq_details && ($bunq_details->RequestInquiry->status == 'ACCEPTED');
+        if ($bunq_details)
+            return $bunq_details->RequestInquiry->status;
+
+        return false;
     }
 
     private function bunqRequestCreate() {
@@ -131,8 +155,24 @@ class Refund extends Model
 
         $response = $bunq_service->revokePaymentRequest($monetaryAccountId, $this->bunq_request_id);
 
-        // Log::info('bunq - revoke payment request :' . json_encode($response, JSON_PRETTY_PRINT));
-
         return $response;
+    }
+
+    public static function getQueue($exclude = []) {
+        return self::orderBy('updated_at', 'ASC')
+        ->where('status', '=', 'pending')
+        ->whereNotIn('id', $exclude);
+    }
+
+    public static function processQueue() {
+        if (self::getQueue()->count() == 0)
+            return null;
+
+        $ids = [];
+
+        while($refund = self::getQueue($ids)->first()) {
+            array_push($ids, $refund->id);
+            $refund->updateState();
+        }
     }
 }

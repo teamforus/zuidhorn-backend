@@ -24,16 +24,9 @@ class RefundController extends Controller
             $request->user()->id
         )->first();
 
-        $refund = $shopKeeper->refunds()->where([
-            'status' => 'pending'
-        ])->first();
-
-        if (!$refund)
-            $amount = 0;
-        else
-            $amount = $refund->transactions()->where([
-                'status' => 'pending-refund'
-            ])->sum('amount');
+        $amount = $shopKeeper->transactions()->where([
+            'status' => 'pending-refund'
+        ])->sum('amount');
 
         return compact('amount');
     }
@@ -52,15 +45,38 @@ class RefundController extends Controller
             $request->user()->id
         )->first();
         
+        // get current refund model
         $refund = $shopKeeper->refunds()->where([
             'status' => 'pending'
         ])->first();
 
-        if (!$refund)
+        // total funds to be refund
+        $amount = $shopKeeper->transactions()->where([
+            'status' => 'pending-refund'
+        ])->sum('amount');
+
+        // nothing to refund
+        if ($amount == 0) {
             return response([
                 'error'         => 'nothing-to-refund',
                 'description'   => 'Nothing to refund.',
             ], $status = 401);
+        }
+
+        // no refund model or amount is wrong
+        if (!$refund || ($refund->transactions()->sum('amount') != $amount)) {
+            // refund model exists, check state and remove model
+            if ($refund)
+                $refund->applyOrRevokeBunqRequest();
+
+            // create new pending refund
+            $refund = Refund::create([
+                'shop_keeper_id'    => $shopKeeper->id,
+                'status'            => 'pending',
+            ])->transactions()->attach($shopKeeper->transactions()->where([
+                'status' => 'pending-refund'
+            ])->pluck('id'));
+        }
 
         $url = $refund->getBunqUrl();
 
