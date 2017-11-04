@@ -11,7 +11,8 @@ use App\Http\Controllers\Controller;
 
 use App\Services\UIDGeneratorService\Facades\UIDGenerator;
 
-use App\Jobs\VoucherGenerateWalletCodeJob;
+use App\Jobs\VoucherInitializeWalletCodeJob;
+use App\Jobs\MailSenderJob;
 
 use App\Models\Role;
 use App\Models\User;
@@ -109,9 +110,20 @@ class VoucherController extends Controller
             'activation_token'  => null,
         ])
         ->save();
+
+        $wallet = $voucher->generateWallet();
+
+        MailSenderJob::dispatch(
+            'emails.voucher-activated-qr-code', [
+                'voucher'   => $voucher,
+            ], [
+                'to'        => $user->email, 
+                'subject'   => 'QR-code kindpakket'
+            ]
+        );
         
         // create voucher's wallet and add tokens
-        VoucherGenerateWalletCodeJob::dispatch(
+        VoucherInitializeWalletCodeJob::dispatch(
             $voucher, 
             $voucher->amount
         )->onQueue('high');

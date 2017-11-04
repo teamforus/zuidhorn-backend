@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\Voucher;
 use App\Jobs\MailSenderJob;
 
-class VoucherGenerateWalletCodeJob implements ShouldQueue
+class VoucherInitializeWalletCodeJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     
@@ -44,18 +44,7 @@ class VoucherGenerateWalletCodeJob implements ShouldQueue
      */
     public function handle()
     {
-        $wallet = $this->voucher->generateWallet();
-
-        MailSenderJob::dispatch(
-            'emails.voucher-activated-qr-code', [
-                'voucher'   => $this->voucher,
-            ], [
-                'to'        => $this->voucher->user->email, 
-                'subject'   => 'QR-code kindpakket'
-            ]
-        );
-
-        $wallet->export()->fundTokens($this->tokens);
+        $this->voucher->wallet->export()->fundTokens($this->tokens);
     }
 
     /**
