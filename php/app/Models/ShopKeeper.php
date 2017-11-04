@@ -172,6 +172,9 @@ class ShopKeeper extends Model
             $addresses = collect([]);
 
         $addresses->each(function($office) use ($shopKeeper) {
+            if ($office->type != "vestigingsadres")
+                return;
+
             $office_address = collect([$office->street, $office->houseNumber, 
                 $office->houseNumberAddition, $office->postalCode, 
                 $office->city, $office->country])->filter()->implode(', ');
@@ -192,7 +195,7 @@ class ShopKeeper extends Model
 
         // create shopkeeper's wallet and add 
         // ether for transactions
-        dispatch(new ShoKeeperGenerateWalletCodeJob($shopKeeper));
+        ShoKeeperGenerateWalletCodeJob::dispatch($shopKeeper)->onQueue('high');
 
         return $shopKeeper;
     }

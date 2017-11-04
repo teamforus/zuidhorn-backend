@@ -61,8 +61,8 @@ class Voucher extends Model
             return $this->amount;
 
         return $this->amount - $this->transactions()->whereNotIn(
-            'status', ['pending-refund', 'refunded'
-        ])->sum('amount');
+            'status', ['refund', 'refunded']
+        )->sum('amount');
 
         return floatval(min($max_amount, $funds_available));
     }

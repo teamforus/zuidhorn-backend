@@ -66,7 +66,7 @@ class TransactionController extends Controller
         // validate input
         $this->validate($request, [
             "full_amount"   => "nullable|boolean",
-            "amount"        => "required|between:{$min_amount},{$max_amount}",
+            "amount"        => "required|numeric|between:{$min_amount},{$max_amount}",
             "extra_amount"  => "nullable|numeric"
         ]);
 
@@ -160,7 +160,7 @@ class TransactionController extends Controller
 
         // check target transaction state
         if ($transaction->status == 'refunded' || 
-            $transaction->status == 'pending-refund')
+            $transaction->status == 'refund')
             return response([
                 'error'     => 'already-marked',
                 'message'   => "Transaction is already marked for refunding."
@@ -169,7 +169,7 @@ class TransactionController extends Controller
         // transaction was not executed, make sure it will not happen
         if ($transaction->status == 'pending') {
             $transaction->update([
-                'status'    => 'refunded'
+                'status' => 'refunded'
             ]);
 
             return $transaction;
@@ -189,7 +189,7 @@ class TransactionController extends Controller
 
         // prepare transaction for refund
         $transaction->update([
-            'status'        => 'pending-refund'
+            'status'            => 'refund'
         ]);
 
         // create new pending refund
@@ -197,7 +197,7 @@ class TransactionController extends Controller
             'shop_keeper_id'    => $shopKeeper->id,
             'status'            => 'pending',
         ])->transactions()->attach($shopKeeper->transactions()->where([
-            'status' => 'pending-refund'
+            'status' => 'refund'
         ])->pluck('id'));
 
         // return target transaction
