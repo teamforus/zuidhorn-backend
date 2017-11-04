@@ -25,7 +25,7 @@ class RefundController extends Controller
         )->first();
 
         $amount = $shopKeeper->transactions()->where([
-            'status' => 'pending-refund'
+            'status' => 'refund'
         ])->sum('amount');
 
         return compact('amount');
@@ -52,7 +52,7 @@ class RefundController extends Controller
 
         // total funds to be refund
         $amount = $shopKeeper->transactions()->where([
-            'status' => 'pending-refund'
+            'status' => 'refund'
         ])->sum('amount');
 
         // nothing to refund
@@ -74,7 +74,7 @@ class RefundController extends Controller
                 'shop_keeper_id'    => $shopKeeper->id,
                 'status'            => 'pending',
             ])->transactions()->attach($shopKeeper->transactions()->where([
-                'status' => 'pending-refund'
+                'status'            => 'refund'
             ])->pluck('id'));
         }
 
