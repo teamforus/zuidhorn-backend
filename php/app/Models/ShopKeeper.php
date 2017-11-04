@@ -235,12 +235,18 @@ class ShopKeeper extends Model
         if (!$shopkeeper->wallet)
             throw new \Exception('No wallet, please create wallet first.');
 
+        $subjects = [
+            'pending'   => 'State changed',
+            'declined'  => 'Declined',
+            'approved'  => 'welkom bij kindpakket Zuidhorn',
+        ];
+
         MailSenderJob::dispatch(
             'emails.shopkeeper-state-changed', [
                 'state'     => $state
             ], [
                 'to'        => $shopkeeper->user->email,
-                'subject'   => 'You shopkeeper state was changed.',
+                'subject'   => $subjects[$state],
             ]
         )->onQueue('high');
 

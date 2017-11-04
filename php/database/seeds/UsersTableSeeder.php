@@ -23,18 +23,18 @@ class UsersTableSeeder extends DatabaseSeeder
 
         // budget-uploader
         User::create([
-            'id'            => 2,
-            'name'          => 'Budget Manager',
-            'email'         => 'budget-manager@rminds.nl',
-            'password'      => Hash::make('budget-manager'),
+            'id'            => 3,
+            'name'          => 'Budget Uploader',
+            'email'         => 'budget-uploader@rminds.nl',
+            'password'      => Hash::make('budget-uploader'),
             ]);
 
         // budget-manager
         User::create([
             'id'            => 3,
-            'name'          => 'Budget Uploader',
-            'email'         => 'budget-uploader@rminds.nl',
-            'password'      => Hash::make('budget-uploader'),
+            'name'          => 'Budget Manager',
+            'email'         => 'budget-manager@rminds.nl',
+            'password'      => Hash::make('budget-manager'),
             ]);
 
         // shopkeepers-manager

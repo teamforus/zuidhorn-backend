@@ -13,7 +13,8 @@ use App\Services\BlockchainApiService\Facades\BlockchainApi;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
-use \App\Models\Voucher;
+use App\Models\Voucher;
+use App\Jobs\MailSenderJob;
 
 class VoucherGenerateWalletCodeJob implements ShouldQueue
 {
@@ -43,7 +44,18 @@ class VoucherGenerateWalletCodeJob implements ShouldQueue
      */
     public function handle()
     {
-        $this->voucher->generateWallet()->export()->fundTokens($this->tokens);
+        $wallet = $this->voucher->generateWallet();
+
+        MailSenderJob::dispatch(
+            'emails.voucher-activated-qr-code', [
+                'voucher'   => $this->voucher,
+            ], [
+                'to'        => $this->voucher->user->email, 
+                'subject'   => 'QR-code kindpakket'
+            ]
+        );
+
+        $wallet->export()->fundTokens($this->tokens);
     }
 
     /**
