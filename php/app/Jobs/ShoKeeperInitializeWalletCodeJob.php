@@ -15,12 +15,12 @@ use Illuminate\Support\Facades\Mail;
 
 use \App\Models\ShopKeeper;
 
-class ShoKeeperGenerateWalletCodeJob implements ShouldQueue
+class ShoKeeperInitializeWalletCodeJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     
     public $tries = 1;
-    public $timeout = 120;
+    public $timeout = 30;
 
     protected $shopKeeper;
     protected $ether;
@@ -43,7 +43,7 @@ class ShoKeeperGenerateWalletCodeJob implements ShouldQueue
      */
     public function handle()
     {
-        $this->shopKeeper->generateWallet()->export()->fundEther($this->ether);
+        $this->shopKeeper->wallet->export()->fundEther($this->ether);
     }
 
     /**

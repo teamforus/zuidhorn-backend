@@ -126,7 +126,7 @@ class VoucherController extends Controller
         VoucherInitializeWalletCodeJob::dispatch(
             $voucher, 
             $voucher->amount
-        )->onQueue('high');
+        );
 
         // generate and response the access token
         $access_token = Citizen::create([
