@@ -111,7 +111,10 @@ class VoucherController extends Controller
         ->save();
         
         // create voucher's wallet and add tokens
-        VoucherGenerateWalletCodeJob::dispatch($voucher, $voucher->amount);
+        VoucherGenerateWalletCodeJob::dispatch(
+            $voucher, 
+            $voucher->amount
+        )->onQueue('high');
 
         // generate and response the access token
         $access_token = Citizen::create([
