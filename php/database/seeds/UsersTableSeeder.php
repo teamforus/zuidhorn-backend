@@ -23,7 +23,7 @@ class UsersTableSeeder extends DatabaseSeeder
 
         // budget-uploader
         User::create([
-            'id'            => 3,
+            'id'            => 2,
             'name'          => 'Budget Uploader',
             'email'         => 'csvvalidator@forus.io',
             'password'      => Hash::make('budget-uploader'),

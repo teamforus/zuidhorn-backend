@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Services\BlockchainApiService\Facades\BlockchainApi;
 use App\Services\KvkApiService\Facades\KvkApi;
 
-use App\Jobs\ShoKeeperGenerateWalletCodeJob;
+use App\Jobs\ShoKeeperInitializeWalletCodeJob;
 use App\Jobs\BlockchainRequestJob;
 use App\Jobs\MailSenderJob;
 use App\Models\OfficeSchedule;
@@ -195,7 +195,9 @@ class ShopKeeper extends Model
 
         // create shopkeeper's wallet and add 
         // ether for transactions
-        ShoKeeperGenerateWalletCodeJob::dispatch($shopKeeper)->onQueue('high');
+        $shopKeeper->generateWallet();
+        
+        ShoKeeperInitializeWalletCodeJob::dispatch($shopKeeper);
 
         return $shopKeeper;
     }
