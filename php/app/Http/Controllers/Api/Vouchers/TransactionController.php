@@ -66,7 +66,7 @@ class TransactionController extends Controller
         // validate input
         $this->validate($request, [
             "full_amount"   => "nullable|boolean",
-            "amount"        => "required|between:{$min_amount},{$max_amount}",
+            "amount"        => "required|numeric|between:{$min_amount},{$max_amount}",
             "extra_amount"  => "nullable|numeric"
         ]);
 
