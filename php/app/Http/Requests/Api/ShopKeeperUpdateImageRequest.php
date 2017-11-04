@@ -24,10 +24,6 @@ class ShopKeeperUpdateImageRequest extends FormRequest
      */
     public function rules()
     {
-        $id = $this->route('shop_keeper')->id;
-
-        return [
-            'image' => 'required|image'
-        ];
+        return ['image' => 'required|image'];
     }
 }

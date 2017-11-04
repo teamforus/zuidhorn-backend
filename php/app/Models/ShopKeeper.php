@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Services\BlockchainApiService\Facades\BlockchainApi;
 use App\Services\KvkApiService\Facades\KvkApi;
 
-use App\Jobs\ShoKeeperGenerateWalletCodeJob;
+use App\Jobs\ShoKeeperInitializeWalletCodeJob;
 use App\Jobs\BlockchainRequestJob;
 use App\Jobs\MailSenderJob;
 use App\Models\OfficeSchedule;
@@ -31,7 +31,7 @@ class ShopKeeper extends Model
     ];
 
     protected $hidden = [
-        'kvk_data', '_original', '_preview'
+        'kvk_data', '_original', '_preview', 'pivot'
     ];
 
     protected $media_size = [
@@ -172,6 +172,9 @@ class ShopKeeper extends Model
             $addresses = collect([]);
 
         $addresses->each(function($office) use ($shopKeeper) {
+            if ($office->type != "vestigingsadres")
+                return;
+
             $office_address = collect([$office->street, $office->houseNumber, 
                 $office->houseNumberAddition, $office->postalCode, 
                 $office->city, $office->country])->filter()->implode(', ');
@@ -192,7 +195,9 @@ class ShopKeeper extends Model
 
         // create shopkeeper's wallet and add 
         // ether for transactions
-        dispatch(new ShoKeeperGenerateWalletCodeJob($shopKeeper));
+        $shopKeeper->generateWallet();
+        
+        ShoKeeperInitializeWalletCodeJob::dispatch($shopKeeper);
 
         return $shopKeeper;
     }
@@ -232,15 +237,20 @@ class ShopKeeper extends Model
         if (!$shopkeeper->wallet)
             throw new \Exception('No wallet, please create wallet first.');
 
-        dispatch(
-            new MailSenderJob(
-                'emails.shopkeeper-state-changed', [
-                    'state'     => $state
-                ], [
-                    'to'        => $shopkeeper->user->email,
-                    'subject'   => 'You shopkeeper state was changed.',
-                ]
-            ));
+        $subjects = [
+            'pending'   => 'State changed',
+            'declined'  => 'Declined',
+            'approved'  => 'welkom bij kindpakket Zuidhorn',
+        ];
+
+        MailSenderJob::dispatch(
+            'emails.shopkeeper-state-changed', [
+                'state'     => $state
+            ], [
+                'to'        => $shopkeeper->user->email,
+                'subject'   => $subjects[$state],
+            ]
+        )->onQueue('high');
 
         dispatch(new BlockchainRequestJob(
             'setShopKeeperState', 

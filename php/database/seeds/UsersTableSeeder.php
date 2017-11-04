@@ -24,25 +24,25 @@ class UsersTableSeeder extends DatabaseSeeder
         // budget-uploader
         User::create([
             'id'            => 2,
-            'name'          => 'Margrieta Maatjes',
-            'email'         => 'mmaatjes@zuidhorn.nl',
-            'password'      => '$2y$10$amPG2VvsZE3VtfKGaxxLSez62dpSOUmct7pt0Cl0lAubFw4LKV5FW',
+            'name'          => 'Budget Uploader',
+            'email'         => 'csvvalidator@forus.io',
+            'password'      => Hash::make('budget-uploader'),
             ]);
 
         // budget-manager
         User::create([
             'id'            => 3,
-            'name'          => 'Jan Pastoor',
-            'email'         => 'jpastoor@zuidhorn.nl',
-            'password'      => '$2y$10$/bam6vm48gOETCXN2jj89ulvW.dfZOcpliHVgsElkM.5PZ4Biv2li',
+            'name'          => 'Budget Manager',
+            'email'         => 'sponsor@forus.io',
+            'password'      => Hash::make('budget-manager'),
             ]);
 
         // shopkeepers-manager
         User::create([
             'id'            => 4,
-            'name'          => 'Marleen Bolwijn',
-            'email'         => 'mebolwijn@zuidhorn.nl',
-            'password'      => '$2y$10$enMKn9SlQBsxjQhTCuPatOe3WdbR7iUgjXzIPb1iM2Cr7WoJ1L4Me',
+            'name'          => 'Shopkeeper Manager',
+            'email'         => 'shopvalidator@forus.io',
+            'password'      => Hash::make('shopkeeper-manager'),
             ]);
     }
 }

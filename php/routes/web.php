@@ -19,17 +19,10 @@ Route::get('/', function () {
     return redirect(action('Panel\DashboardController@getIndex'));
 });
 
-Route::get('/test', 'TestController@getTest');
-Route::get('/device/approve/{device_approve_token}', function(Request $request, $device_approve_token) {
-    if ($device_approve_token->status == 'approved')
-        return 'You device is already approved!';
+Route::group(['prefix' => 'panel', 'middleware' => ['auth', 'panel']], function() {
+    // testing
+    Route::get('/test', 'TestController@getTest');
     
-    $device_approve_token->update(['status' => 'approved']);
-
-    return "Success!";
-});
-
-Route::group(['prefix' => 'panel', 'middleware' => 'auth'], function() {
     Route::get('/dashboard', 'Panel\DashboardController@getIndex');
     Route::get('/csv-parser', 'Panel\UsersController@getCsvParser');
 
@@ -65,7 +58,7 @@ Route::group(['prefix' => 'panel', 'middleware' => 'auth'], function() {
 });
 
 
-Route::group(['prefix' => 'ajax', 'middleware' => 'auth'], function() {
+Route::group(['prefix' => 'ajax', 'middleware' => ['auth', 'panel']], function() {
     Route::get('/category/select-option', 'Ajax\CategoryController@getSelectOptions');
     Route::put('/budget/submit-data', 'Ajax\BudgetController@putSubmitData');
 });

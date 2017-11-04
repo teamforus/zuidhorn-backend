@@ -14,24 +14,40 @@ use Illuminate\Support\Facades\Mail;
 |
 */
 
-Route::group(['prefix' => 'municipality', 'middleware' => 'auth:api'], function() {
-    Auth::routes();
+Route::group(['prefix' => 'municipality', 'middleware' => ['auth:api', 'municipality.api']], function() {
+    // get list available categories
+    Route::get('categories', 'MunicipalityApi\CategoryController@index');
+
+    // User related routes
+    Route::group(['prefix' => 'user'], function() {
+        // get user details
+        Route::get('/', 'MunicipalityApi\UserController@user');
+
+        // get funds available on bunq
+        Route::get('/funds', 'MunicipalityApi\UserController@funds');
+    });
+
+    // Budget related routes
+    Route::group(['prefix' => 'budget'], function() {
+        // get budget details
+        Route::get('/', 'MunicipalityApi\BudgetController@show');
+
+        // update budget settings
+        Route::put('/', 'MunicipalityApi\BudgetController@update');
+
+        // upload budget csv
+        Route::post('/csv', 'MunicipalityApi\BudgetController@csv');
+
+        // fetch voucher states by activation codes
+        Route::post('/voucher-state', 'MunicipalityApi\BudgetController@voucherState');
+    });
+
+    // Shopkeepers related routes
+    Route::group(['prefix' => 'shop-keepers'], function() {
+        // change shopkeeper state
+        Route::post('/{shopKeeper}/state', 'MunicipalityApi\ShopKeeperController@state');
+
+        // list shopkeepers
+        Route::get('/', 'MunicipalityApi\ShopKeeperController@index');
+    });
 });
-
-Route::group(['prefix' => 'municipality', 'middleware' => 'auth:api'], function() {
-    Route::get('user', 'MunicipalityApi\UserController@user');
-    Route::get('user/funds', 'MunicipalityApi\UserController@funds');
-
-    Route::get('budget', 'MunicipalityApi\BudgetController@get');
-    Route::put('budget', 'MunicipalityApi\BudgetController@update');
-    Route::post('budget/csv', 'MunicipalityApi\BudgetController@csv');
-    Route::post('budget/voucher-state', 'MunicipalityApi\BudgetController@voucherState');
-
-    Route::resource('categories', 'MunicipalityApi\CategoryController');
-
-    Route::post('/shop-keepers/{shopKeeper}/state', 'MunicipalityApi\ShopKeeperController@state');
-    Route::resource('shop-keepers', 'MunicipalityApi\ShopKeeperController');
-    Route::resource('shop-keepers.offices', 'MunicipalityApi\ShopKeeper\OfficeController');
-});
-
-Auth::routes();

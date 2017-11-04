@@ -19,8 +19,12 @@ class CreateTransactionsTable extends Migration
             $table->integer('shop_keeper_id')->unsigned();
             $table->float('amount');
             $table->float('extra_amount');
+            
             $table->integer('payment_id')->unsigned()->nullable();
+            $table->integer('attempts')->unsigned()->default(0);
             $table->string('status')->default('pending');
+
+            $table->timestamp('last_attempt_at')->nullable();
             $table->timestamps();
 
             $table->foreign('voucher_id')

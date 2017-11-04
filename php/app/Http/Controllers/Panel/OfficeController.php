@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers\Panel;
 
+use Illuminate\Http\Request;
+
 use App\Http\Requests\Panel\OfficeStoreRequest;
 use App\Http\Requests\Panel\OfficeUpdateRequest;
 
 use App\Models\Media;
 use App\Models\ShopKeeper;
 use App\Models\Office;
-use Illuminate\Http\Request;
+
 use App\Http\Controllers\Controller;
+
+use App\Jobs\UpdateOfficeCoordinatesJob;
 
 class OfficeController extends Controller
 {
@@ -81,7 +85,8 @@ class OfficeController extends Controller
                     $mediable_id, $media_info['mediaId']);
             }
 
-            $office->updateCoordinates();
+            // update coordinates by address string
+            UpdateOfficeCoordinatesJob::dispatch($office)->onQueue('high');
         }
 
         return redirect($shopKeeper->urlPanelView());

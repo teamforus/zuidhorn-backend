@@ -20,6 +20,7 @@ sudo chown -R forus:www-data ./php
 sudo chmod -R 0775 ./php/bootstrap/cache ./php/storage ./php/public/uploads
 
 echo -e "Restarting supervisor job"
-sudo supervisorctl restart forus-backend-worker:*
+sudo supervisorctl restart forus-backend-worker-default:*
+sudo supervisorctl restart forus-backend-worker-high:*
 
 echo -e "Done"

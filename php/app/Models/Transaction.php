@@ -2,7 +2,11 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+
+use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
+
 use App\Services\BunqService\BunqService;
 
 class Transaction extends Model
@@ -15,8 +19,13 @@ class Transaction extends Model
     ];
     
     protected $hidden = [
-        'payment_id', 'voucher_id', 'shop_keeper_id'
+        'payment_id', 'voucher_id', 'shop_keeper_id', 'last_attempt_at', 'attempts'
     ];
+
+    protected $dates = [
+        'last_attempt_at', 'created_at', 'updated_at'
+    ];
+
 
     public function voucher()
     {
@@ -41,7 +50,7 @@ class Transaction extends Model
         return json_encode($response, JSON_PRETTY_PRINT);
     }
 
-    public function makeTransaction()
+    public function makeBunqTransaction()
     {
         $bunq_service = new BunqService();
 
@@ -59,5 +68,43 @@ class Transaction extends Model
         ]);
 
         return $response->{'Response'}[0]->{'Id'}->{'id'};
+    }
+
+    public static function getQueue() {
+        return self::orderBy('updated_at', 'ASC')
+        ->where('status', '=', 'pending')
+        ->where('attempts', '<', 5)
+        ->where(function($query) {
+            $query
+            ->whereNull('last_attempt_at')
+            ->orWhere('last_attempt_at', '<', Carbon::now()->subHours(8));
+        });
+    }
+
+    public static function processQueue() {
+        if (self::getQueue()->count() == 0)
+            return null;
+
+        while($transaction = self::getQueue()->first()) {
+            $transaction->forceFill([
+                'attempts'          => ++$transaction->attempts,
+                'last_attempt_at'   => Carbon::now(),
+            ])->save();
+
+            try {
+                $payment_id = $transaction->makeBunqTransaction();
+
+                if (is_numeric($payment_id)) {
+                    $transaction->forceFill([
+                        'status'            => 'success',
+                        'payment_id'        => $payment_id
+                    ])->save();
+                }
+
+            } catch(\Exception $e) {
+                Log::error(
+                    sprintf("[%s] - %s", Carbon::now(), $e->getMessage()));
+            }
+        }
     }
 }

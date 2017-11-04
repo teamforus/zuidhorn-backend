@@ -10,96 +10,48 @@ use App\Services\BlockchainApiService\Facades\BlockchainApi;
 class ShopKeeperController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the shopkeepers.
      *
+     * @param  \Illuminate\Http\Request     $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return ShopKeeper::with('offices.schedules', 'user', 'categories')->get()->map(function($shopKeeper) {
+        if (!$request->user()->hasPermission('shopkeeper_manage'))
+            return response([], 401);
+
+        return ShopKeeper::with(
+            'offices.schedules', 'user', 'categories'
+        )->get()->map(function($shopKeeper) {
             $shopKeeper->preview = $shopKeeper->urlPreview();
             $shopKeeper->original = $shopKeeper->urlOriginal();
             
-            $shopKeeper->offices = $shopKeeper->offices->map(function($office) {
-                $office->preview = $office->urlPreview();
-                $office->original = $office->urlOriginal();
+            $shopKeeper->offices = $shopKeeper->offices->map(
+                function($office) {
+                    $office->preview = $office->urlPreview();
+                    $office->original = $office->urlOriginal();
 
-                return $office;
-            });
+                    return $office;
+                });
 
             return $shopKeeper;
         });
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Change the shopkeeper state.
      *
+     * @param  \Illuminate\Http\Request     $request
+     * @param  \App\Models\ShopKeeper       $shopKeeper
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\ShopKeeper  $shopKeeper
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ShopKeeper $shopKeeper)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\ShopKeeper  $shopKeeper
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ShopKeeper $shopKeeper)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ShopKeeper  $shopKeeper
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, ShopKeeper $shopKeeper)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\ShopKeeper  $shopKeeper
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(ShopKeeper $shopKeeper)
-    {
-        //
-    }
-
     public function state(Request $request, ShopKeeper $shopKeeper)
     {
-        $shopKeeper = ShopKeeper::find($request->shopKeeper);
+        if (!$request->user()->hasPermission('shopkeeper_manage'))
+            return response([], 401);
+
+        if (is_numeric($request->shopKeeper))
+            $shopKeeper = ShopKeeper::find($request->shopKeeper);
 
         // validation
         $this->validate($request, [

@@ -28,7 +28,7 @@ class Citizen extends Model
     public function generateAuthToken() {
         return $this->citizenTokens()->create([
             'token'         => UIDGenerator::generate(32, 4),
-            'expires_at'    => Carbon::now()->addMinutes(60),
+            'expires_at'    => Carbon::now()->addMinutes(15),
         ]);
     }
 

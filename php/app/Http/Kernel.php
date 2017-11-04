@@ -44,6 +44,11 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\ShopKeeperStateMiddleware::class,
         ],
 
+        'municipality-api' => [
+            'throttle:60,1',
+            'bindings',
+        ],
+
         'client-api' => [
             'throttle:60,1',
             'bindings',
@@ -58,13 +63,20 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
-        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        'can' => \Illuminate\Auth\Middleware\Authorize::class,
-        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'cors' => \App\Http\Middleware\Cors::class,
-        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'client.api' => \App\Http\Middleware\ClientApiMiddleware::class,
+        'auth'              => \Illuminate\Auth\Middleware\Authenticate::class,
+        'auth.basic'        => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'bindings'          => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        'can'               => \Illuminate\Auth\Middleware\Authorize::class,
+        'guest'             => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'cors'              => \App\Http\Middleware\Cors::class,
+        'throttle'          => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        
+        // api middlewares
+        'client.api'        => \App\Http\Middleware\Api\ClientApiMiddleware::class,
+        'municipality.api'  => \App\Http\Middleware\Api\MunicipalityApiMiddleware::class,
+        'shopkeeper.api'    => \App\Http\Middleware\Api\ShopKeeperApiMiddleware::class,
+
+        // panel middlewares
+        'panel'             => \App\Http\Middleware\Panel\PanelMiddleware::class,
     ];
 }

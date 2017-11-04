@@ -10,35 +10,37 @@ use App\Http\Controllers\Controller;
 class VoucherController extends Controller
 {
     /**
-     * Display the specified resource.
+     * Return requestd voucher details.
+     * Only if they have shared categories.
      *
      * @param  \App\Voucher  $voucher
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, Voucher $voucher)
-    {
-        if (!$voucher->id)
+    public function show(
+        Request $request, 
+        Voucher $voucher
+    ) {
+        // current shopkeeper
+        $shopKeeper = ShopKeeper::whereUserId(
+            $request->user()->id
+        )->first();
+
+        // get categories shared by voucher and shopkeeper
+        $available_categs = $shopKeeper->categories->pluck('id')
+        ->intersect($voucher->budget->categories->pluck('id'));
+
+        // at least one common category is required for transaction
+        if ($available_categs->count() < 1) {
             return response(collect([
-                'error' => 'not-found',
-                'message' => 'Not found!'
-                ]), 404);
+                'error'     => 'voucher-unavailable-categories',
+                'message'   => "Shopkeeper don't have categories required by voucher."
+            ]), 401);
+        }
 
-        $target_user = $request->user();
-        $shop_keeper = ShopKeeper::whereUserId($target_user->id)->first();
-
-        $available_categs = $shop_keeper->categories->pluck('id')->intersect(
-            $voucher->budget->categories->pluck('id'));
-
-        if ($available_categs->count() < 1)
-            return response(collect([
-                'error' => 'no-available-categories',
-                'message' => "Shopkeeper don't have categories 
-                required by voucher."
-                ]), 401);
-
-        $public_key = $voucher->wallet->address;
-        $max_amount = $voucher->getAvailableFunds();
-
-        return compact('public_key', 'max_amount');
+        // return voucher details
+        return [
+            'public_key'    => $voucher->wallet->address,
+            'max_amount'    => $voucher->getAvailableFunds()
+        ];
     }
 }

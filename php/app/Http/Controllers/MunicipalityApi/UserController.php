@@ -11,11 +11,26 @@ use App\Services\BunqService\BunqService;
 
 class UserController extends Controller
 {
+    /**
+     * Get the user details.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @return \Illuminate\Http\Response
+     */
     public function user(Request $request) {
         return $request->user()->load('permissions');
     }
 
+    /**
+     * Get the municipality funds on the bunq.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @return \Illuminate\Http\Response
+     */
     public function funds(Request $request) {
+        if (!$request->user()->hasPermission('budget_manage'))
+            return response([], 401);
+
         $bunq_service = new BunqService();
 
         $response = $bunq_service->getMonetaryAccounts()->Response[0];

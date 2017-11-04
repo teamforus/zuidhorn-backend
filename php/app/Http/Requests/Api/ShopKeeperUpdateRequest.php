@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api;
 
+use \Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\ShopKeeper;
 
@@ -22,9 +23,9 @@ class ShopKeeperUpdateRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
-        $id = $this->route('shop_keeper')->id;
+        $id = $request->user()->id;
 
         return [
             'name'          => 'required', 

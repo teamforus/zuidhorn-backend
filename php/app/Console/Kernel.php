@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \App\Console\Commands\BunqProcessTransactionsCommand::class,
+        \App\Console\Commands\BunqMakeTransactionCommand::class,
+        \App\Console\Commands\BunqCheckRefundsCommand::class,
         \App\Console\Commands\CleanerCommand::class,
     ];
 
@@ -26,7 +27,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('cleaner')->hourly();
-        // $schedule->command('bunq:process-transactions')->hourly();
+        $schedule->command('bunq:check-refunds')->hourly();
+        $schedule->command('bunq:make-transaction')->everyMinute();
     }
 
     /**

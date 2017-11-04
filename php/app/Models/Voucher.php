@@ -9,9 +9,7 @@ use App\Models\ShopKeeper;
 
 use App\Jobs\MailSenderJob;
 use App\Jobs\VoucherActivateJob;
-use App\Jobs\VoucherEmailQrCodeJob;
-use App\Jobs\VoucherEmailActivationEmailJob;
-use App\Jobs\BunqProcessTransactionJob;
+use App\Jobs\BlockchainRequestJob;
 
 use App\Services\UIDGeneratorService\Facades\UIDGenerator;
 
@@ -62,50 +60,62 @@ class Voucher extends Model
         if (is_null($this->user_id))
             return $this->amount;
 
-        return $this->amount - $this->transactions()->where(
-            'status', '!=', 'refunded'
+        return $this->amount - $this->transactions()->whereNotIn(
+            'status', ['refund', 'refunded']
         )->sum('amount');
 
         return floatval(min($max_amount, $funds_available));
     }
 
-    public function logTransaction($shop_keeper_id, $amount, $extra_amount = 0)
-    {
-        $shopKeeper = ShopKeeper::find($shop_keeper_id);
+    public function makeTransaction(
+        $shop_keeper_id, 
+        $amount, 
+        $extra_amount = 0
+    ) {
+        // generate transaction
+        $transaction = $this->transactions()->save(new Transaction(
+            compact('shop_keeper_id', 'amount', 'extra_amount')
+        ));
 
-        $transaction = new Transaction(
-            compact('shop_keeper_id', 'amount', 'extra_amount'));
-        $transaction = $this->transactions()->save($transaction);
+        // send email
+        MailSenderJob::dispatch(
+            'emails.voucher-transaction-done', [
+                'transaction' => $transaction,
+            ], [
+                'to'        => $transaction->voucher->user->email,
+                'subject'   => 'gebruik gemaakt kindpakket budget',
+            ]
+        )->onQueue('high');
 
-        dispatch(new BunqProcessTransactionJob($transaction));
+        // add transaction in to blockchain
+        dispatch(new BlockchainRequestJob(
+            'requestFunds', [
+                $transaction->voucher->wallet->address,
+                $transaction->shop_keeper->wallet->address,
+                $transaction->shop_keeper->wallet->passphrase,
+                $transaction->amount
+            ]));
 
         return $transaction;
     }
 
-    public function activateByEmail($email) 
+    public function sendActivationToken($email) 
     {
         $this->update([
-            'activation_token' => UIDGenerator::generate(128),
+            'activation_token' => UIDGenerator::generate(32, 4),
             'activation_email' => $email,
         ]);
 
-        dispatch(new MailSenderJob(
+        MailSenderJob::dispatch(
             'emails.voucher-activation-email', [
                 'voucher'   => $this,
             ], [
-                'subject'   => 'Activate voucher',
+                'subject'   => 'activeer uw kindpakket account',
                 'to'        => $email
-            ]));
+            ]
+        )->onQueue('high');
 
         return [];
-    }
-
-    public function setOwner($user_id) 
-    {
-        $this->update(['user_id' => $user_id]);
-        $this->load('user');
-
-        return $this;
     }
 
     public function emailQrCode($email = false) 
@@ -113,7 +123,16 @@ class Voucher extends Model
         if (!$email)
             $email = $this->user->email;
         
-        return dispatch(new VoucherEmailQrCodeJob($this, $email));
+        MailSenderJob::dispatch(
+            'emails.voucher-qr-code', [
+                'voucher'   => $this
+            ], [
+                'subject'   => 'QR-code kindpakket',
+                'to'        => $email
+            ]
+        )->onQueue('high');
+
+        return [];
     }
 
     public function getBlockchainAmount() {
