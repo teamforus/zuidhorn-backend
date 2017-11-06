@@ -46,6 +46,10 @@ class MailSenderJob implements ShouldQueue
             $this->view, 
             $this->scope, 
             function($message) use ($callbackData) {
+                $message->replyTo(
+                    env('MAIL_REPLY_TO_ADDRESS'), 
+                    env('MAIL_REPLY_TO_NAME'));
+
                 foreach ($callbackData as $key => $value) {
                     if (gettype($value) != 'array')
                         $value = [$value];
