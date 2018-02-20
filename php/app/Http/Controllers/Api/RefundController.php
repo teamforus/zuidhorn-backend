@@ -66,8 +66,9 @@ class RefundController extends Controller
         // no refund model or amount is wrong
         if (!$refund || ($refund->transactions()->sum('amount') != $amount)) {
             // refund model exists, check state and remove model
-            if ($refund)
+            if ($refund) {
                 $refund->applyOrRevokeBunqRequest();
+            }
 
             // create new pending refund
             $refund = Refund::create([
