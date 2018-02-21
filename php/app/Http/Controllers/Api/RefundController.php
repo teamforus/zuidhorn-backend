@@ -23,6 +23,16 @@ class RefundController extends Controller
         $shopKeeper = ShopKeeper::whereUserId(
             $request->user()->id
         )->first();
+        
+        // get current refund model
+        $refund = $shopKeeper->refunds()->where([
+            'status' => 'pending'
+        ])->first();
+
+        // refund model exists, check state and remove model
+        if ($refund) {
+            $refund->updateState();
+        }
 
         $amount = $shopKeeper->transactions()->where([
             'status' => 'refund'
@@ -79,7 +89,7 @@ class RefundController extends Controller
             ])->pluck('id'));
         }
 
-        $url = $refund->getBunqUrl();
+        $url = $refund ? $refund->getBunqUrl() : false;
 
         return compact('url');
     }

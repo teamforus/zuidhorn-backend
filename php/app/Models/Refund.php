@@ -30,7 +30,7 @@ class Refund extends Model
         $this->updateState();
 
         if ($this->status == 'pending') {
-            $this->revoke();
+            $this->requestRevoked();
         }
 
         return $this;
@@ -40,35 +40,56 @@ class Refund extends Model
         $status = $this->bunqRequestStatus();
 
         if($status == 'ACCEPTED') {
-            // update refund and transactions status
-            $this->update(['status' => 'refunded']);
-            $this->transactions()->update(['status' => 'refunded']);
-
-            // dispatch to blockchain
-            $this->transactions->each(function($transaction) {
-                BlockchainRequestJob::dispatch(
-                    'refund', [
-                        $transaction->shop_keeper->wallet->address,
-                        $transaction->shop_keeper->wallet->private_key,
-                        $transaction->voucher->wallet->address,
-                        $transaction->amount
-                    ]
-                );
-            });
+            $this->requestAccepted();
         } else if ($status == 'REJECTED' || $status == 'REVOKED') {
-            $this->revoke($status);
+            $this->requestRevoked($status);
         }
 
         return $this;
     }
 
-    private function revoke($current_state = FALSE) {
+    public function requestAccepted() {
+        // update refund and transactions status
+        $this->update(['status' => 'refunded']);
+        Transaction::whereIn('id', $this->transactions->pluck('id'))->update([
+            'status' => 'refunded'
+        ]);
+
+        // dispatch to blockchain
+        $this->transactions->each(function($transaction) {
+            BlockchainRequestJob::dispatch(
+                'refund', [
+                    $transaction->shop_keeper->wallet->address,
+                    $transaction->shop_keeper->wallet->private_key,
+                    $transaction->voucher->wallet->address,
+                    $transaction->amount
+                ]
+            );
+        });
+    }
+
+    private function requestRevoked($current_state = FALSE) {
         // revoke bunq request, detach transactions and update status
-        if ($current_state != 'REVOKED')
+        if ($current_state != 'REVOKED') {
             $this->bunqRequestRevoke();
-        
-        $this->transactions()->detach();
+        }
+
         $this->forceFill(['status' => 'revoked'])->save();
+    }
+
+    private function bunqRequestRevoke() {
+        if (!$this->bunq_request_id)
+            return false;
+
+        $bunq_service = new BunqService();
+
+        $response = $bunq_service->getMonetaryAccounts();
+
+        $monetaryAccountId = $response->{'Response'}[0]->{'MonetaryAccountBank'}->{'id'};
+
+        $response = $bunq_service->revokePaymentRequest($monetaryAccountId, $this->bunq_request_id);
+
+        return $response;
     }
 
     public function getBunqUrl() {
@@ -76,17 +97,20 @@ class Refund extends Model
             $this->bunqRequestCreate();
 
         $bunq_details = $this->bunqRequestDetails();
+        $status = $bunq_details->RequestInquiry->status;
 
-        if ($bunq_details->RequestInquiry->status == 'PENDING')
+        Log::info('bunq - status :' . json_encode($bunq_details, JSON_PRETTY_PRINT));
+
+        if ($status == 'PENDING')
             return $bunq_details->RequestInquiry->bunqme_share_url;
 
-        if ($bunq_details->RequestInquiry->status == 'ACCEPTED')
-            return true;
+        if ($status == 'ACCEPTED') {
+            $this->requestAccepted();
+            return "paid";
+        }
 
-        if ($bunq_details->RequestInquiry->status == 'REJECTED') {
-            $this->update([
-                'status' => 'rejected'
-            ]);
+        if ($status == 'REJECTED' || $status == 'REVOKED') {
+            $this->requestRevoked($status);
         }
 
         return false;
@@ -141,21 +165,6 @@ class Refund extends Model
         // Log::info('bunq - check payment request :' . json_encode($response, JSON_PRETTY_PRINT));
 
         return $response->Response[0];
-    }
-
-    private function bunqRequestRevoke() {
-        if (!$this->bunq_request_id)
-            return false;
-
-        $bunq_service = new BunqService();
-
-        $response = $bunq_service->getMonetaryAccounts();
-
-        $monetaryAccountId = $response->{'Response'}[0]->{'MonetaryAccountBank'}->{'id'};
-
-        $response = $bunq_service->revokePaymentRequest($monetaryAccountId, $this->bunq_request_id);
-
-        return $response;
     }
 
     public static function getQueue($exclude = []) {
