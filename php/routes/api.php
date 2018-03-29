@@ -72,7 +72,7 @@ Route::group([
         '/vouchers/{voucherAddress}/transactions/{transaction}/refund', 
         'Api\Vouchers\TransactionController@refund');
     
-    // mark transaction to be refunded
+    // transactions
     Route::resource(
         'vouchers.transactions', 
         'Api\Vouchers\TransactionController', [

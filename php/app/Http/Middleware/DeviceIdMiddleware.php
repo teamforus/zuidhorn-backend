@@ -3,7 +3,9 @@
 namespace App\Http\Middleware;
 
 use \App\Models\ShopKeeper;
+use App\Models\User;
 use Closure;
+use Illuminate\Http\Response;
 
 class DeviceIdMiddleware
 {
@@ -27,6 +29,10 @@ class DeviceIdMiddleware
      */
     public function handle($request, Closure $next)
     {
+        /**
+         * @var User $target_user
+         * @var ShopKeeper $shop_keeper
+         */
         if ($this->inExceptArray($request)) {
             return $next($request);
         }
@@ -34,8 +40,9 @@ class DeviceIdMiddleware
         $target_user = $request->user();
         $shop_keeper = ShopKeeper::whereUserId($target_user->id)->first();
 
-        if (!$target_user->hasRole('shop-keeper') || !$shop_keeper)
+        if (!$target_user->hasRole('shop-keeper') || !$shop_keeper) {
             abort(401);
+        }
 
         $device_id = $request->header('Device-Id');
 
