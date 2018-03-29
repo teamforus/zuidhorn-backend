@@ -15,6 +15,23 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return Category::select(['name', 'id'])->get();
+        return app(Category::class)->select(['name', 'id'])->get();
+    }
+
+    public function earnings() {
+        return app(Category::class)->get()->map(function($category) {
+            /**
+             * @var Category $category
+             */
+            $total = 100;
+
+            return [
+                'id' => $category->id,
+                'name' => $category->name,
+                'preview' => $category->urlPreview(),
+                'original' => $category->urlOriginal(),
+                'earnings' => compact('total')
+            ];
+        });
     }
 }
