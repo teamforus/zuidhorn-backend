@@ -8,13 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-use App\Services\BlockchainApiService\Facades\BlockchainApi;
-
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-
 use App\Models\Voucher;
-use App\Jobs\MailSenderJob;
 
 class VoucherInitializeWalletCodeJob implements ShouldQueue
 {
@@ -28,8 +22,8 @@ class VoucherInitializeWalletCodeJob implements ShouldQueue
 
     /**
      * Create a new job instance.
-     *
-     * @return void
+     * @param Voucher $voucher
+     * @param $tokens
      */
     public function __construct(Voucher $voucher, $tokens)
     {
@@ -50,7 +44,7 @@ class VoucherInitializeWalletCodeJob implements ShouldQueue
     /**
      * The job failed to process.
      *
-     * @param  Exception  $exception
+     * @param  \Exception  $exception
      * @return void
      */
     public function failed($exception)
