@@ -39,6 +39,9 @@ Route::group(['prefix' => 'municipality', 'middleware' => ['auth:api', 'municipa
 
         // fetch voucher states by activation codes
         Route::post('/voucher-state', 'MunicipalityApi\BudgetController@voucherState');
+
+        // upload budget csv
+        Route::post('/add-children', 'MunicipalityApi\BudgetController@addChildren');
     });
 
     // Shopkeepers related routes

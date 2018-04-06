@@ -8,8 +8,15 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use App\Notifications\MailResetPasswordToken;
-use Illuminate\Support\Facades\DB;
 
+/**
+ * Class User
+ * @property mixed $id
+ * @property string $name
+ * @property string $email
+ * @property string $password
+ * @package App\Models
+ */
 class User extends Authenticatable
 {
     use Traits\GenerateUidsTrait, Traits\Urls\UserUrlsTrait;
@@ -35,6 +42,7 @@ class User extends Authenticatable
 
     /**
      * Send a password reset email to the user
+     * @param string $token
      */
     public function sendPasswordResetNotification($token)
     {

@@ -10,12 +10,10 @@ use Illuminate\Foundation\Bus\Dispatchable;
 
 use App\Services\BlockchainApiService\Facades\BlockchainApi;
 
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-
-use \App\Models\User;
-use \App\Models\Voucher;
-
+/**
+ * Class BlockchainRequestJob
+ * @package App\Jobs
+ */
 class BlockchainRequestJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -29,7 +27,8 @@ class BlockchainRequestJob implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @return void
+     * @param $method
+     * @param $args
      */
     public function __construct($method, $args)
     {
@@ -50,7 +49,7 @@ class BlockchainRequestJob implements ShouldQueue
     /**
      * The job failed to process.
      *
-     * @param  Exception  $exception
+     * @param  \Exception  $exception
      * @return void
      */
     public function failed($exception)
