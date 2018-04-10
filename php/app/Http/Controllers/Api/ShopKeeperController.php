@@ -191,4 +191,24 @@ class ShopKeeperController extends Controller
             $request->user()->id
         )->first()->categories;
     }
+
+    /**
+     * Revoke shopkeeper registration only if the shopkeeper is still in pending
+     * @param Request $request
+     * @return array
+     */
+    public function revoke(Request $request) {
+        $shopKeeper = (new ShopKeeper())->where([
+            'user_id' => $request->user()->id
+        ])->first();
+        
+        $success = false;
+
+        if ($shopKeeper->state == 'pending') {
+            $shopKeeper->revokeRegistration();
+            $success = true;
+        }
+
+        return compact('success');
+    }
 }

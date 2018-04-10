@@ -56,6 +56,9 @@ Route::group([
     Route::put(
         '/shop-keepers', 
         'Api\ShopKeeperController@update');
+    Route::post(
+        '/shop-keepers/revoke',
+        'Api\ShopKeeperController@revoke');
 
 
 
