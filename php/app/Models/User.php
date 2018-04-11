@@ -92,6 +92,8 @@ class User extends Authenticatable
 
     public function unlink()
     {
-        return $this->delete();
+        try {
+            $this->delete();
+        } catch (\Exception $exception) {};
     }
 }

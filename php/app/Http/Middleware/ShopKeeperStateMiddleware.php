@@ -13,7 +13,10 @@ class ShopKeeperStateMiddleware
      *
      * @var array
      */
-    protected $except = [];
+    protected $except = [
+        "/api/shop-keepers/revoke",
+        "/shop-keepers/revoke"
+    ];
 
     /**
      * Handle an incoming request.

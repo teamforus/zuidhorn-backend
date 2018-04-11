@@ -67,4 +67,10 @@ class Wallet extends Model
             'passphrase'    => $this->passphrase,
         ];
     }
+
+    public function unlink() {
+        try {
+            $this->delete();
+        } catch (\Exception $exception) {};
+    }
 }

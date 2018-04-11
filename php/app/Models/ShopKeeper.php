@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Http\Request;
@@ -13,8 +15,27 @@ use App\Services\KvkApiService\Facades\KvkApi;
 use App\Jobs\ShoKeeperInitializeWalletCodeJob;
 use App\Jobs\BlockchainRequestJob;
 use App\Jobs\MailSenderJob;
-use App\Models\OfficeSchedule;
 
+/**
+ * Class ShopKeeper
+ * @property mixed $id
+ * @property integer $user_id
+ * @property string $name
+ * @property string $kvk_number
+ * @property string $btw_number
+ * @property string $bussines_address
+ * @property string $phone
+ * @property string $state
+ * @property string $iban
+ * @property string $iban_name
+ * @property string $kvk_data
+ * @property string $website
+ * @property Wallet $wallet
+ * @property User $user
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @package App\Models
+ */
 class ShopKeeper extends Model
 {
     use Traits\HasMediaTrait;
@@ -42,7 +63,7 @@ class ShopKeeper extends Model
     /**
      * Return list all available states
      * 
-     * @return Illuminate\Support\Collection
+     * @return Collection
      */
     public static function availableStates()
     {
@@ -102,8 +123,11 @@ class ShopKeeper extends Model
     public function unlink()
     {
         $this->user->unlink();
-        
-        return $this->delete();
+        $this->wallet->unlink();
+
+        try {
+            $this->delete();
+        } catch (\Exception $exception) {};
     }
 
     public function checkDevice($device_id)
@@ -275,5 +299,13 @@ class ShopKeeper extends Model
             return BlockchainApi::checkShopKeeperState($this->wallet->address);
 
         return false;
+    }
+
+    public function revokeRegistration() {
+        if ($this->state != 'pending') {
+            return;
+        }
+
+        $this->unlink();
     }
 }
