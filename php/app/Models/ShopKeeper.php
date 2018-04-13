@@ -32,6 +32,7 @@ use App\Jobs\MailSenderJob;
  * @property string $website
  * @property Wallet $wallet
  * @property User $user
+ * @property \Illuminate\Database\Eloquent\Collection $categories
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @package App\Models

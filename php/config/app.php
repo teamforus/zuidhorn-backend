@@ -191,10 +191,11 @@ return [
         App\Services\KvkApiService\KvkApiServiceProvider::class,
         App\Services\UIDGeneratorService\UIDGeneratorServiceProvider::class,
         App\Services\BlockchainApiService\BlockchainApiServiceProvider::class,
+        App\Services\BunqService\BunqServiceProvider::class
     ],
 
     /*
-    |--------------------------------------------------------------------------
+    |----------------------------^----------------------------------------------
     | Class Aliases
     |--------------------------------------------------------------------------
     |

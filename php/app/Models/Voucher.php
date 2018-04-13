@@ -20,6 +20,7 @@ use App\Jobs\BlockchainRequestJob;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Wallet|null $wallet
+ * @property Budget $budget
  * @property User|null $user
  * @package App\Models
  */

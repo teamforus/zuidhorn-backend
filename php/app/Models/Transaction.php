@@ -2,17 +2,32 @@
 
 namespace App\Models;
 
+use App\Helpers\Helper;
 use Carbon\Carbon;
 
-use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Services\BunqService\BunqService;
-
+/**
+ * Class Transaction
+ * @property mixed $id
+ * @property integer $voucher_id
+ * @property integer $amount
+ * @property integer $extra_amount
+ * @property integer $shop_keeper_id
+ * @property integer $payment_id
+ * @property string $status
+ * @property Voucher $voucher
+ * @property ShopKeeper $shop_keeper
+ * @property Carbon $last_attempt_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @package App\Models
+ */
 class Transaction extends Model
 {
     use Traits\Urls\TransactionUrlsTrait;
-    
+
     protected $fillable = [
         'voucher_id', 'amount', 'extra_amount', 'shop_keeper_id', 
         'payment_id', 'status'
@@ -26,7 +41,6 @@ class Transaction extends Model
         'last_attempt_at', 'created_at', 'updated_at'
     ];
 
-
     public function voucher()
     {
         return $this->belongsTo('App\Models\Voucher');
@@ -39,42 +53,17 @@ class Transaction extends Model
 
     public function transactionDetails()
     {
-        $bunq_service = new BunqService();
-
-        $response = $bunq_service->getMonetaryAccounts();
-
-        $monetaryAccountId = $response->{'Response'}[0]->{'MonetaryAccountBank'}->{'id'};
-
-        $response = $bunq_service->paymentDetails($monetaryAccountId, $this->payment_id);
-
-        return json_encode($response, JSON_PRETTY_PRINT);
-    }
-
-    public function makeBunqTransaction()
-    {
-        $bunq_service = new BunqService();
-
-        $response = $bunq_service->getMonetaryAccounts();
-
-        $monetaryAccountId = $response->{'Response'}[0]->{'MonetaryAccountBank'}->{'id'};
-
-        $response = $bunq_service->makePayment($monetaryAccountId, [
-            "value" => (string) $this->amount,
-            "currency" => "EUR",
-        ], [
-            "type"  => "IBAN",
-            "value" => $this->shop_keeper->iban,
-            "name"  => $this->shop_keeper->name,
-        ]);
-
-        return $response->{'Response'}[0]->{'Id'}->{'id'};
+        return json_encode(Helper::BunqService()->paymentDetails(
+            $this->payment_id
+        ), JSON_PRETTY_PRINT);
     }
 
     public static function getQueue() {
-        return self::orderBy('updated_at', 'ASC')
+        return (new self())->orderBy('updated_at', 'ASC')
         ->where('status', '=', 'pending')
         ->where('attempts', '<', 5)
         ->where(function($query) {
+            /** @var Builder $query */
             $query
             ->whereNull('last_attempt_at')
             ->orWhere('last_attempt_at', '<', Carbon::now()->subHours(8));
@@ -82,8 +71,9 @@ class Transaction extends Model
     }
 
     public static function processQueue() {
-        if (self::getQueue()->count() == 0)
+        if (self::getQueue()->count() == 0) {
             return null;
+        }
 
         while($transaction = self::getQueue()->first()) {
             $transaction->forceFill([
@@ -92,7 +82,11 @@ class Transaction extends Model
             ])->save();
 
             try {
-                $payment_id = $transaction->makeBunqTransaction();
+                $payment_id = Helper::BunqService()->makePayment(
+                    $transaction->amount,
+                    $transaction->shop_keeper->iban,
+                    $transaction->shop_keeper->name
+                );
 
                 if (is_numeric($payment_id)) {
                     $transaction->forceFill([
@@ -102,8 +96,11 @@ class Transaction extends Model
                 }
 
             } catch(\Exception $e) {
-                Log::error(
-                    sprintf("[%s] - %s", Carbon::now(), $e->getMessage()));
+                app('log')->error(sprintf(
+                    "[%s] - %s",
+                    Carbon::now(),
+                    $e->getMessage()
+                ));
             }
         }
     }

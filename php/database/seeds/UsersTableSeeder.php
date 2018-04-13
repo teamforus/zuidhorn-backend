@@ -14,35 +14,35 @@ class UsersTableSeeder extends DatabaseSeeder
      */
     public function run()
     {
-        User::create([
+        (new User())->create([
             'id'            => 1,
             'name'          => 'Administrator',
             'email'         => 'forus-admin@dev-weget.nl',
-            'password'      => Hash::make('mvp-admin-pass'),
+            'password'      => app('hash')->make('mvp-admin-pass'),
             ]);
 
         // budget-uploader
-        User::create([
+        (new User())->create([
             'id'            => 2,
             'name'          => 'Budget Uploader',
             'email'         => 'csvvalidator@forus.io',
-            'password'      => Hash::make('budget-uploader'),
+            'password'      => app('hash')->make('budget-uploader'),
             ]);
 
         // budget-manager
-        User::create([
+        (new User())->create([
             'id'            => 3,
             'name'          => 'Budget Manager',
             'email'         => 'sponsor@forus.io',
-            'password'      => Hash::make('budget-manager'),
+            'password'      => app('hash')->make('budget-manager'),
             ]);
 
         // shopkeepers-manager
-        User::create([
+        (new User())->create([
             'id'            => 4,
             'name'          => 'Shopkeeper Manager',
             'email'         => 'shopvalidator@forus.io',
-            'password'      => Hash::make('shopkeeper-manager'),
+            'password'      => app('hash')->make('shopkeeper-manager'),
             ]);
     }
 }
