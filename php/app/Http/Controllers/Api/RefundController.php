@@ -20,11 +20,12 @@ class RefundController extends Controller
         Request $request
     ) {
         // current shopkeeper
-        $shopKeeper = ShopKeeper::whereUserId(
-            $request->user()->id
-        )->first();
+        $shopKeeper = (new ShopKeeper())->where([
+            'user_id' => $request->user()->id
+        ])->first();
         
         // get current refund model
+        /** @var Refund $refund */
         $refund = $shopKeeper->refunds()->where([
             'status' => 'pending'
         ])->first();
@@ -51,11 +52,12 @@ class RefundController extends Controller
         Request $request
     ) {
         // current shopkeeper
-        $shopKeeper = ShopKeeper::whereUserId(
-            $request->user()->id
-        )->first();
+        $shopKeeper = (new ShopKeeper())->where([
+            'user_id' => $request->user()->id
+        ])->first();
         
         // get current refund model
+        /** @var Refund $refund */
         $refund = $shopKeeper->refunds()->where([
             'status' => 'pending'
         ])->first();
@@ -81,10 +83,12 @@ class RefundController extends Controller
             }
 
             // create new pending refund
-            $refund = Refund::create([
+            $refund = (new Refund())->create([
                 'shop_keeper_id'    => $shopKeeper->id,
                 'status'            => 'pending',
-            ])->transactions()->attach($shopKeeper->transactions()->where([
+            ]);
+
+            $refund->transactions()->attach($shopKeeper->transactions()->where([
                 'status'            => 'refund'
             ])->pluck('id'));
         }

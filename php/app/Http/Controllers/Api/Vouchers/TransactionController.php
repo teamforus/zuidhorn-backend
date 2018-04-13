@@ -7,11 +7,7 @@ use App\Models\Voucher;
 use App\Models\ShopKeeper;
 use App\Models\Transaction;
 
-use App\Http\Requests\App\VoucherSubmitRequest;
-use App\Services\BlockchainApiService\Facades\BlockchainApi;
-
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Controller;
 
@@ -30,9 +26,9 @@ class TransactionController extends Controller
         Voucher $voucher
     ) {
         // current shopkeeper
-        $shopKeeper = ShopKeeper::whereUserId(
-            $request->user()->id
-        )->first();
+        $shopKeeper = (new ShopKeeper())->where([
+            'user_id' => $request->user()->id
+        ])->first();
 
         // get voucher transaction shared by shopkeeper
         return $voucher->transactions()->where([
@@ -52,9 +48,9 @@ class TransactionController extends Controller
         Voucher $voucher
     ) {
         // current shopkeeper
-        $shopKeeper = ShopKeeper::whereUserId(
-            $request->user()->id
-        )->first();
+        $shopKeeper = (new ShopKeeper())->where([
+            'user_id' => $request->user()->id
+        ])->first();
 
         // transaction input
         $amount         = $request->input('amount');
@@ -71,11 +67,11 @@ class TransactionController extends Controller
         ]);
 
         // get categories shared by voucher and shopkeeper
-        $available_categs = $shopKeeper->categories->pluck('id')
+        $available_categories = $shopKeeper->categories->pluck('id')
         ->intersect($voucher->budget->categories->pluck('id'));
 
         // at least one common category is required for transaction
-        if ($available_categs->count() < 1) {
+        if ($available_categories->count() < 1) {
             return response(collect([
                 'error'     => 'voucher-unavailable-categories',
                 'message'   => "Shopkeeper don't have categories required by voucher."
@@ -90,13 +86,13 @@ class TransactionController extends Controller
     }
 
     /**
-     * Return requested transaction common for current shopkeeper 
+     * Return requested transaction common for current shopkeeper
      * and the voucher.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  \App\Models\Voucher          $voucher
-     * @param  \App\Models\Transaction      $transaction
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Voucher $voucher
+     * @param Transaction $transaction
+     * @return Transaction|\Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function show(
         Request $request, 
@@ -104,9 +100,9 @@ class TransactionController extends Controller
         Transaction $transaction
     ) {
         // current shopkeeper
-        $shopKeeper = ShopKeeper::whereUserId(
-            $request->user()->id
-        )->first();
+        $shopKeeper = (new ShopKeeper())->where([
+            'user_id' => $request->user()->id
+        ])->first();
 
         // check transaction -> voucher relations
         if ($transaction->voucher_id != $voucher->id)
@@ -129,10 +125,10 @@ class TransactionController extends Controller
     /**
      * Mark transaction to be refunded.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  \App\Models\Voucher          $voucher
-     * @param  \App\Models\Transaction      $transaction
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Voucher $voucher
+     * @param Transaction $transaction
+     * @return Transaction|\Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function refund(
         Request $request, 
@@ -140,9 +136,9 @@ class TransactionController extends Controller
         Transaction $transaction
     ) {
         // current shopkeeper
-        $shopKeeper = ShopKeeper::whereUserId(
-            $request->user()->id
-        )->first();
+        $shopKeeper = (new ShopKeeper())->where([
+            'user_id' => $request->user()->id
+        ])->first();
 
         // check transaction -> voucher relations
         if ($transaction->voucher_id != $voucher->id)
@@ -176,7 +172,7 @@ class TransactionController extends Controller
         }
 
         // get current refund if any exists
-        $refund = Refund::where([
+        $refund = (new Refund())->where([
             'shop_keeper_id'    => $shopKeeper->id,
             'status'            => 'pending',
         ])->first();
@@ -189,11 +185,11 @@ class TransactionController extends Controller
 
         // prepare transaction for refund
         $transaction->update([
-            'status'            => 'refund'
+            'status' => 'refund'
         ]);
 
         // create new pending refund
-        Refund::create([
+        (new Refund())->create([
             'shop_keeper_id'    => $shopKeeper->id,
             'status'            => 'pending',
         ])->transactions()->attach($shopKeeper->transactions()->where([

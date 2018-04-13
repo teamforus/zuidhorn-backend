@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\MunicipalityApi;
 
-use App\Models\User;
 use App\Models\Voucher;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\BunqService\BunqService;
+use App\Helpers\Helper;
 
 class UserController extends Controller
 {
@@ -28,16 +28,16 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function funds(Request $request) {
-        if (!$request->user()->hasPermission('budget_manage'))
+        if (!$request->user()->hasPermission('budget_manage')) {
             return response([], 401);
+        }
 
-        $bunq_service = new BunqService();
+        $funds = Helper::BunqService()->getBankAccountBalanceValue();
 
-        $response = $bunq_service->getMonetaryAccounts()->Response[0];
-        $funds = floatval($response->MonetaryAccountBank->balance->value);
-
-        $funds_required = floatval(Voucher::sum('amount'));
-        $funds_required -= Transaction::whereStatus('success')->sum('amount');
+        $funds_required = floatval((new Voucher())->sum('amount'));
+        $funds_required -= (new Transaction())->where([
+            'status' => 'success'
+        ])->sum('amount');
 
         return compact('funds', 'funds_required');
     }
