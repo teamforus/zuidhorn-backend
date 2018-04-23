@@ -125,7 +125,10 @@ class Refund extends Model
             'status' => 'refunded'
         ]);
 
-        $this->transactions()->update([
+        // don't user transactions(), ambiguous updated_at field
+        (new Transaction())->whereIn(
+            'id', $this->transactions->pluck('id')
+        )->update([
             'status' => 'refunded'
         ]);
 
@@ -148,7 +151,7 @@ class Refund extends Model
      */
     private function requestRevoked($current_state = FALSE) {
         // revoke bunq request, detach transactions and update status
-        if ($current_state != 'REVOKED') {
+        if ($current_state != 'REVOKED' && !is_null($this->bunq_request_id)) {
             Helper::BunqService()->revokePaymentRequest(
                 $this->bunq_request_id
             )->getValue();
