@@ -104,4 +104,26 @@ class Transaction extends Model
             }
         }
     }
+
+    public static function getBunqCosts(
+        Carbon $fromDate
+    ) {
+        $amount = 0;
+
+        $amount += (new self())->whereNotNull('payment_id')->where(
+            'created_at', '>=', $fromDate->format('Y-m-d')
+        )->count() * .1;
+
+        $amount += (new Refund())->whereNotNull('bunq_request_id')->where(
+            'created_at', '>=', $fromDate->format('Y-m-d')
+        )->where('status', '=', 'refunded')->count() * .3;
+
+        $amount += (new Refund())->whereNotNull('bunq_request_id')->where(
+            'created_at', '>=', $fromDate->format('Y-m-d')
+        )->where('status', '!=', 'refunded')->count() * .1;
+
+        $amount += ($fromDate->diffInMonths(new Carbon()) * 9.99);
+
+        return $amount;
+    }
 }
