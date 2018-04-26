@@ -39,6 +39,12 @@ class UserController extends Controller
             'status' => 'success'
         ])->sum('amount');
 
-        return compact('funds', 'funds_required');
+        $bunq_costs = Transaction::getBunqCosts(
+            (new Transaction())->orderBy(
+                'created_at', 'ASK'
+            )->first()->created_at
+        );
+
+        return compact('funds', 'funds_required', 'bunq_costs');
     }
 }
