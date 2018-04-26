@@ -41,7 +41,7 @@ class UserController extends Controller
 
         $bunq_costs = Transaction::getBunqCosts(
             (new Transaction())->orderBy(
-                'created_at', 'ASK'
+                'created_at'
             )->first()->created_at
         );
 
