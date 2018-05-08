@@ -79,10 +79,12 @@ class TransactionController extends Controller
         }
 
         // start transaction process
-        return $voucher->makeTransaction(
-            $shopKeeper->id, 
-            $full_amount ? $max_amount : $amount, 
-            $extra_amount);
+        return collect($voucher->makeTransaction(
+            $shopKeeper->id,
+            $full_amount ? $max_amount : $amount,
+            $extra_amount))->only([
+                'id', 'amount', 'extra_amount', 'created_at', 'updated_at'
+        ]);
     }
 
     /**

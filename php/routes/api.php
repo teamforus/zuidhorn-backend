@@ -77,7 +77,7 @@ Route::group([
     
     // transactions
     Route::resource(
-        'vouchers.transactions', 
+            'vouchers.transactions',
         'Api\Vouchers\TransactionController', [
             'parameters'    => ['vouchers' => 'voucherAddress'],
             'only'          => ['index', 'store', 'show']
