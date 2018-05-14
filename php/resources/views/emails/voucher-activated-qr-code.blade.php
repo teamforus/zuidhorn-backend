@@ -12,7 +12,7 @@
         <br>
         <img src="{!!$message->embedData(QrCode::format('png')->margin(1)->size(300)->generate($voucher->wallet->address), 'QrCode.png', 'image/png')!!}">
         <br>
-        Uw huidige budget is: [current budget]
+        Uw huidige budget is: €{{ number_format($voucher->getAvailableFunds(), 2) }}
         <br>
         Met deze QR-code kunt u uw kindpakket budget bij diverse winkels besteden.
         <br>

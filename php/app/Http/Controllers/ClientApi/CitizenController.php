@@ -33,6 +33,13 @@ class CitizenController extends Controller
         // get target user by email
         $user = User::whereEmail($request->input('email'))->first();
         $citizen = Citizen::whereUserId($user->id)->first();
+
+        if (!$citizen) {
+            return response()->json([
+                "email" => ["e-mailadres bestaat niet."]
+            ], 412);
+        }
+
         $citizenToken = $citizen->generateAuthToken();
 
         // send auth token by email
