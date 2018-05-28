@@ -56,6 +56,9 @@ Route::group([
     Route::put(
         '/shop-keepers', 
         'Api\ShopKeeperController@update');
+    Route::post(
+        '/shop-keepers/revoke',
+        'Api\ShopKeeperController@revoke');
 
 
 
@@ -72,9 +75,9 @@ Route::group([
         '/vouchers/{voucherAddress}/transactions/{transaction}/refund', 
         'Api\Vouchers\TransactionController@refund');
     
-    // mark transaction to be refunded
+    // transactions
     Route::resource(
-        'vouchers.transactions', 
+            'vouchers.transactions',
         'Api\Vouchers\TransactionController', [
             'parameters'    => ['vouchers' => 'voucherAddress'],
             'only'          => ['index', 'store', 'show']

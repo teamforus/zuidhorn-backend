@@ -53,6 +53,13 @@ class BlockchainApi
             $endpoint, "post", 'json', compact('wallet', 'amount'));
     }
 
+    /**
+     * Add tokens to target wallet
+     *
+     * @param $wallet
+     * @param $amount
+     * @return mixed
+     */
     public function fundTokens($wallet, $amount)
     {
         $endpoint = "/api/fund-tokens";

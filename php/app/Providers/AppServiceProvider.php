@@ -18,7 +18,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         App::setLocale(Request::header('Locale', 'en'));
-        Schema::defaultStringLength(200);
+        Schema::defaultStringLength(191);
 
         Validator::extend('iban', '\App\Validators\IbanValidator@rule');
         Validator::extend('schedule', '\App\Validators\ScheduleValidator@rule');

@@ -342,7 +342,7 @@ class Media extends Model
     }
 
     protected static function unique_file_name($path, $name, $ext) {
-        if (!strcmp($path[count($path) - 1], '/'))
+        if (!strcmp($path[strlen($path) - 1], '/'))
             $path .= '/';
 
         while(file_exists($path . $name . '.' . $ext)) {

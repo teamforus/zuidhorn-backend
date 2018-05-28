@@ -2,18 +2,34 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Facades\Log;
+use App\Helpers\Helper;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-
-use App\Services\BunqService\BunqService;
 use App\Jobs\BlockchainRequestJob;
 
+/**
+ * Class Refund
+ * @property mixed $id
+ * @property integer $shop_keeper_id
+ * @property integer $bunq_request_id
+ * @property string $status
+ * @property string $link
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Collection $transactions
+ * @property ShopKeeper $shop_keeper
+ * @package App\Models
+ */
 class Refund extends Model
 {
     protected $fillable = [
         'shop_keeper_id', 'bunq_request_id', 'status', 'link'
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function transactions()
     {
         return $this->belongsToMany(
@@ -21,152 +37,168 @@ class Refund extends Model
             'refund_transactions');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function shop_keeper()
     {
         return $this->belongsTo('App\Models\ShopKeeper');
     }
 
+    /**
+     * Update status and revoke if still pending
+     * @return $this
+     */
     public function applyOrRevokeBunqRequest() {
         $this->updateState();
 
         if ($this->status == 'pending') {
-            $this->revoke();
+            $this->requestRevoked();
         }
 
         return $this;
     }
 
+    /**
+     * Update status
+     * @return $this|bool|string
+     */
     public function updateState() {
-        $status = $this->bunqRequestStatus();
+        if (!$this->bunq_request_id) {
+            return false;
+        }
 
-        if($status == 'ACCEPTED') {
-            // update refund and transactions status
-            $this->update(['status' => 'refunded']);
-            $this->transactions()->update(['status' => 'refunded']);
+        $requestDetails = Helper::BunqService()->paymentRequestDetails(
+            $this->bunq_request_id
+        );
 
-            // dispatch to blockchain
-            $this->transactions->each(function($transaction) {
-                BlockchainRequestJob::dispatch(
-                    'refund', [
-                        $transaction->shop_keeper->wallet->address,
-                        $transaction->shop_keeper->wallet->private_key,
-                        $transaction->voucher->wallet->address,
-                        $transaction->amount
-                    ]
-                );
-            });
-        } else if ($status == 'REJECTED' || $status == 'REVOKED') {
-            $this->revoke($status);
+        switch ($requestDetails->getStatus()) {
+            case "ACCEPTED": {
+                $this->requestAccepted();
+                return 'paid';
+            } break;
+            case "REJECTED":
+            case "REVOKED": {
+                $this->requestRevoked($requestDetails->getStatus());
+            } break;
         }
 
         return $this;
     }
 
-    private function revoke($current_state = FALSE) {
-        // revoke bunq request, detach transactions and update status
-        if ($current_state != 'REVOKED')
-            $this->bunqRequestRevoke();
-        
-        $this->transactions()->detach();
-        $this->forceFill(['status' => 'revoked'])->save();
-    }
-
+    /**
+     * Get bunq bunq me share url
+     * @return bool|string
+     */
     public function getBunqUrl() {
-        if (!$this->bunq_request_id)
+        if (!$this->bunq_request_id) {
             $this->bunqRequestCreate();
+        }
 
-        $bunq_details = $this->bunqRequestDetails();
+        $requestDetails = Helper::BunqService()->paymentRequestDetails(
+            $this->bunq_request_id
+        );
 
-        if ($bunq_details->RequestInquiry->status == 'PENDING')
-            return $bunq_details->RequestInquiry->bunqme_share_url;
-
-        if ($bunq_details->RequestInquiry->status == 'ACCEPTED')
-            return true;
-
-        if ($bunq_details->RequestInquiry->status == 'REJECTED') {
-            $this->update([
-                'status' => 'rejected'
-            ]);
+        switch ($requestDetails->getStatus()) {
+            case "PENDING": {
+                return $requestDetails->getBunqmeShareUrl();
+            } break;
+            case "ACCEPTED": {
+                $this->requestAccepted();
+                return 'paid';
+            } break;
+            case "REJECTED":
+            case "REVOKED": {
+                $this->requestRevoked($requestDetails->getStatus());
+            } break;
         }
 
         return false;
     }
 
-    public function bunqRequestStatus() {
-        $bunq_details = $this->bunqRequestDetails();
-
-        if ($bunq_details)
-            return $bunq_details->RequestInquiry->status;
-
-        return false;
-    }
-
-    private function bunqRequestCreate() {
-        $bunq_service = new BunqService();
-
-        $response = $bunq_service->getMonetaryAccounts();
-
-        $monetaryAccountId = $response->{'Response'}[0]->{'MonetaryAccountBank'}->{'id'};
-
-        $response = $bunq_service->createPaymentRequest($monetaryAccountId, [
-            "value" => (string) $this->transactions()->sum('amount'),
-            "currency" => "EUR",
-        ], [
-            "type"  => "EMAIL",
-            "value" => $this->shop_keeper->user->email,
-            "name"  => $this->shop_keeper->name,
-        ], 'Refund.');
-
-        // Log::info('bunq - create payment request :' . json_encode($response, JSON_PRETTY_PRINT));
-
+    /**
+     * Request accepted update db
+     */
+    public function requestAccepted() {
+        // update refund and transactions status
         $this->update([
-            'bunq_request_id' => $response->Response[0]->Id->id,
+            'status' => 'refunded'
         ]);
 
-        return $response->Response[0]->Id->id;
+        // don't user transactions(), ambiguous updated_at field
+        (new Transaction())->whereIn(
+            'id', $this->transactions->pluck('id')
+        )->update([
+            'status' => 'refunded'
+        ]);
+
+        // dispatch to blockchain
+        $this->transactions->each(function($transaction) {
+            BlockchainRequestJob::dispatch(
+                'refund', [
+                    $transaction->shop_keeper->wallet->address,
+                    $transaction->shop_keeper->wallet->private_key,
+                    $transaction->voucher->wallet->address,
+                    $transaction->amount
+                ]
+            );
+        });
     }
 
-    private function bunqRequestDetails() {
-        if (!$this->bunq_request_id)
-            return false;
+    /**
+     * Request revoked update db and revoke bunq request if not already
+     * @param bool $current_state
+     */
+    private function requestRevoked($current_state = FALSE) {
+        // revoke bunq request, detach transactions and update status
+        if ($current_state != 'REVOKED' && !is_null($this->bunq_request_id)) {
+            Helper::BunqService()->revokePaymentRequest(
+                $this->bunq_request_id
+            )->getValue();
+        }
 
-        $bunq_service = new BunqService();
-
-        $response = $bunq_service->getMonetaryAccounts();
-
-        $monetaryAccountId = $response->{'Response'}[0]->{'MonetaryAccountBank'}->{'id'};
-
-        $response = $bunq_service->verifyPaymentRequest($monetaryAccountId, $this->bunq_request_id);
-
-        // Log::info('bunq - check payment request :' . json_encode($response, JSON_PRETTY_PRINT));
-
-        return $response->Response[0];
+        $this->forceFill([
+            'status' => 'revoked'
+        ])->save();
     }
 
-    private function bunqRequestRevoke() {
-        if (!$this->bunq_request_id)
-            return false;
+    /**
+     * Create bunq request inquiry
+     * @return mixed
+     */
+    private function bunqRequestCreate() {
+        $bunqRequestId = Helper::BunqService()->makePaymentRequest(
+            $this->transactions()->sum('amount'),
+            $this->shop_keeper->user->email,
+            $this->shop_keeper->name,
+            'Refund.'
+        );
 
-        $bunq_service = new BunqService();
+        $this->update([
+            'bunq_request_id' => $bunqRequestId
+        ]);
 
-        $response = $bunq_service->getMonetaryAccounts();
-
-        $monetaryAccountId = $response->{'Response'}[0]->{'MonetaryAccountBank'}->{'id'};
-
-        $response = $bunq_service->revokePaymentRequest($monetaryAccountId, $this->bunq_request_id);
-
-        return $response;
+        return $bunqRequestId;
     }
 
+    /**
+     * Get pending requests queue
+     * @param array $exclude
+     * @return \Illuminate\Database\Query\Builder|static
+     */
     public static function getQueue($exclude = []) {
-        return self::orderBy('updated_at', 'ASC')
+        return (new self())->orderBy('updated_at', 'ASC')
         ->where('status', '=', 'pending')
         ->whereNotIn('id', $exclude);
     }
 
+    /**
+     * Get queue and fetch requests states
+     */
     public static function processQueue() {
-        if (self::getQueue()->count() == 0)
-            return null;
+        if (self::getQueue()->count() == 0) {
+            return;
+        }
 
         $ids = [];
 

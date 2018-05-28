@@ -42,9 +42,10 @@ class VoucherController extends Controller
         // email should not be already in the system
         if (User::whereEmail($request->input('email'))->count() > 0) {
             return response(['email' => [
-                'Dit E-mailadres is al gebruikt om een Kindpakket account ' . 
-                'te activeren. Probeer het nogmaals met een ander' . 
-                'E-mailadres.']], 422);
+                'Dit e-mailadres is al gebruikt om een Kindpakket ' .
+                'account te activeren. Probeer het nogmaals met een ander ' .
+                'e-mailadres.'
+            ]], 422);
         }
 
         // code should not be already active

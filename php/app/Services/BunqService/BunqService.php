@@ -1,119 +1,175 @@
 <?php
 namespace App\Services\BunqService;
 
-use Illuminate\Support\Facades\Cache;
-use App\Services\BunqService\BunqServiceBase;
+use bunq\Context\BunqContext;
+use bunq\Model\Generated\Endpoint\MonetaryAccount;
+use bunq\Model\Generated\Endpoint\Payment;
+use bunq\Model\Generated\Endpoint\RequestInquiry;
+use bunq\Model\Generated\Object\Amount;
+use bunq\Model\Generated\Object\Pointer;
+use bunq\Util\BunqEnumApiEnvironmentType;
+use bunq\Context\ApiContext;
 
-class BunqService extends BunqServiceBase 
+class BunqService
 {
-    function __construct($api_key = FALSE) 
+    private $bunqContextFilePath = "/bunq_context/context.json";
+    private $deviceDescription = "My Device Description";
+
+    /**
+     * BunqService constructor.
+     */
+    function __construct()
     {
-        parent::__construct($api_key ? $api_key : env('BUNQ_KEY'));
+        $bunqContextFilePath = storage_path($this->bunqContextFilePath);
+
+        $apiKey = config('bunq.key');
+        $useSandbox = config('bunq.sandbox');
+
+        BunqContext::loadApiContext(
+            $this->requestApiContext(
+                $bunqContextFilePath,
+                $useSandbox,
+                $apiKey,
+                $this->deviceDescription
+            )
+        );
+    }
+
+    /**
+     * @param $bunqContextFilePath
+     * @param $useSandbox
+     * @param $apiKey
+     * @param $deviceDescription
+     * @return ApiContext|static
+     */
+    private function requestApiContext(
+        string $bunqContextFilePath,
+        bool $useSandbox,
+        string $apiKey,
+        string $deviceDescription
+    ) {
+        if (!file_exists($bunqContextFilePath)) {
+            if ($useSandbox) {
+                $environmentType = BunqEnumApiEnvironmentType::SANDBOX();
+            } else {
+                $environmentType = BunqEnumApiEnvironmentType::PRODUCTION();
+            }
+
+            $permittedIps = [];
+
+            $apiContext = ApiContext::create(
+                $environmentType,
+                $apiKey,
+                $deviceDescription,
+                $permittedIps
+            );
+
+            try {
+                $apiContext->save($bunqContextFilePath);
+            } catch (\Exception $exception) {}
+
+            return $apiContext;
+        } else {
+            try {
+                return ApiContext::restore($bunqContextFilePath);
+            } catch (\Exception $exception) {
+                unlink($bunqContextFilePath);
+                return $this->requestApiContext(
+                    $bunqContextFilePath,
+                    $useSandbox,
+                    $apiKey,
+                    $deviceDescription
+                );
+            }
+        }
+    }
+
+    /**
+     * Get bank monetary account balance value
+     * @return float
+     */
+    public function getBankAccountBalanceValue()
+    {
+        $monetaryAccount = MonetaryAccount::listing()->getValue()[0];
+
+        return floatval(
+            $monetaryAccount->getMonetaryAccountBank()->getBalance()->getValue()
+        );
     }
     
     public function getMonetaryAccounts()
     {
-        $minutes = 5;
+        return MonetaryAccount::listing()->getValue();
+    }
 
-        $self = &$this;
+    /**
+     * @param $amount
+     * @param $iban
+     * @param $name
+     * @param string $description
+     * @return int
+     */
+    public function makePayment(
+        float $amount,
+        string $iban,
+        string $name,
+        string $description = ""
+    ) {
+        return Payment::create(
+            new Amount($amount, 'EUR'),
+            new Pointer('IBAN', $iban, $name),
+            $description
+        )->getValue();
+    }
 
-        return Cache::remember('bunq_monetary_account', $minutes, function() use (&$self) {
-            $arrayHeaders = [
-                Request::HEADER_REQUEST_CUSTOM_AUTHENTICATION => $this->sessionServerToken
-            ];
-            
-            $arrayBody = null;
-            
-            return BunqRequest::makeRequest(
-                'user/' . $this->userId . '/monetary-account', 
-                BunqRequest::METHOD_GET, 
-                $arrayBody,
-                $arrayHeaders,
-                $this->clientPrivateKey);
-        });
+    /**
+     * @param $paymentId
+     * @return Payment
+     */
+    public function paymentDetails(
+        int $paymentId
+    ) {
+        return Payment::get($paymentId)->getValue();
     }
-    
-    public function makePayment($monetaryAccount, $amount, $counterparty_alias, $description = "")
-    {
-        $arrayHeaders = [
-            Request::HEADER_REQUEST_CUSTOM_AUTHENTICATION => $this->sessionServerToken
-        ];
-        
-        $arrayBody = compact('amount', 'counterparty_alias', 'description');
-        
-        return BunqRequest::makeRequest(
-            'user/' . $this->userId . '/monetary-account/' . $monetaryAccount . '/payment', 
-            BunqRequest::METHOD_POST, 
-            $arrayBody,
-            $arrayHeaders,
-            $this->clientPrivateKey);
-    }
-    
-    public function paymentDetails($monetaryAccount, $paymentId)
-    {
-        $arrayHeaders = [
-            Request::HEADER_REQUEST_CUSTOM_AUTHENTICATION => $this->sessionServerToken
-        ];
-        
-        $arrayBody = null;
-        
-        return BunqRequest::makeRequest(
-            'user/' . $this->userId . '/monetary-account/' . $monetaryAccount . '/payment/' . $paymentId, 
-            BunqRequest::METHOD_GET, 
-            $arrayBody,
-            $arrayHeaders,
-            $this->clientPrivateKey);
-    }
-    
-    public function createPaymentRequest($monetaryAccount, $amount_inquired, $counterparty_alias, $description = "")
-    {
-        $allow_bunqme = true;
 
-        $arrayHeaders = [
-            Request::HEADER_REQUEST_CUSTOM_AUTHENTICATION => $this->sessionServerToken
-        ];
-        
-        $arrayBody = compact('amount_inquired', 'counterparty_alias', 'description', 'allow_bunqme');
-        
-        return BunqRequest::makeRequest(
-            'user/' . $this->userId . '/monetary-account/' . $monetaryAccount . '/request-inquiry', 
-            BunqRequest::METHOD_POST, 
-            $arrayBody,
-            $arrayHeaders,
-            $this->clientPrivateKey);
+    /**
+     * @param $amount
+     * @param $email
+     * @param $name
+     * @param string $description
+     * @return int
+     */
+    public function makePaymentRequest(
+        float $amount,
+        string $email,
+        string $name,
+        string $description = ""
+    ) {
+        return RequestInquiry::create(
+            new Amount($amount, 'EUR'),
+            new Pointer('EMAIL', $email, $name),
+            $description,
+            true
+        )->getValue();
     }
-    
-    public function verifyPaymentRequest($monetaryAccount, $request_id)
-    {
-        $arrayHeaders = [
-            Request::HEADER_REQUEST_CUSTOM_AUTHENTICATION => $this->sessionServerToken
-        ];
-        
-        $arrayBody = '{}';
-        
-        return BunqRequest::makeRequest(
-            'user/' . $this->userId . '/monetary-account/' . $monetaryAccount . '/request-inquiry/' . $request_id, 
-            BunqRequest::METHOD_GET, 
-            $arrayBody,
-            $arrayHeaders,
-            $this->clientPrivateKey);
-    }
-    
-    public function revokePaymentRequest($monetaryAccount, $request_id)
-    {
-        $arrayHeaders = [
-            Request::HEADER_REQUEST_CUSTOM_AUTHENTICATION => $this->sessionServerToken
-        ];
 
-        $status = 'REVOKED';
-        
-        $arrayBody = compact('status');
-        
-        return BunqRequest::makeRequest(
-            'user/' . $this->userId . '/monetary-account/' . $monetaryAccount . '/request-inquiry/' . $request_id, 
-            BunqRequest::METHOD_PUT, 
-            $arrayBody,
-            $arrayHeaders,
-            $this->clientPrivateKey);
+    /**
+     * @param $paymentRequestId
+     * @return RequestInquiry
+     */
+    public function paymentRequestDetails(
+        int $paymentRequestId
+    ) {
+        return RequestInquiry::get($paymentRequestId)->getValue();
+    }
+
+    /**
+     * @param $paymentRequestId
+     * @return \bunq\Model\Generated\Endpoint\BunqResponseRequestInquiry
+     */
+    public function revokePaymentRequest(
+        int $paymentRequestId
+    ) {
+        return RequestInquiry::update($paymentRequestId, null, 'REVOKED');
     }
 }

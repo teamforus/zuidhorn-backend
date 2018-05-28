@@ -2,17 +2,28 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use App\Services\BunqService\BunqService;
-use App\Services\BlockchainApiService\Facades\BlockchainApi;
-use App\Models\ShopKeeper;
 
 use App\Jobs\MailSenderJob;
-use App\Jobs\VoucherActivateJob;
 use App\Jobs\BlockchainRequestJob;
 
-use App\Services\UIDGeneratorService\Facades\UIDGenerator;
-
+/**
+ * Class Voucher
+ * @property mixed $id
+ * @property string $code
+ * @property integer $budget_id
+ * @property integer $user_id
+ * @property float $amount
+ * @property string $activation_token
+ * @property string $activation_email
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Wallet|null $wallet
+ * @property Budget $budget
+ * @property User|null $user
+ * @package App\Models
+ */
 class Voucher extends Model
 {
     use Traits\Urls\VoucherUrlsTrait;
@@ -24,7 +35,7 @@ class Voucher extends Model
      * @var array
      */
     protected $fillable = [
-        'code', 'budget_id', 'user_id', 'status', 'amount', 'activation_token',
+        'code', 'budget_id', 'user_id', 'amount', 'activation_token',
         'activation_email'
     ];
 
@@ -63,8 +74,6 @@ class Voucher extends Model
         return $this->amount - $this->transactions()->whereNotIn(
             'status', ['refund', 'refunded']
         )->sum('amount');
-
-        return floatval(min($max_amount, $funds_available));
     }
 
     public function makeTransaction(
@@ -102,7 +111,7 @@ class Voucher extends Model
     public function sendActivationToken($email) 
     {
         $this->update([
-            'activation_token' => UIDGenerator::generate(32, 4),
+            'activation_token' => app('uid_generator')->generate(32, 4),
             'activation_email' => $email,
         ]);
 
@@ -120,9 +129,10 @@ class Voucher extends Model
 
     public function emailQrCode($email = false) 
     {
-        if (!$email)
+        if (!$email) {
             $email = $this->user->email;
-        
+        }
+
         MailSenderJob::dispatch(
             'emails.voucher-qr-code', [
                 'voucher'   => $this
@@ -138,7 +148,7 @@ class Voucher extends Model
     public function getBlockchainAmount() {
         try {
             if ($this->wallet)
-                return BlockchainApi::getBalance($this->wallet->address)['balance'];
+                return app('blockchain_api')->getBalance($this->wallet->address)['balance'];
         } catch(\Exception $e) {
 
         }
@@ -150,7 +160,7 @@ class Voucher extends Model
         if ($this->wallet)
             return $this->wallet;
         
-        $this->wallet()->create(BlockchainApi::generateWallet());
+        $this->wallet()->create(app('blockchain_api')->generateWallet());
         $this->load('wallet');
 
         return $this->wallet;

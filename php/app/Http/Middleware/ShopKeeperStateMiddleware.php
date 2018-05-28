@@ -13,7 +13,10 @@ class ShopKeeperStateMiddleware
      *
      * @var array
      */
-    protected $except = [];
+    protected $except = [
+        "/api/shop-keepers/revoke",
+        "/shop-keepers/revoke"
+    ];
 
     /**
      * Handle an incoming request.
@@ -36,6 +39,12 @@ class ShopKeeperStateMiddleware
                 'error'         => 'shopkeeper-pending',
                 'description'   => "Shopkeeper account is yet to be validated."
                 ]), 401);
+
+        if ($shop_keeper->state == 'declined')
+            return response(collect([
+                'error'         => 'shopkeeper-declined',
+                'description'   => "Shopkeeper account is declined."
+            ]), 401);
 
         return $next($request);
     }
